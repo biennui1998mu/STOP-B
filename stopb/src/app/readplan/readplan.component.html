@@ -1,0 +1,72 @@
+<p class="title">Plan</p>
+<div class="note-board">
+  <div class="subtitle">
+    <p>KẾ HOẠCH ĐẦU TƯ VÀ PHÁT TRIỂN TP HN</p>
+    <h5>Created by: Son Nguyen</h5>
+  </div>
+  <div class="date-task">
+    <mat-form-field>
+      <mat-label>Choose a date</mat-label>
+      <input matInput [matDatepicker]="picker">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div class="list-member">
+    <div class="section-title">
+      <h2>
+        MEMBERS
+      </h2>
+      <button color="primary" mat-icon-button>
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div class="pill-name">Nam DoHoang</div>
+    <div class="pill-name">Pham Khue</div>
+    <div class="pill-name">Q Huy</div>
+    <div class="pill-name">Tuan Anh</div>
+  </div>
+  <div class="list-task">
+    <div class="section-title">
+      <h2>
+        TASK
+      </h2>
+      <button color="primary" mat-icon-button>
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div class="pill-name">Task 1</div>
+    <div class="pill-name">Task 2</div>
+    <div class="pill-name">Task 3</div>
+    <div class="pill-name">KẾ HOẠCH ĐẦU TƯ VÀ PHÁT TRIỂN TP HN KẾ HOẠCH ĐẦU TƯ VÀ PHÁT TRIỂN TP hCM</div>
+  </div>
+</div>
+
+<div class="task-board">
+  <div class="subtitle">
+    <p maxlength="100">Task 1</p>
+    <h5>Worker: Nam Dohoang</h5>
+  </div>
+  <div class="date-task">
+    <mat-form-field>
+      <mat-label>Choose a date</mat-label>
+      <input matInput [matDatepicker]="picker2">
+      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+      <mat-datepicker #picker2></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div class="task-work">
+    <div class="box-tag">
+      <div class="tag" *ngFor="let d of arr">
+        <mat-icon>note</mat-icon>
+        <p>Note</p>
+      </div>
+
+    </div>
+    <div class="box-note">
+      <textarea></textarea>
+    </div>
+  </div>
+</div>

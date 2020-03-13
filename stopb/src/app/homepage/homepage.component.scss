@@ -1,0 +1,16 @@
+.value {
+  display: grid;
+  grid-template-columns: 2rem auto;
+  margin-top: 1rem;
+
+  i {
+    grid-column: 1/2;
+  }
+
+  p {
+    grid-column: 2/3;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 0.1rem;
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "stop-b",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node -r dotenv index",
+    "dev": "nodemon --watch ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/biennui1998mu/STOP-B.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/biennui1998mu/STOP-B/issues"
+  },
+  "homepage": "https://github.com/biennui1998mu/STOP-B#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.4",
+    "nodemon": "^2.0.2"
+  }
+}
