@@ -1,0 +1,7 @@
+.eachTask {
+  display: grid;
+  grid-template-columns: auto max-content max-content;
+  grid-gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormControl} from '@angular/forms';
+import {Task} from "../shared/models/Task";
 
 @Component({
   selector: 'app-makeplan',
@@ -10,20 +11,25 @@ export class MakeplanComponent implements OnInit {
 
   members = new FormControl();
   memberlist: string[] = ['Namhoang Do', 'QHuy', 'Tuananh Nguyen', 'Khue Pham'];
-  tasks = ['task 1'];
+  tasks: Task[] = [];
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
 
   addTask() {
-    this.tasks.push('New task');
+    this.tasks.push({
+      title: ''
+    });
   }
 
-  removetask() {
-    this.tasks.splice(1,1);
+  updateTask(newVal: Task, index: number) {
+    if (newVal) {
+      this.tasks.splice(index, 1, newVal);
+    } else {
+      this.tasks.splice(index, 1);
+    }
   }
-
-
 }

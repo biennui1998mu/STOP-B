@@ -1,0 +1,26 @@
+<mat-card class="eachTask">
+  <mat-form-field>
+    <mat-label>Task name</mat-label>
+    <input (change)="updatedValue($event.target['value'])"
+           [disabled]="!isEditable"
+           [ngModel]="task.title"
+           matInput
+           maxlength="100"
+           placeholder="Max 100 character">
+  </mat-form-field>
+  <button (click)="toggleEdit()"
+          [color]="isEditable ? 'primary' : 'accent'"
+          mat-raised-button>
+    <ng-container *ngIf="!isEditable">
+      Edit task
+    </ng-container>
+    <ng-container *ngIf="isEditable">
+      Finish edit
+    </ng-container>
+  </button>
+  <button (click)="removeTask()"
+          [disabled]="isEditable"
+          mat-raised-button>
+    Delete task
+  </button>
+</mat-card>
