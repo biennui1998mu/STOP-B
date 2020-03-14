@@ -1,26 +1,27 @@
-.navbar {
-  width: 11rem;
-  height: 100vh;
-  padding: 0.5rem;
-  display: grid;
-  grid-template-rows: 0.1fr 1fr;
-  grid-row-gap: 1rem;
-  box-shadow: 0.5rem 0 0.5rem -0.5rem rgba(0, 0, 0, 0.699);
-  background: var(--main-color);
+.navigation-bar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  background: white;
 
-  .button {
-    color: black;
-    width: 10rem;
+  .top-buttons, .bot-buttons {
+    display: flex;
+    flex-direction: column;
 
+    .divider {
+      width: 80%;
+      margin: 1rem auto;
+    }
   }
 
-  .top-button {
-    grid-row: 1/2;
-    border-bottom: 1px solid black;
-  }
+  .top-buttons {
+    padding: 1rem;
 
-  .bot-button {
-    grid-row: 2/3;
-    border-top: 1px solid black;
+    .button {
+      margin-bottom: 1rem;
+    }
   }
 }

@@ -1,26 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NewTaskComponent } from './new-task/new-task.component';
-import {SidenavComponent} from "./sidenav/sidenav.component";
-import {MaterialCompsModule} from "../../material-comps.module";
-import {FormsModule} from "@angular/forms";
+import { SidenavComponent } from "./sidenav/sidenav.component";
+import { CoreImportsModule } from '../modules/core-imports.module';
+import { LayoutsComponent } from '../layouts/layouts.component';
+import { ChatComponent } from './chat/chat.component';
 
 const components = [
   NewTaskComponent,
   SidenavComponent,
+  ChatComponent,
+  LayoutsComponent,
 ];
 
 @NgModule({
   declarations: [
-    ...components
+    ...components,
   ],
   exports: [
-    NewTaskComponent
+    ...components,
   ],
   imports: [
     CommonModule,
-    MaterialCompsModule,
-    FormsModule
-  ]
+    CoreImportsModule,
+  ],
 })
-export class SharedComponentModule { }
+export class SharedComponentModule {
+}

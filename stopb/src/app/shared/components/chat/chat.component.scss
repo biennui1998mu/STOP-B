@@ -1,0 +1,110 @@
+.navbar {
+  height: 100vh;
+  display: grid;
+  grid-template-areas: 'user' 'friends';
+  grid-template-columns: 1fr;
+  grid-template-rows: 5rem auto;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  background: white;
+
+  .top {
+    grid-area: user;
+    border-bottom: 1px solid gray;
+    padding: 1rem;
+    background: #2d314a;
+
+    .user-self {
+      grid-template-columns: 3rem auto;
+      grid-gap: 0.5rem 1rem;
+
+      img {
+        width: 3rem;
+        height: 3rem;
+        border: 2px solid white;
+      }
+
+      .username {
+        color: white;
+      }
+
+      .status {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+        line-height: 0.8rem;
+        border-radius: 0.65rem;
+        background: white;
+      }
+    }
+  }
+
+  .list-friend {
+    grid-area: friends;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 3rem auto;
+
+    .title {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 8rem);
+      overflow: auto;
+
+      .friend {
+        padding: 0.5rem 1rem;
+        grid-template-columns: 2rem auto;
+        grid-column-gap: 0.5rem;
+        margin-bottom: 0.5rem;
+
+        img {
+          border-radius: 50%;
+          box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);
+          width: 2rem;
+          height: 2rem;
+        }
+
+        .username {
+          color: black;
+        }
+      }
+    }
+  }
+}
+
+
+.row-card {
+  display: grid;
+  grid-template-areas: 'avatar name' 'avatar status';
+  grid-template-rows: max-content auto;
+
+  img {
+    grid-area: avatar;
+    border-radius: 50%;
+    box-shadow: 0 3px 2px rgba(0, 0, 0, 0.3);
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .username {
+    grid-area: name;
+    display: flex;
+  }
+
+  .status {
+    justify-self: start;
+    grid-area: status;
+    background: white;
+    display: grid;
+    place-content: center;
+
+    &.online {
+      color: green;
+    }
+  }
+}

@@ -1,0 +1,21 @@
+:host {
+  display: grid;
+  grid-template-areas: 'nav-bar router chat-bar';
+  grid-template-columns: minmax(4rem, 250px) auto minmax(4rem, 250px);
+  width: 100vw;
+  height: 100vh;
+
+  .nav-bar {
+    grid-area: nav-bar;
+  }
+
+  .page {
+    grid-area: router;
+    height: 100vh;
+    overflow: auto;
+  }
+
+  .chat-bar {
+    grid-area: chat-bar;
+  }
+}

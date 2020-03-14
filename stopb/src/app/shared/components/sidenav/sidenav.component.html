@@ -1,12 +1,42 @@
-<div class="navbar">
-  <div class="top-button">
-    <button class="button" routerLink="/homepage" mat-button color="accent">Dashboard</button>
-    <button class="button" routerLink="/quicknote" mat-button color="accent">Quick Note</button>
-    <button class="button" routerLink="/makeplan" mat-button color="accent">Make Plan</button>
+<div class="navigation-bar">
+  <div class="top-buttons">
+    <button class="button"
+            color="primary"
+            mat-flat-button
+            routerLink="/homepage">
+      Dashboard
+    </button>
+    <button class="button"
+            color="primary"
+            mat-flat-button
+            routerLink="/quicknote">
+      Quick Note
+    </button>
+    <button class="button"
+            color="primary"
+            mat-flat-button
+            routerLink="/makeplan">
+      Make Plan
+    </button>
+    <hr class="divider">
   </div>
-  <div class="bot-button">
-    <button class="button" mat-button color="accent">Friends</button>
-    <button class="button" mat-button color="accent">Setting</button>
-    <button class="button" mat-button color="accent">Account</button>
+
+  <div class="bot-buttons">
+    <hr class="divider">
+    <button class="button"
+            color="primary"
+            mat-button>
+      Friends
+    </button>
+    <button class="button"
+            color="primary"
+            mat-button>
+      Setting
+    </button>
+    <button class="button"
+            color="primary"
+            mat-button>
+      Account
+    </button>
   </div>
 </div>
