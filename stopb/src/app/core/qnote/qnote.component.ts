@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UiStateService } from '../shared/services/state/ui-state.service';
+import { UiStateService } from '../../shared/services/state/ui-state.service';
 
 @Component({
   selector: 'app-qnote',

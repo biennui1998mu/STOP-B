@@ -1,0 +1,63 @@
+:host {
+  display: grid;
+  grid-template-areas: 'general detail' 'confirm detail';
+  grid-template-columns: minmax(max-content, 350px) auto;
+  grid-template-rows: max-content auto;
+  grid-gap: 1rem;
+  padding: 1rem;
+}
+
+.general-information {
+  grid-area: general;
+  width: 100%;
+  max-width: 350px;
+  height: max-content;
+  position: relative;
+
+  .general-section-content {
+    display: flex;
+    flex-direction: column;
+
+    > *:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.detail-information {
+  grid-area: detail;
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  .detail-section-content {
+    display: flex;
+    flex-direction: column;
+
+    .note-input-paper {
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.confirmation {
+  grid-area: confirm;
+  height: max-content;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+}
+
+
+mat-form-field.span-all {
+  width: 100%;
+}
+
+mat-card-content {
+  padding-top: 0.5rem;
+}
+
+.note-input-paper {
+  height: 369px;
+}

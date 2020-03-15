@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomepageComponent } from './core/homepage/homepage.component';
-import { QnoteComponent } from "./qnote/qnote.component";
+import { QnoteComponent } from "./core/qnote/qnote.component";
 import { MakeplanComponent } from "./core/makeplan/makeplan.component";
 import { ReadnoteComponent } from "./readnote/readnote.component";
 import { ReadplanComponent } from "./readplan/readplan.component";

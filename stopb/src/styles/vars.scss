@@ -1,0 +1,14 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+$stopb-primary: mat-palette($mat-indigo);
+$stopb-accent: mat-palette($mat-pink, A200, A100, A400);
+$stopb-warn: mat-palette($mat-red);
+$stopb-theme: mat-light-theme($stopb-primary, $stopb-accent, $stopb-warn);
+
+@include angular-material-theme($stopb-theme);
+
+:root {
+  --main-color: rgb(238, 238, 238);
+  --note-color: #FFFF88;
+}

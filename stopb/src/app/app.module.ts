@@ -4,7 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './core/login/login.component';
 import { HomepageComponent } from './core/homepage/homepage.component';
-import { QnoteComponent } from './qnote/qnote.component';
+import { QnoteComponent } from './core/qnote/qnote.component';
 import { MakeplanComponent } from './core/makeplan/makeplan.component';
 import { ReadnoteComponent } from './readnote/readnote.component';
 import { ReadplanComponent } from './readplan/readplan.component';

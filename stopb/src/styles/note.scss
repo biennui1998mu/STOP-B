@@ -1,0 +1,35 @@
+.note-input-paper {
+  resize: vertical;
+  width: 100%;
+  font-size: 1.25rem;
+  background: var(--note-color);
+  color: black;
+  padding: 0.5rem 1rem 1rem;
+  outline: none;
+  border: none;
+  border-top: 0.5rem solid transparent;
+
+  &.green {
+    border-top-color: green;
+  }
+
+  &.red {
+    border-top-color: red;
+  }
+
+  &.orange {
+    border-top-color: orange;
+  }
+
+  &.blue {
+    border-top-color: blue;
+  }
+
+  &.pink {
+    border-top-color: pink;
+  }
+
+  &.black {
+    border-top-color: black;
+  }
+}

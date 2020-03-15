@@ -10,8 +10,10 @@ import {MatDatepickerModule,} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatCardModule} from "@angular/material/card";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const modules = [
+  BrowserAnimationsModule,
   MatFormFieldModule,
   MatInputModule,
   MatIconModule,
@@ -21,14 +23,13 @@ const modules = [
   MatDatepickerModule,
   MatNativeDateModule,
   MatCheckboxModule,
-  MatCardModule
+  MatCardModule,
 ];
-
 
 @NgModule({
   imports: [
     CommonModule,
-    ...modules
+    ...modules,
   ],
   exports: [
     ...modules
