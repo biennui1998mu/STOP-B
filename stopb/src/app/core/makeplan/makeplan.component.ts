@@ -1,11 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {Task} from "../shared/models/Task";
+import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Task } from "../../shared/models/Task";
+import { UiStateService } from '../../shared/services/state/ui-state.service';
 
 @Component({
   selector: 'app-makeplan',
   templateUrl: './makeplan.component.html',
-  styleUrls: ['./makeplan.component.scss']
+  styleUrls: ['./makeplan.component.scss'],
 })
 export class MakeplanComponent implements OnInit {
 
@@ -13,7 +14,15 @@ export class MakeplanComponent implements OnInit {
   memberlist: string[] = ['Namhoang Do', 'QHuy', 'Tuananh Nguyen', 'Khue Pham'];
   tasks: Task[] = [];
 
-  constructor() {
+  constructor(
+    private uiStateService: UiStateService,
+  ) {
+    this.uiStateService.setPageTitle({
+      current: {
+        title: 'Create Plan',
+        path: '/plan/create',
+      },
+    });
   }
 
   ngOnInit(): void {
@@ -21,7 +30,7 @@ export class MakeplanComponent implements OnInit {
 
   addTask() {
     this.tasks.push({
-      title: ''
+      title: '',
     });
   }
 

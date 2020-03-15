@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UiStateService } from '../shared/services/state/ui-state.service';
 
 @Component({
   selector: 'app-qnote',
@@ -7,7 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class QnoteComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private uiStateService: UiStateService,
+  ) {
+    this.uiStateService.setPageTitle({
+      current: {
+        title: 'Quick Note',
+        path: '/note/create',
+      },
+    });
+  }
 
   ngOnInit(): void {
   }
