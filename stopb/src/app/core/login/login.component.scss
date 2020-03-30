@@ -1,33 +1,43 @@
 .container {
-  min-height: 100vh;
-  display: grid;
-  place-content: center;
+  //min-height: 100vh;
+  //display: grid;
+  //place-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.51);
+  padding: 2rem;
+  border-radius: 3px;
 
   .inner-form {
     display: flex;
     flex-direction: column;
+    width: 400px;
+    margin: 2.5rem 0 1rem 0;
 
-    p {
-      font-size: 8rem;
-      text-transform: uppercase;
+    .inputfiel {
+      background: var(--main-color);
     }
 
-    input {
-      background: var(--note-color);
-    }
-  }
-
-  .button {
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-column-gap: 1rem;
-
-    .button1 {
-      grid-column: 1/2;
-    }
-
-    .button2 {
-      grid-column: 2/3;
+    .parenBtn{
+      text-align: center;
+      .button{
+        width: 10rem;
+        height: 3rem;
+      }
     }
   }
+
+
 }
+
+.background{
+  width: 100vw;
+  height: 100vh;
+  background-image: url("background-image/background STOP B.jpg");
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+

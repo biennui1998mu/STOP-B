@@ -1,16 +1,15 @@
-<p class="title">make plan</p>
 <div class="table">
   <div class="table-left">
     <mat-form-field appearance="fill">
       <mat-label>Title</mat-label>
-      <input matInput maxlength="100">
+      <input matInput maxlength="100" required>
     </mat-form-field>
     <br>
     <mat-form-field appearance="fill">
       <mat-label>Priority</mat-label>
-      <mat-select>
-        <mat-option value="option">Important</mat-option>
-        <mat-option value="option">Normal</mat-option>
+      <mat-select required>
+        <mat-option value="Important">Important</mat-option>
+        <mat-option value="Normal">Normal</mat-option>
       </mat-select>
     </mat-form-field>
     <br>

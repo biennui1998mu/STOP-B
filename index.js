@@ -3,41 +3,60 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+const mongoDB = 'mongodb://localhost:27017/stopb';
+mongoose.connect(mongoDB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+mongoose.Promise = global.Promise;
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-/**
- * @type {{origin: string, optionsSuccessStatus: number}}
- */
+const noteRoutes = require('./routes/noteRoute');
+const planRoutes = require('./routes/planRoute');
+const userRoutes = require('./routes/userRoute');
+
 const corsOptions = {
     origin: '*',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
-app.use(cookieParser());
 app.use(cors(corsOptions));
 
-/**
- * Allow user can access public folder.
- */
-app.use(express.static(path.join(__dirname, "/stopb/dist/stopb"), { maxAge: 31557600000 }));
+//hiện dưới terminal
+app.use(morgan('dev'));
+app.use('/uploads/', express.static('uploads'))
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+app.use(bodyParser.json());
 
-/**
- * Allow angular to use all get request from user;
- */
-app.use(express.static(path.join(__dirname, "view"), { maxAge: 31557600000 }));
-app.get('*', (req, res, next) => {
-    res.sendFile(path.join(__dirname, '/stopb/dist/stopb/index.html'));
+
+app.use(cookieParser());
+
+//routes handle request
+app.use('/notes', noteRoutes);
+app.use('/plans', planRoutes);
+app.use('/users', userRoutes);
+
+app.use((req, res, next) => {
+    const error = new Error('not found');
+    error.status = 404;
+    next(error);
 });
 
-app.use('/test', require('./routes/general'));
-
-app.get('/', (req, res) => {
-    const abc = {
-        username: 'nam',
-        password: '1123'
-    };
-    res.json(abc);
+app.use((error, req, res, next) => {
+    res.status(error.status || 500);
+    res.json({
+        error : {
+            message: error.message
+        }
+    })
 });
 
 app.listen(PORT, () => {

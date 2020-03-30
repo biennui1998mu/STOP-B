@@ -11,6 +11,7 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatCardModule} from "@angular/material/card";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatTableModule} from '@angular/material/table';
 
 const modules = [
   BrowserAnimationsModule,
@@ -24,6 +25,7 @@ const modules = [
   MatNativeDateModule,
   MatCheckboxModule,
   MatCardModule,
+  MatTableModule,
 ];
 
 @NgModule({

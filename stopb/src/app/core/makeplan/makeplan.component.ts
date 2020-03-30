@@ -11,7 +11,7 @@ import { UiStateService } from '../../shared/services/state/ui-state.service';
 export class MakeplanComponent implements OnInit {
 
   members = new FormControl();
-  memberlist: string[] = ['Namhoang Do', 'QHuy', 'Tuananh Nguyen', 'Khue Pham'];
+  memberlist: string[] = ['Namhoang Do', 'QHuy', 'Tuananh Nguyen', 'Khue Pham', 'Son Goku'];
   tasks: Task[] = [];
 
   constructor(

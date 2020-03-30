@@ -5,6 +5,9 @@ import { SidenavComponent } from "./sidenav/sidenav.component";
 import { CoreImportsModule } from '../modules/core-imports.module';
 import { LayoutsComponent } from '../layouts/layouts.component';
 import { ChatComponent } from './chat/chat.component';
+import { SettingComponent } from './setting/setting.component';
+import { FriendsComponent } from './friends/friends.component';
+import { AccountComponent } from './account/account.component';
 
 const components = [
   NewTaskComponent,
@@ -16,10 +19,14 @@ const components = [
 @NgModule({
   declarations: [
     ...components,
+    SettingComponent,
+    FriendsComponent,
+    AccountComponent,
   ],
-  exports: [
-    ...components,
-  ],
+    exports: [
+        ...components,
+        SettingComponent,
+    ],
   imports: [
     CommonModule,
     CoreImportsModule,

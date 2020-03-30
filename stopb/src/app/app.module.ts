@@ -11,6 +11,10 @@ import { ReadplanComponent } from './readplan/readplan.component';
 import { SharedComponentModule } from "./shared/components/shared-component.module";
 import { CoreImportsModule } from './shared/modules/core-imports.module';
 import { SharedServicesModule } from './shared/services/shared-services.module';
+import {FormsModule} from "@angular/forms";
+import {HttpClientModule} from "@angular/common/http";
+import {AuthenticateGuard} from "./shared/guard/authenticate.guard";
+
 
 @NgModule({
   declarations: [
@@ -27,8 +31,12 @@ import { SharedServicesModule } from './shared/services/shared-services.module';
     SharedComponentModule,
     SharedServicesModule,
     AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    AuthenticateGuard
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {

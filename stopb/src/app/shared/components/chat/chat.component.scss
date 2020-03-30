@@ -1,9 +1,9 @@
 .chat-sidebar {
   height: 100vh;
   display: grid;
-  grid-template-areas: 'user' 'friends';
+  grid-template-areas: 'user' 'friends' 'inbox';
   grid-template-columns: 1fr;
-  grid-template-rows: 5rem auto;
+  grid-template-rows: 5rem auto auto;
   background: white;
 
   .top {
@@ -75,6 +75,33 @@
       }
     }
   }
+
+  .chat-inbox{
+    grid-area: inbox;
+    width: 22rem;
+    height: 26rem;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0 17rem 1rem 0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    padding: 0.5rem;
+
+    display: none;
+    grid-template-rows: 2rem auto 3rem;
+    grid-row-gap: 1rem;
+
+    .friend-name{
+      grid-row: 1/2;
+      padding: 0.5rem;
+    }
+    .chat-box{
+      grid-row: 2/3;
+    }
+    .user-chat{
+      grid-row: 3/4;
+    }
+  }
 }
 
 
@@ -108,3 +135,4 @@
     }
   }
 }
+

@@ -21,6 +21,10 @@
     "@angular/platform-browser": "~9.0.5",
     "@angular/platform-browser-dynamic": "~9.0.5",
     "@angular/router": "~9.0.5",
+    "mongo": "^0.1.0",
+    "mongodb": "^3.5.5",
+    "mongoose": "^5.9.4",
+    "morgan": "^1.9.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

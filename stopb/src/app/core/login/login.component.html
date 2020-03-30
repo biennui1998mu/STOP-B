@@ -1,17 +1,83 @@
-<div class="container">
-  <div class="inner-form">
-    <p>log in</p>
-    <mat-form-field appearance="outline">
-      <mat-label>ID</mat-label>
-      <input matInput placeholder="Your name">
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>PASSWORD</mat-label>
-      <input type="password" matInput placeholder="Password">
-    </mat-form-field>
-  </div>
-  <div class="button">
-    <button class="button1" mat-raised-button color="primary">Sign in</button>
-    <button class="button2" mat-raised-button color="warn">Sign up</button>
-  </div>
+<mat-tab-group mat-stretch-tabs class="container" (selectedTabChange)="changeTab($event)" [(selectedIndex)]="tab">
+  <mat-tab label="Sign in">
+      <form class="inner-form" action="" #signinForm=ngForm (ngSubmit)="onSignin()">
+<!--        input username-->
+        <mat-form-field appearance="outline">
+          <mat-label>Username</mat-label>
+          <input class="inputfiel" matInput
+                 placeholder="Your name"
+                 [(ngModel)]="formSignIn.username"
+                 name="username"
+                 required>
+        </mat-form-field>
+<!--        input password-->
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input class="inputfiel" type="password"
+                 matInput placeholder="Password" [type]="hide ? 'password' : 'text'"
+                 [(ngModel)]="formSignIn.password"
+                 name="password"
+                 required>
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+<!--        button submit-->
+        <div class="parenBtn">
+          <button class="button" mat-raised-button color="primary" [disabled]="!signinForm.valid">Log in</button>
+        </div>
+      </form>
+  </mat-tab>
+
+  <mat-tab label="Sign up">
+    <form class="inner-form" #signupForm=ngForm (ngSubmit)="onSignup()">
+      <mat-form-field appearance="outline">
+        <mat-label>Username</mat-label>
+        <input class="inputfiel" matInput
+               placeholder="Your username"
+               name="username"
+               [(ngModel)]="formSignup.username" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input class="inputfiel" type="password"
+               matInput placeholder="Password"
+               name="password"
+               [(ngModel)]="formSignup.password" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Confirm password</mat-label>
+        <input class="inputfiel" type="password"
+               matInput placeholder="Confirm password"
+               name="password_confirm"
+               [(ngModel)]="formSignup.password_confirm" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input class="inputfiel" matInput
+               placeholder="Your name"
+               name="realname"
+               [(ngModel)]="formSignup.name" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Choose a date</mat-label>
+        <input matInput [matDatepicker]="picker"
+               name="dob"
+               [(ngModel)]="formSignup.dob" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+<!--      button submit-->
+      <div class="parenBtn">
+        <button class="button" mat-raised-button color="warn" [disabled]="!signupForm.valid">Sign up</button>
+      </div>
+    </form>
+  </mat-tab>
+</mat-tab-group>
+
+<div class="background">
 </div>
