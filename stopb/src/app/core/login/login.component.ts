@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {UiStateService} from '../../shared/services/state/ui-state.service';
 import {Router} from "@angular/router";
 import {AuthorizeService} from "../../services/authorize.service";
+import {SocketService} from "../../services/socket.service";
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private authorizeService: AuthorizeService,
     private uiStateService: UiStateService,
-    private router: Router
+    private router: Router,
+    private socketService: SocketService
   ) {
     this.uiStateService.setPageTitle({
       current: {

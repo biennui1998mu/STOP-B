@@ -16,11 +16,10 @@ const routes: Routes = [
     path: '', component: LayoutsComponent, canActivateChild: [AuthenticateGuard], children: [
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: HomepageComponent },
-      { path: 'plan', component: ReadplanComponent },
       { path: 'plan/create', component: MakeplanComponent },
-      { path: 'note', component: ReadnoteComponent },
-      { path: 'note/create', component: QnoteComponent },
-      // { path: 'account', component: AccountComponent}
+      { path: 'plans/view/:id', component: ReadplanComponent },
+      { path: 'notes/create', component: QnoteComponent },
+      { path: 'notes/view/:id', component: ReadnoteComponent },
     ],
   },
   { path: 'login', component: LoginComponent },

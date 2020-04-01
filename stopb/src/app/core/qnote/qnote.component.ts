@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UiStateService } from '../../shared/services/state/ui-state.service';
-import {GeneralService} from "../../services/general.service";
+import {NoteService} from "../../services/note.service";
 import {Router} from "@angular/router";
 
 @Component({
@@ -21,7 +21,7 @@ export class QnoteComponent implements OnInit {
 
   constructor(
     private uiStateService: UiStateService,
-    private generalService: GeneralService,
+    private generalService: NoteService,
     private router: Router
   ) {
     this.uiStateService.setPageTitle({

@@ -1,5 +1,5 @@
 const express = require('express');
-const router =  express.Router();
+const router = express.Router();
 const mongoose = require('mongoose');
 const checkAuth = require("../middleware/check-auth");
 
@@ -8,7 +8,6 @@ const Note = require('../database/models/note');
 // Take all from list
 router.get('/', checkAuth, (req, res, next) => {
     Note.find()
-        .select('noteTitle notePara notePriority noteDate _id')
         .exec()
         .then(docs => {
             const response = {
@@ -44,32 +43,32 @@ router.get('/', checkAuth, (req, res, next) => {
 });
 
 // Search by ID
-router.get('/:noteId', checkAuth, (req, res, next) => {
-    const id = req.params.noteId;
+router.post('/view', checkAuth, (req, res, next) => {
+    const id = req.body.noteId;
+    if (!id) {
+        // ... xu ly validate
+    }
     Note.findById(id)
-        .select('noteTitle notePara notePriority _id')
         .exec()
         .then(doc => {
-            // console.log("From database", doc);
-            if(doc) {
-                res.status(200).json({
+            console.log("From database", doc);
+            if (doc) {
+                return res.status(200).json({
                     note: doc,
                     request: {
                         type: 'GET',
                         // description: 'Get all notes',
                         url: 'http://localhost:3000/notes/'
                     }
-                })
-            }else{
-                res.status(404).json({
-                    message : 'No valid id was found',
                 });
             }
-            res.status(200).json(doc);
+            return res.status(404).json({
+                message: 'No valid id was found',
+            });
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({
+            return res.status(500).json({
                 error: err
             })
         })
@@ -112,17 +111,15 @@ router.post('/createNote', checkAuth, (req, res, next) => {
 
 router.patch('/:noteId', checkAuth, (req, res, next) => {
     const id = req.params.noteId;
-    const updateOps = {};
-    for(const ops of req.body) {
-        updateOps[ops.propTitle] = ops.value;
-        updateOps[ops.propPara] = ops.value;
-        updateOps[ops.propPriority] = ops.value;
-        updateOps[ops.propDate] = ops.value;
-    }
+    const updateOps = {...req.body};
+
+    console.log(updateOps);
+
     Note.update({_id: id}, {$set: updateOps})
         .exec()
         .then(result => {
-            res.status(200).json({
+            console.log(result);
+            return res.status(200).json({
                 message: 'Note updated',
                 request: {
                     type: 'GET',
@@ -132,9 +129,9 @@ router.patch('/:noteId', checkAuth, (req, res, next) => {
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({
+            return res.status(500).json({
                 Error: err
-            })
+            });
         });
 });
 
@@ -158,7 +155,7 @@ router.delete('/:noteId', checkAuth, (req, res, next) => {
         .catch(err => {
             console.log(err);
             res.status(500).json({
-                Error : err,
+                Error: err,
             })
         });
 });

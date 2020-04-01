@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import {NoteService} from "../services/note.service";
+import {ActivatedRoute, Router} from "@angular/router";
+import {Note} from "../shared/interface/Note";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-readnote',
@@ -7,9 +11,74 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReadnoteComponent implements OnInit {
 
-  constructor() { }
+  formNote: Note = null;
 
-  ngOnInit(): void {
+  readNoteForm: FormGroup;
+
+  get noteTitle() {
+    return this.readNoteForm.get('noteTitle');
   }
 
+  get noteDate() {
+    return this.readNoteForm.get('noteDate');
+  }
+
+  get notePara() {
+    return this.readNoteForm.get('notePara');
+  }
+
+  get noteId() {
+    return this.readNoteForm.get('_id');
+  }
+
+  constructor(
+    private noteService: NoteService,
+    private activatedRoute: ActivatedRoute,
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) {
+    this.readNoteForm = this.formBuilder.group({
+      _id: [''],
+      noteTitle: ['', [Validators.required, Validators.minLength(2)]],
+      noteDate: ['', [], []],
+      notePara: ['']
+    });
+
+    console.log(this.activatedRoute);
+    this.activatedRoute.paramMap.subscribe(param => {
+      const id = param.get('id');
+      if (!id) {
+        // trong truong hop k co id tren url thi tu ve dashboard
+        this.router.navigateByUrl('/dashboard');
+      } else {
+        this.noteId.setValue(id);
+        this.readNote(id);
+      }
+    })
+  }
+
+  ngOnInit(): void {
+    this.readNoteForm.valueChanges.subscribe(data => {
+      console.log(data);
+      console.log(this.readNoteForm.invalid);
+    })
+  }
+
+  readNote(id: string){
+    return this.noteService.readNote(id).subscribe((data : Note) => {
+      this.noteTitle.setValue(data.noteTitle);
+      this.notePara.setValue(data.notePara);
+      this.noteDate.setValue(data.noteDate);
+    });
+  }
+
+  updateNote(){
+    return this.noteService.updateNote(
+      this.noteId.value, this.readNoteForm.value
+    ).subscribe( updated => {
+      if(updated){
+        this.router.navigateByUrl('/dashboard')
+      }
+    })
+  }
 }

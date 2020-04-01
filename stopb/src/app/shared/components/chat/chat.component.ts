@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {SocketService} from "../../../services/socket.service";
+import {User} from "../../interface/User";
 
 @Component({
   selector: 'app-chat',
@@ -7,9 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChatComponent implements OnInit {
 
-  constructor() { }
+  message: string;
+  messages: string[] = [];
 
-  ngOnInit(): void {
+  user: User = null;
+
+  constructor(
+    private socketService: SocketService
+  ) {}
+
+  sendMessage() {
+    this.socketService.sendMessage(this.message);
+    this.message = '';
   }
 
+  ngOnInit() {
+    this.socketService.getMessages().subscribe(
+      (message: string) => {
+        this.messages.push(message);
+      });
+  }
 }

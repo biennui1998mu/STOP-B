@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {UiStateService} from '../../shared/services/state/ui-state.service';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Note} from "../../shared/interface/Note";
+import {NoteService} from "../../services/note.service";
+import {PlanService} from "../../services/plan.service";
+import {Plan} from "../../shared/interface/Plan";
 
 @Component({
   selector: 'app-homepage',
@@ -15,10 +18,14 @@ export class HomepageComponent implements OnInit {
   dob: string;
 
   notes: Note[] = [];
+  plans: Plan[] = [];
 
   constructor(
     private uiStateService: UiStateService,
-    private http: HttpClient) {
+    private http: HttpClient,
+    private noteService: NoteService,
+    private planService: PlanService
+  ) {
     this.uiStateService.setPageTitle({
       current: {
         title: 'Dashboard',
@@ -29,22 +36,19 @@ export class HomepageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getNote();
+    this.getPlan();
   }
 
   getNote() {
-    const header = new HttpHeaders({
-      "Authorization": 'Bearer ' + localStorage.getItem('token')
-    });
-    return this.http.get<{
-      count: number,
-      notes: Note[]
-    }>(
-      'http://localhost:3000/notes', {
-        headers: header
-      }
-    ).subscribe(notes => {
-      this.notes = notes.notes;
-    });
+    this.noteService.getNote().subscribe(result => {
+      this.notes = result.notes
+    })
+  }
+
+  getPlan() {
+    this.planService.getPlan().subscribe( result => {
+      this.plans = result.plans
+    })
   }
 }
 

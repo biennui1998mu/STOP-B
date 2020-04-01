@@ -9,26 +9,26 @@ const Task = require('../database/models/task');
 // Take all from list
 router.get('/', checkAuth, (req, res, next) => {
     Plan.find()
-        .select('planTitle planTaskID planPriority planDate planMember _id')
         .exec()
         .then(docs => {
-            res.status(200).json({
+            const response = {
                 count: docs.length,
                 plans: docs.map(doc => {
                     return {
-                        id: doc._id,
-                        title: doc.planTitle,
-                        taskID: doc.planTaskID,
-                        priority: doc.planPriority,
-                        date: doc.planDate,
-                        member: doc.planMember,
+                        _id: doc._id,
+                        planTitle: doc.planTitle,
+                        planTaskID: doc.planTaskID,
+                        planPriority: doc.planPriority,
+                        planDate: doc.planDate,
+                        planMember: doc.planMember,
                         request: {
                             type: 'GET',
                             url: 'http://localhost:3000/plans/' + doc._id
                         }
                     }
                 })
-            });
+            };
+            res.status(200).json(response)
         })
         .catch(err => {
             res.status(500).json({
@@ -38,22 +38,47 @@ router.get('/', checkAuth, (req, res, next) => {
 });
 
 // Search by ID
-router.get('/:planId', checkAuth, (req, res, next) => {
-    res.status(200).json({
-        message: "Plan detail!",
-        planId: req.params.planId
-    })
+router.post('/view', checkAuth, (req, res, next) => {
+    const id = req.body.planId;
+    if(!id) {
+        // ... xu ly validate
+    }
+    Plan.findById(id)
+        .populate(['planTaskID'])
+        .exec()
+        .then(doc => {
+            console.log("From database", doc);
+            if(doc) {
+                return res.status(200).json({
+                    plan: doc,
+                    request: {
+                        type: 'GET',
+                        // description: 'Get all notes',
+                        url: 'http://localhost:3000/plans/'
+                    }
+                })
+            }
+            return res.status(404).json({
+                message: 'No valid id was found',
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).json({
+                error: err
+            })
+        })
 });
 
 // Create plan
-router.post('/', checkAuth, (req, res, next) => {
+router.post('/createPlan', checkAuth, (req, res, next) => {
     const plan = new Plan({
         _id: new mongoose.Types.ObjectId(),
         planTitle: req.body.planTitle,
-        planTaskID: req.body.planTaskID,
+        planTaskID: new mongoose.Types.ObjectId(),
         planPriority: req.body.planPriority,
         planDate: req.body.planDate,
-        planMember: req.body.planPriority
+        planMember: req.body.planMember
     });
     plan.save()
         .then(result => {
@@ -61,12 +86,12 @@ router.post('/', checkAuth, (req, res, next) => {
             res.status(200).json({
                 message: 'plan has been created',
                 createdPlan: {
-                    id: result._id,
-                    title: result.planTitle,
-                    taskID: result.planTaskID,
-                    priority: result.planPriority,
-                    date: result.planDate,
-                    member: result.planMember,
+                    _id: result._id,
+                    planTitle: result.planTitle,
+                    planTaskID: result.planTaskID,
+                    planPriority: result.planPriority,
+                    planDate: result.planDate,
+                    planMember: result.planMember,
                 },
                 request: {
                     type: 'GET',
@@ -80,10 +105,6 @@ router.post('/', checkAuth, (req, res, next) => {
                 error: err
             });
         });
-    res.status(201).json({
-        message: "plans post",
-        createdPlan : plan
-    })
 });
 
 router.patch('/:planId', checkAuth, (req, res, next) => {

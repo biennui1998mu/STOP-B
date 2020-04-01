@@ -15,7 +15,8 @@ const  userSchema = new Schema({
     },
     name : {type: String, required: true},
     dob : {type: Date, required: true},
-    avatar : String
+    avatar : String,
+    status: Boolean
 });
 
 module.exports = mongoose.model('User' ,userSchema);

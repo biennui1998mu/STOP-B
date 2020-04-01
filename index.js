@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+
 const mongoDB = 'mongodb://localhost:27017/stopb';
 mongoose.connect(mongoDB, {
     useNewUrlParser: true,
@@ -59,6 +60,33 @@ app.use((error, req, res, next) => {
     })
 });
 
-app.listen(PORT, () => {
+// Socket.io cho chat
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+
+const user=["nohope1"];
+
+io.on('connection', (socket) => {
+    console.log('Đăng nhập mới: ' + socket.id);
+    socket.on('disconnect', function () {
+        console.log('ID: ' + socket.id + ' đã out');
+    });
+    socket.on("SENT-USER-LOGIN-TO-CLIENT", function (data) {
+        if(user.indexOf(data) >= 0){
+            //fail
+            socket.emit("SERVER-SEND-LOGIN-FAIL");
+        }else{
+            // success
+            user.push(data);
+            socket.emit("SERVER-SEND-DK-TC", data);
+        }
+    })
+});
+
+http.listen(PORT, () => {
     console.log(`Server lives! Port: ${PORT}`);
 });
+
+
+
+

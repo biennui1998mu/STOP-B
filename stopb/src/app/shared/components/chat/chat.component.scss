@@ -88,18 +88,52 @@
     padding: 0.5rem;
 
     display: none;
-    grid-template-rows: 2rem auto 3rem;
+    grid-template-rows: 3rem auto 3rem;
     grid-row-gap: 1rem;
 
-    .friend-name{
+    .friend{
       grid-row: 1/2;
       padding: 0.5rem;
+
+      display: grid;
+      grid-template-columns: 2rem auto;
+      grid-column-gap: 0.5rem;
+
+      .friend-img{
+        grid-column: 1/2;
+        border-radius: 50%;
+        border: 1px solid black;
+        width: 2rem;
+        height: 2rem;
+      }
+      .friend-name{
+        grid-column: 2/3;
+        align-self: center;
+      }
     }
     .chat-box{
       grid-row: 2/3;
+      background: yellow;
     }
     .user-chat{
       grid-row: 3/4;
+
+      display: grid;
+      grid-template-columns: 14rem 4rem;
+      grid-column-gap: 1rem;
+      padding: 0.5rem;
+      background: red;
+
+      .user-input{
+        grid-column: 1/2;
+        height: 2rem;
+        padding: 0.5rem;
+        outline: none;
+        border-radius: 4px;
+      }
+      .user-submit-btn{
+        grid-column: 2/3;
+      }
     }
   }
 }

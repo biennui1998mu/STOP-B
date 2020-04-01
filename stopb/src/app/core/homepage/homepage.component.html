@@ -1,25 +1,13 @@
 <mat-tab-group>
   <mat-tab label="Note">
     <section class="section">
-<!--      <div class="tbl-header">-->
-<!--        <table class="table" cellpadding="0" cellspacing="0" border="0">-->
-<!--          <thead>-->
-<!--          <tr>-->
-<!--            <th class="th">Title</th>-->
-<!--            <th class="th">Created at</th>-->
-<!--          </tr>-->
-<!--          </thead>-->
-<!--        </table>-->
-<!--      </div>-->
       <div class="tbl-content">
-        <table class="table" cellpadding="0" cellspacing="0" border="0">
-          <tbody>
-          <tr [routerLink]="['/note', note._id]" *ngFor="let note of notes">
-            <td class="td">{{note.noteTitle}}</td>
-            <td class="td">{{note.noteDate | date:"dd-MM-yyyy hh:mm:ss"}}</td>
-          </tr>
-          </tbody>
-        </table>
+        <div class="table">
+          <a class="tag" href="" [routerLink]="['/notes', 'view', note._id]" *ngFor="let note of notes">
+            <p class="title">{{note.noteTitle}}</p>
+            <p class="date">{{note.noteDate | date:"dd-MM-yyyy hh:mm:ss"}}</p>
+          </a>
+        </div>
       </div>
     </section>
   </mat-tab>
@@ -27,25 +15,13 @@
 
   <mat-tab label="Plan">
     <section class="section">
-      <!--      <div class="tbl-header">-->
-      <!--        <table class="table" cellpadding="0" cellspacing="0" border="0">-->
-      <!--          <thead>-->
-      <!--          <tr>-->
-      <!--            <th class="th">Title</th>-->
-      <!--            <th class="th">Created at</th>-->
-      <!--          </tr>-->
-      <!--          </thead>-->
-      <!--        </table>-->
-      <!--      </div>-->
       <div class="tbl-content">
-        <table class="table" cellpadding="0" cellspacing="0" border="0">
-          <tbody>
-          <tr routerLink="/plan">
-            <td class="td">AAA</td>
-            <td class="td">2019-20-02</td>
-          </tr>
-          </tbody>
-        </table>
+        <div class="table">
+          <a class="tag" href="" [routerLink]="['/plans', 'view', plan._id]" *ngFor="let plan of plans">
+            <p class="title">{{plan.planTitle}}</p>
+            <p class="date">{{plan.planDate | date:"dd-MM-yyyy hh:mm:ss"}}</p>
+          </a>
+        </div>
       </div>
     </section>
   </mat-tab>

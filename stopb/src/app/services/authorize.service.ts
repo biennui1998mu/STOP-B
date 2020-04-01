@@ -6,6 +6,8 @@ import {TokenService} from "./token.service";
 import {Router} from "@angular/router";
 import {DataStateService} from "./data-state.service";
 import {User} from "../shared/interface/User";
+import * as io from 'socket.io-client';
+import { observable } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,7 @@ export class AuthorizeService {
 
   private url = "http://localhost:3000";
   private header: HttpHeaders;
+  private socket;
 
   constructor(
     private http: HttpClient,
@@ -23,7 +26,8 @@ export class AuthorizeService {
   ) {
     this.header = new HttpHeaders({
       "Authorize": this.tokenService.getToken(),
-    })
+    });
+    this.socket = io(this.url);
   }
 
   get isAuthorize() {
@@ -48,9 +52,12 @@ export class AuthorizeService {
             this.tokenService.setToken(result.token);
             // save user data globally
             this.dataStateService.saveUserState(result.user);
+            // share user status
             return true;
+          }else{
+            // this.socket.emit("FAIL-TO-LOGIN");
+            return false;
           }
-          return false;
         }),
         catchError(error => {
           console.error(error);

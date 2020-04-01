@@ -79,7 +79,7 @@ router.get('/', (req, res, next) => {
 router.get('/:userId', (req, res, next) => {
     const id = req.params.userId;
     User.findById(id)
-        .select('_id username password name dob avatar')
+        // .select('_id username password name dob avatar')
         .exec()
         .then(user => {
             if (user) {

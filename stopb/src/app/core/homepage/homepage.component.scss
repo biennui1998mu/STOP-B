@@ -10,21 +10,24 @@
 
     .table{
       width:100%;
-      table-layout: fixed;
 
-      //.th{
-      //  padding: 1rem 1rem;
-      //  text-align: left;
-      //  font-weight: bold;
-      //  font-size: 1.5rem;
-      //  text-transform: uppercase;
-      //}
-      .td{
-        padding: 1rem;
+      .tag{
+        padding: 0.5rem;
         text-align: left;
         vertical-align:middle;
         text-transform: uppercase;
         border-bottom: solid 1px rgba(255,255,255,0.1);
+        text-decoration: none;
+        color: white;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        .title{
+          grid-column: 1/2;
+        }
+        .date{
+          grid-column: 2/3;
+        }
       }
     }
   }
