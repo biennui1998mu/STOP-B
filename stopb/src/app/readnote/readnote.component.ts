@@ -3,6 +3,7 @@ import {NoteService} from "../services/note.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Note} from "../shared/interface/Note";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {element} from "protractor";
 
 @Component({
   selector: 'app-readnote',
@@ -11,9 +12,9 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class ReadnoteComponent implements OnInit {
 
-  formNote: Note = null;
-
   readNoteForm: FormGroup;
+
+  alertDelete: boolean = false;
 
   get noteTitle() {
     return this.readNoteForm.get('noteTitle');
@@ -72,13 +73,30 @@ export class ReadnoteComponent implements OnInit {
     });
   }
 
+  deleteNote(id: string){
+      return this.noteService.deleteNote(id).subscribe( success => {
+        if(success){
+          alert('Delete note success');
+          this.router.navigateByUrl('/dashboard');
+        }
+      })
+  }
+
   updateNote(){
     return this.noteService.updateNote(
       this.noteId.value, this.readNoteForm.value
     ).subscribe( updated => {
+      console.log(updated);
       if(updated){
         this.router.navigateByUrl('/dashboard')
       }
     })
+  }
+
+  showAlertDelete(){
+    this.alertDelete = true;
+  }
+  hideAlertDelete(){
+    this.alertDelete = false;
   }
 }

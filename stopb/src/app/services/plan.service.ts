@@ -91,4 +91,50 @@ export class PlanService {
       })
     )
   }
+
+  deletePlan(){
+
+  }
+
+  taskCreate(credentials: {
+    taskTitle: string,
+    taskPara: string
+  }) {
+    return this.http.post<{
+      message: string,
+      createdTask? : Task,
+      error: any
+    }>(`${this.url}/createTask`, credentials).pipe(
+      map(result => {
+        if(result.createdTask){
+          return true;
+        }else{
+          return false;
+        }
+      }),
+      catchError(error => {
+        console.log(error);
+        return of(false);
+      })
+    )
+  }
+
+  getTask(taskId: string){
+    return this.http.post<{
+      error: any,
+      task: Task
+    }>(`${this.url}/view`, {taskId: taskId}).pipe(
+      map(result => {
+        if(result.task){
+          return result.task
+        }else {
+          return {}
+        }
+      }),
+      catchError( error => {
+        console.log(error);
+        return error;
+      })
+    )
+  }
 }

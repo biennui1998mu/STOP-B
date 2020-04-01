@@ -31,19 +31,13 @@ export class NoteService {
     noteDate: string
   }) {
     return this.http.post<{
-      token: string;
+      // token: string;
       message: string,
       createdNote? : Note,
       error: any
     }>(`${this.url}/createNote`, credentials, {headers: this.header}).pipe(
       map( result => {
-        if(result.createdNote && result.token){
-          this.tokenService.setToken(result.token);
-          // this.router.navigateByUrl('/dashboard');
-          return true;
-        }else{
-          return false;
-        }
+        return !!result.createdNote;
       }),
       catchError(error => {
         console.log(error);
@@ -103,11 +97,10 @@ export class NoteService {
     notePriority: boolean,
     noteDate: string}) {
     return this.http.patch<{
-      token: string;
       message: string,
       updatenote? : Note,
       error: any
-    }>(`${this.url}/${noteId}`, credentials,  {headers: this.header}).pipe(
+    }>(`${this.url}/${noteId}`, credentials).pipe(
       map( result => {
         if(result.updatenote){
           return true;
@@ -118,6 +111,20 @@ export class NoteService {
       catchError(error => {
         console.log(error);
         return of(false);
+      })
+    )
+  }
+
+  deleteNote(noteId: string){
+    return this.http.delete<{
+      message: string
+    }>(`${this.url}/${noteId}`).pipe(
+      map(result => {
+        return !!result.message;
+      }),
+      catchError(error => {
+        console.log(error);
+        return of (false);
       })
     )
   }

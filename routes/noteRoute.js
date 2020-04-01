@@ -86,7 +86,7 @@ router.post('/createNote', checkAuth, (req, res, next) => {
     note.save()
         .then(result => {
             console.log(result);
-            res.status(200).json({
+            return res.status(200).json({
                 message: "Created note successfully",
                 createdNote: {
                     _id: result._id,
@@ -109,7 +109,7 @@ router.post('/createNote', checkAuth, (req, res, next) => {
 });
 
 
-router.patch('/:noteId', checkAuth, (req, res, next) => {
+router.patch('/:noteId', (req, res, next) => {
     const id = req.params.noteId;
     const updateOps = {...req.body};
 
@@ -135,7 +135,7 @@ router.patch('/:noteId', checkAuth, (req, res, next) => {
         });
 });
 
-router.delete('/:noteId', checkAuth, (req, res, next) => {
+router.delete('/:noteId', (req, res, next) => {
     const id = req.params.noteId;
     Note.remove({_id: id})
         .exec()

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UiStateService } from '../../shared/services/state/ui-state.service';
 import {NoteService} from "../../services/note.service";
 import {Router} from "@angular/router";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-qnote',
@@ -12,17 +13,33 @@ export class QnoteComponent implements OnInit {
 
   private url = 'http://localhost:3000';
 
-  public formNote = {
-    noteTitle: null,
-    notePara: null,
-    notePriority: false,
-    noteDate: null
-  };
+  createNoteFrom: FormGroup;
+
+  get noteTitle() {
+    return this.createNoteFrom.get('noteTitle');
+  }
+
+  get noteDate() {
+    return this.createNoteFrom.get('noteDate');
+  }
+
+  get notePara() {
+    return this.createNoteFrom.get('notePara');
+  }
+
+  get notePriority() {
+    return this.createNoteFrom.get('notePriority');
+  }
+
+  get noteId() {
+    return this.createNoteFrom.get('_id');
+  }
 
   constructor(
     private uiStateService: UiStateService,
     private generalService: NoteService,
-    private router: Router
+    private formBuilder: FormBuilder,
+    private router: Router,
   ) {
     this.uiStateService.setPageTitle({
       current: {
@@ -30,13 +47,22 @@ export class QnoteComponent implements OnInit {
         path: '/note/create',
       },
     });
+    this.createNoteFrom = this.formBuilder.group({
+      _id: [''],
+      noteTitle: ['', [Validators.required, Validators.minLength(2)]],
+      noteDate: ['', [Validators.required]],
+      notePara: [''],
+      notePriority: ['']
+    });
+
   }
 
   ngOnInit(): void {
   }
 
   CreateNote(){
-    return this.generalService.noteCreate(this.formNote).subscribe(succes => {
+    return this.generalService.noteCreate(this.createNoteFrom.value).subscribe(succes => {
+      console.log(succes);
       if(succes){
         this.router.navigateByUrl('/dashboard');
       }

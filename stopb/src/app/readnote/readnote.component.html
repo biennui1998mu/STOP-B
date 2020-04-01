@@ -21,6 +21,12 @@
   <div class="btn">
     <button mat-raised-button (click)="updateNote()" [disabled]="readNoteForm.invalid">Save</button>
     <button mat-raised-button>Done/Disable</button>
-    <button mat-raised-button>Delete</button>
+    <button mat-raised-button (click)="showAlertDelete()">Delete</button>
   </div>
+
+  <mat-card class="alertDelete" *ngIf="alertDelete">
+    <p>Do you confirm Delete this note ?</p>
+    <button class="alert-btn-delete" mat-raised-button (click)="deleteNote(noteId.value)">Delete</button>
+    <button class="alert-btn-cancel" mat-raised-button (click)="hideAlertDelete()">Cancel</button>
+  </mat-card>
 </form>
