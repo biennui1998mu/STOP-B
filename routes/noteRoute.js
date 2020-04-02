@@ -74,6 +74,27 @@ router.post('/view', checkAuth, (req, res, next) => {
         })
 });
 
+//Search by string
+router.post('/search', (req, res) => {
+    const getTitle = req.body.noteTitle;
+
+    if(getTitle.length < 2){
+        return res.json({
+            message: 'Must be at least 2 character'
+        })
+    }else{
+        Note.find({
+            noteTitle : new RegExp(getTitle)
+        }, function (err, notes) {
+            if(notes){
+                return res.json(notes);
+            }else{
+                return err;
+            }
+        }).limit(10)
+    }
+});
+
 // Create note
 router.post('/createNote', checkAuth, (req, res, next) => {
     const note = new Note({

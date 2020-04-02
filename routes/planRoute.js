@@ -107,6 +107,27 @@ router.post('/createPlan', checkAuth, (req, res, next) => {
         });
 });
 
+//Search by string
+router.post('/search', (req, res) => {
+    const getTitle = req.body.planTitle;
+
+    if(getTitle.length < 2){
+        return res.json({
+            message: 'Must be at least 2 character'
+        })
+    }else{
+        Plan.find({
+            planTitle : new RegExp(getTitle)
+        }, function (err, plans) {
+            if(plans){
+                return res.json(plans);
+            }else{
+                return err;
+            }
+        }).limit(10)
+    }
+});
+
 router.patch('/:planId', checkAuth, (req, res, next) => {
     const id = req.params.planId;
     const updateOps = {};

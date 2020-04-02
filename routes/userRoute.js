@@ -105,6 +105,27 @@ router.get('/:userId', (req, res, next) => {
         })
 });
 
+//Search by string
+router.post('/search', (req, res) => {
+    const getUsername = req.body.username;
+
+    if(getUsername.length < 3){
+        return res.json({
+            message: 'Must be at least 3 character'
+        })
+    }else{
+        User.find({
+            username : new RegExp(getUsername)
+        }, function (err, users) {
+            if(users){
+                return res.json(users);
+            }else{
+                return err;
+            }
+        }).limit(10)
+    }
+});
+
 //signup
 router.post('/signup', upload.single('avatar'), (req, res, next) => {
     User
@@ -178,7 +199,7 @@ router.post('/signin', async (req, res, next) => {
             },
             process.env.JWT_KEY,
             {
-                expiresIn: "24h"
+                expiresIn: "1h"
             });
         console.log(token);
         return res.status(200).json({
