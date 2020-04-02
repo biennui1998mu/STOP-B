@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Plan} from "../shared/interface/Plan";
-import {catchError, map} from "rxjs/operators";
-import {Router} from "@angular/router";
-import {of} from "rxjs";
-import {TokenService} from "./token.service";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Plan } from "../shared/interface/Plan";
+import { catchError, map } from "rxjs/operators";
+import { Router } from "@angular/router";
+import { of } from "rxjs";
+import { TokenService } from "./token.service";
 import { Task } from '../shared/interface/Task';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PlanService {
 
@@ -18,11 +18,11 @@ export class PlanService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {
     this.header = new HttpHeaders({
-      "Authorization": "Bearer " + this.tokenService.getToken()
-    })
+      "Authorization": "Bearer " + this.tokenService.getToken(),
+    });
   }
 
   planCreate(credentials: {
@@ -34,65 +34,65 @@ export class PlanService {
     return this.http.post<{
       token: string;
       message: string,
-      createdplan? : Plan,
+      createdplan?: Plan,
       error: any
-    }>(`${this.url}/createPlan`, credentials, {headers: this.header}).pipe(
+    }>(`${this.url}/createPlan`, credentials, { headers: this.header }).pipe(
       map(result => {
-        if(result.createdplan && result.token){
+        if (result.createdplan && result.token) {
           this.tokenService.setToken(result.token);
           return true;
-        }else{
+        } else {
           return false;
         }
       }),
-      catchError( error => {
+      catchError(error => {
         console.log(error);
         return of(false);
-      })
-    )
+      }),
+    );
   }
 
-  getPlan(){
+  getPlan() {
     return this.http.get<{
       token: string,
       error: any,
       count: number,
       plans: Plan[]
-    }>(`${this.url}`, {headers: this.header}).pipe(
-      map( result => {
-        if(result.plans){
+    }>(`${this.url}`, { headers: this.header }).pipe(
+      map(result => {
+        if (result.plans) {
           return result;
-        }else{
+        } else {
           return [];
         }
       }),
-      catchError( error => {
+      catchError(error => {
         console.log(error);
         return [];
-      })
-    )
+      }),
+    );
   }
 
-  readPlan(planId: string){
+  readPlan(planId: string) {
     return this.http.post<{
       token: string,
       error: any,
       plan: Plan
-    }>(`${this.url}/view`, {planId: planId}, {headers: this.header}).pipe(
-      map( result => {
-        if(result.plan){
+    }>(`${this.url}/view`, { planId: planId }, { headers: this.header }).pipe(
+      map(result => {
+        if (result.plan) {
           return result.plan;
         }
-        return {}
+        return {};
       }),
-      catchError( error => {
+      catchError(error => {
         console.log(error);
         return error;
-      })
-    )
+      }),
+    );
   }
 
-  deletePlan(){
+  deletePlan() {
 
   }
 
@@ -102,39 +102,39 @@ export class PlanService {
   }) {
     return this.http.post<{
       message: string,
-      createdTask? : Task,
+      createdTask?: Task,
       error: any
     }>(`${this.url}/createTask`, credentials).pipe(
       map(result => {
-        if(result.createdTask){
+        if (result.createdTask) {
           return true;
-        }else{
+        } else {
           return false;
         }
       }),
       catchError(error => {
         console.log(error);
         return of(false);
-      })
-    )
+      }),
+    );
   }
 
-  getTask(taskId: string){
+  getTask(taskId: string) {
     return this.http.post<{
       error: any,
       task: Task
-    }>(`${this.url}/view`, {taskId: taskId}).pipe(
+    }>(`${this.url}/view`, { taskId: taskId }).pipe(
       map(result => {
-        if(result.task){
-          return result.task
-        }else {
-          return {}
+        if (result.task) {
+          return result.task;
+        } else {
+          return {};
         }
       }),
-      catchError( error => {
+      catchError(error => {
         console.log(error);
         return error;
-      })
-    )
+      }),
+    );
   }
 }

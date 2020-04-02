@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Note} from "../shared/interface/Note";
-import {catchError, map} from "rxjs/operators";
-import {Router} from "@angular/router";
-import {of} from "rxjs";
-import {TokenService} from "./token.service";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Note } from "../shared/interface/Note";
+import { catchError, map } from "rxjs/operators";
+import { Router } from "@angular/router";
+import { of } from "rxjs";
+import { TokenService } from "./token.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NoteService {
 
@@ -17,11 +17,11 @@ export class NoteService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {
     this.header = new HttpHeaders({
-      "Authorization": "Bearer " + this.tokenService.getToken()
-    })
+      "Authorization": "Bearer " + this.tokenService.getToken(),
+    });
   }
 
   noteCreate(credentials: {
@@ -33,37 +33,37 @@ export class NoteService {
     return this.http.post<{
       // token: string;
       message: string,
-      createdNote? : Note,
+      createdNote?: Note,
       error: any
-    }>(`${this.url}/createNote`, credentials, {headers: this.header}).pipe(
-      map( result => {
+    }>(`${this.url}/createNote`, credentials, { headers: this.header }).pipe(
+      map(result => {
         return !!result.createdNote;
       }),
       catchError(error => {
         console.log(error);
         return of(false);
-      })
-    )
+      }),
+    );
   }
 
-  getNote(){
+  getNote() {
     return this.http.get<{
       token: string,
       error: any,
       count: number,
       notes: Note[]
-    }>(`${this.url}`, {headers: this.header}).pipe(
-      map( result => {
-        if(result.notes){
+    }>(`${this.url}`, { headers: this.header }).pipe(
+      map(result => {
+        if (result.notes) {
           return result;
-        }else{
+        } else {
           return [];
         }
       }),
-      catchError( error => {
+      catchError(error => {
         console.log(error);
         return [];
-      })
+      }),
     );
   }
 
@@ -71,51 +71,52 @@ export class NoteService {
    * Tim thong tin cua note bang ID cua note
    * @param noteId
    */
-  readNote(noteId: string){
+  readNote(noteId: string) {
     return this.http.post<{
       token: string,
       error: any,
       note: Note
-    }>(`${this.url}/view`, {noteId: noteId}, {headers: this.header}).pipe(
-      map( result => {
-        if(result.note){
-          return result.note
-        }else {
-          return {}
+    }>(`${this.url}/view`, { noteId: noteId }, { headers: this.header }).pipe(
+      map(result => {
+        if (result.note) {
+          return result.note;
+        } else {
+          return {};
         }
       }),
-      catchError( error => {
+      catchError(error => {
         console.log(error);
         return error;
-      })
-    )
+      }),
+    );
   }
 
   updateNote(noteId: string, credentials: {
     noteTitle: string,
     notePara: string,
     notePriority: boolean,
-    noteDate: string}) {
+    noteDate: string
+  }) {
     return this.http.patch<{
       message: string,
-      updatenote? : Note,
+      updatenote?: Note,
       error: any
     }>(`${this.url}/${noteId}`, credentials).pipe(
-      map( result => {
-        if(result.updatenote){
+      map(result => {
+        if (result.updatenote) {
           return true;
-        }else{
+        } else {
           return false;
         }
       }),
       catchError(error => {
         console.log(error);
         return of(false);
-      })
-    )
+      }),
+    );
   }
 
-  deleteNote(noteId: string){
+  deleteNote(noteId: string) {
     return this.http.delete<{
       message: string
     }>(`${this.url}/${noteId}`).pipe(
@@ -124,8 +125,8 @@ export class NoteService {
       }),
       catchError(error => {
         console.log(error);
-        return of (false);
-      })
-    )
+        return of(false);
+      }),
+    );
   }
 }

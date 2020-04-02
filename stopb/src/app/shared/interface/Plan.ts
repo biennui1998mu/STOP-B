@@ -1,5 +1,5 @@
 export interface Plan {
-  _id : string,
+  _id: string,
   planTitle: string,
   planTaskID: string,
   planPriority: boolean,

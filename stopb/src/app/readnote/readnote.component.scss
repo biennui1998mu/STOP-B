@@ -1,4 +1,4 @@
-.note-board{
+.note-board {
   display: grid;
   grid-template-columns: auto 10rem;
   grid-template-rows: 5rem auto;
@@ -10,7 +10,7 @@
   height: 50rem;
   box-shadow: 0 4px 8px 4px rgba(155, 155, 155);
 
-  .title{
+  .title {
     grid-column: 1/2;
     grid-row: 1/2;
     font-weight: bold;
@@ -22,21 +22,21 @@
     align-self: center;
     border: none;
     outline: none;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   }
 
-  .dob{
+  .dob {
     grid-column: 2/3;
     grid-row: 1/2;
     margin: 1rem 2rem 0 0;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     background: white;
     width: 10rem;
     padding: 0.5rem;
     border-radius: 4px;
   }
 
-  .paragraph{
+  .paragraph {
     grid-column: 1/2;
     grid-row: 2/3;
     outline: none;
@@ -47,23 +47,23 @@
     border-top: 1px solid black;
     border-radius: 4px;
     padding: 1rem;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   }
 
-  .btn{
+  .btn {
     grid-column: 2/3;
     grid-row: 2/3;
     display: grid;
     grid-auto-rows: 2rem;
     grid-row-gap: 1rem;
 
-    button{
+    button {
       width: 10rem;
       height: 2rem;
     }
   }
 
-  .alertDelete{
+  .alertDelete {
     width: 20rem;
     height: 8rem;
     position: absolute;
@@ -74,25 +74,28 @@
     grid-template-columns: 10rem 10rem;
     grid-template-rows: 4rem 4rem;
     padding: 0;
-    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
 
-    p{
+    p {
       grid-column: 1/3;
       grid-row: 1/2;
       justify-self: center;
       align-self: center;
     }
-    button{
+
+    button {
       width: 5rem;
       height: 2rem;
       justify-self: center;
       align-self: center;
     }
-    .alert-btn-delete{
+
+    .alert-btn-delete {
       grid-column: 1/2;
       grid-row: 2/3;
     }
-    .alert-btn-cancel{
+
+    .alert-btn-cancel {
       grid-column: 2/3;
       grid-row: 2/3;
     }

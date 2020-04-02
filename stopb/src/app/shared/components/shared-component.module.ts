@@ -23,10 +23,10 @@ const components = [
     FriendsComponent,
     AccountComponent,
   ],
-    exports: [
-        ...components,
-        SettingComponent,
-    ],
+  exports: [
+    ...components,
+    SettingComponent,
+  ],
   imports: [
     CommonModule,
     CoreImportsModule,

@@ -1,4 +1,4 @@
-.box{
+.box {
   position: absolute;
   top: 0;
   width: 100vw;
@@ -7,13 +7,13 @@
   backdrop-filter: blur(2px);
   z-index: 1;
 
-  .setting{
+  .setting {
     width: 500px;
     height: 500px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
   }
 }

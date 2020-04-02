@@ -1,16 +1,15 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {catchError, map} from "rxjs/operators";
-import {of} from "rxjs";
-import {TokenService} from "./token.service";
-import {Router} from "@angular/router";
-import {DataStateService} from "./data-state.service";
-import {User} from "../shared/interface/User";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { catchError, map } from "rxjs/operators";
+import { of } from "rxjs";
+import { TokenService } from "./token.service";
+import { Router } from "@angular/router";
+import { DataStateService } from "./data-state.service";
+import { User } from "../shared/interface/User";
 import * as io from 'socket.io-client';
-import { observable } from 'rxjs'
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthorizeService {
 
@@ -54,7 +53,7 @@ export class AuthorizeService {
             this.dataStateService.saveUserState(result.user);
             // share user status
             return true;
-          }else{
+          } else {
             // this.socket.emit("FAIL-TO-LOGIN");
             return false;
           }
@@ -62,8 +61,8 @@ export class AuthorizeService {
         catchError(error => {
           console.error(error);
           return of(false);
-        })
-      )
+        }),
+      );
   }
 
   logout() {
@@ -75,7 +74,8 @@ export class AuthorizeService {
     username: string,
     password: string,
     name: string,
-    dob: string}) {
+    dob: string
+  }) {
     return this.http.post<{
       message: string,
       createdUser?: User,
@@ -94,7 +94,7 @@ export class AuthorizeService {
           // trong truowng hop no co status 409 hoac 500
           console.error(error);
           return of(false);
-        })
-      )
+        }),
+      );
   }
 }

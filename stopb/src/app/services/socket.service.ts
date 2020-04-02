@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { Observable } from 'rxjs';
-import {User} from "../shared/interface/User";
+import { User } from "../shared/interface/User";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SocketService {
 
@@ -24,10 +24,10 @@ export class SocketService {
 
   public getMessages = () => {
     return Observable.create((observer) => {
-      this.socket.on('receive-message', function(message) {
+      this.socket.on('receive-message', function (message) {
         observer.next(message);
       });
     });
-  }
+  };
 
 }

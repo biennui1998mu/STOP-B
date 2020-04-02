@@ -1,8 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {UiStateService} from '../../shared/services/state/ui-state.service';
-import {Router} from "@angular/router";
-import {AuthorizeService} from "../../services/authorize.service";
-import {SocketService} from "../../services/socket.service";
+import { Component, OnInit } from '@angular/core';
+import { UiStateService } from '../../shared/services/state/ui-state.service';
+import { Router } from "@angular/router";
+import { AuthorizeService } from "../../services/authorize.service";
 
 @Component({
   selector: 'app-login',
@@ -11,26 +10,25 @@ import {SocketService} from "../../services/socket.service";
 })
 export class LoginComponent implements OnInit {
   hide = true;
-  tab= 0;
+  tab = 0;
 
   public formSignIn = {
     username: null,
-    password: null
+    password: null,
   };
 
-  public formSignup = {
+  public formSignUp = {
     username: null,
     password: null,
     password_confirm: null,
     name: null,
-    dob: null
+    dob: null,
   };
 
   constructor(
     private authorizeService: AuthorizeService,
     private uiStateService: UiStateService,
     private router: Router,
-    private socketService: SocketService
   ) {
     this.uiStateService.setPageTitle({
       current: {
@@ -43,22 +41,22 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSignin() {
+  onSignIn() {
     return this.authorizeService.login(this.formSignIn)
       .subscribe(status => {
         if (status) {
-          this.router.navigateByUrl('/dashboard')
+          this.router.navigateByUrl('/dashboard');
         }
-      })
+      });
   }
 
-  onSignup() {
-    return this.authorizeService.signup(this.formSignup).subscribe(
+  onSignUp() {
+    return this.authorizeService.signup(this.formSignUp).subscribe(
       success => {
         if (success) {
           this.tab = 0; // ve panel sign in
         }
-      })
+      });
   }
 
   changeTab(event) {

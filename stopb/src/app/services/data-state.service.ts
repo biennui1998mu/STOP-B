@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject} from "rxjs";
-import {User} from "../shared/interface/User";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from "rxjs";
+import { User } from "../shared/interface/User";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DataStateService {
 

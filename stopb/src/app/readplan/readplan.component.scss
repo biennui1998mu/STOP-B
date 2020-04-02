@@ -1,4 +1,4 @@
-.plan-board{
+.plan-board {
   display: grid;
   grid-template-columns: auto 10rem;
   grid-template-rows: 5rem auto;
@@ -10,7 +10,7 @@
   height: 50rem;
   box-shadow: 0 4px 8px 4px rgba(155, 155, 155);
 
-  .title{
+  .title {
     grid-column: 1/2;
     grid-row: 1/2;
     font-weight: bold;
@@ -22,61 +22,64 @@
     align-self: center;
     border: none;
     outline: none;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   }
 
-  .dob{
+  .dob {
     grid-column: 2/3;
     grid-row: 1/2;
     margin: 1rem 2rem 0 0;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     background: white;
     width: 10rem;
     padding: 0.5rem;
     border-radius: 4px;
   }
 
-  .listTask{
+  .listTask {
     grid-column: 1/2;
     grid-row: 2/3;
     background: var(--main-color);
     grid-auto-rows: auto;
     grid-row-gap: 1rem;
 
-    .task{
+    .task {
       background: white;
       display: grid;
       grid-template-columns: auto 5rem 5rem 5rem;
       grid-column-gap: 1rem;
       height: max-content;
       padding: 1rem;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 
-      .task-input{
+      .task-input {
         grid-column-gap: 1/2;
         border: 1px solid silver;
         border-radius: 4px;
         padding: 0.5rem;
         background: white;
 
-        &:disabled{
+        &:disabled {
           margin: -1rem;
           border: none;
         }
       }
-      .task-btn-activate{
+
+      .task-btn-activate {
         grid-column-gap: 2/3;
         width: 5rem;
         align-self: center;
         justify-self: center;
       }
-      .task-btn-disable{
+
+      .task-btn-disable {
         grid-column-gap: 3/4;
         width: 5rem;
         align-self: center;
         justify-self: center;
       }
-      .task-btn-delete{
+
+      .task-btn-delete {
         grid-column-gap: 4/5;
         width: 5rem;
         align-self: center;
@@ -85,14 +88,14 @@
     }
   }
 
-  .btn{
+  .btn {
     grid-column: 2/3;
     grid-row: 2/3;
     display: grid;
     grid-auto-rows: 2rem;
     grid-row-gap: 1rem;
 
-    button{
+    button {
       width: 10rem;
       height: 2rem;
     }

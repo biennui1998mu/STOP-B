@@ -33,9 +33,9 @@
             mat-button>
       Setting
     </button>
-    <button class="button"
+    <button (click)="openDialog()"
+            class="button"
             color="primary"
-            (click)="openDialog()"
             mat-button routerLink="/account">
       Account
     </button>

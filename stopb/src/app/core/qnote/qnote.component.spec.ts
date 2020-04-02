@@ -8,9 +8,9 @@ describe('QnoteComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ QnoteComponent ]
+      declarations: [QnoteComponent],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

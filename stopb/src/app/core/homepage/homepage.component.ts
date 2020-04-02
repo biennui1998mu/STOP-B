@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {UiStateService} from '../../shared/services/state/ui-state.service';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Note} from "../../shared/interface/Note";
-import {NoteService} from "../../services/note.service";
-import {PlanService} from "../../services/plan.service";
-import {Plan} from "../../shared/interface/Plan";
+import { Component, OnInit } from '@angular/core';
+import { UiStateService } from '../../shared/services/state/ui-state.service';
+import { HttpClient } from "@angular/common/http";
+import { Note } from "../../shared/interface/Note";
+import { NoteService } from "../../services/note.service";
+import { PlanService } from "../../services/plan.service";
+import { Plan } from "../../shared/interface/Plan";
 
 @Component({
   selector: 'app-homepage',
@@ -24,7 +24,7 @@ export class HomepageComponent implements OnInit {
     private uiStateService: UiStateService,
     private http: HttpClient,
     private noteService: NoteService,
-    private planService: PlanService
+    private planService: PlanService,
   ) {
     this.uiStateService.setPageTitle({
       current: {
@@ -41,14 +41,14 @@ export class HomepageComponent implements OnInit {
 
   getNote() {
     this.noteService.getNote().subscribe(result => {
-      this.notes = result.notes
-    })
+      this.notes = result.notes;
+    });
   }
 
   getPlan() {
-    this.planService.getPlan().subscribe( result => {
-      this.plans = result.plans
-    })
+    this.planService.getPlan().subscribe(result => {
+      this.plans = result.plans;
+    });
   }
 }
 

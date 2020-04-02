@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {Plan} from "../shared/interface/Plan";
-import {PlanService} from "../services/plan.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import { Plan } from "../shared/interface/Plan";
+import { PlanService } from "../services/plan.service";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Task } from '../shared/interface/Task';
 
 @Component({
   selector: 'app-readplan',
   templateUrl: './readplan.component.html',
-  styleUrls: ['./readplan.component.scss']
+  styleUrls: ['./readplan.component.scss'],
 })
 export class ReadplanComponent implements OnInit {
 
@@ -21,15 +21,15 @@ export class ReadplanComponent implements OnInit {
   constructor(
     private planService: PlanService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {
     console.log(this.activatedRoute);
-    this.activatedRoute.paramMap.subscribe( param => {
+    this.activatedRoute.paramMap.subscribe(param => {
       const id = param.get('id');
-      if(!id) {
+      if (!id) {
         // trong truong hop k co id tren url thi tu ve dashboard
         this.router.navigateByUrl('/dashboard');
-      }else {
+      } else {
         this.readPlan(id);
       }
     });
@@ -39,17 +39,18 @@ export class ReadplanComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getInputTaskFieldActivate(){
+  getInputTaskFieldActivate() {
     this.inputTaskField = false;
   }
-  getInputTaskFieldDisable(){
+
+  getInputTaskFieldDisable() {
     this.inputTaskField = true;
   }
 
-  readPlan(id: string){
-    return this.planService.readPlan(id).subscribe( (data : Plan) => {
+  readPlan(id: string) {
+    return this.planService.readPlan(id).subscribe((data: Plan) => {
       this.formPlan = data;
       console.log(data);
-    })
+    });
   }
 }

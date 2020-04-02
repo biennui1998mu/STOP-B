@@ -32,7 +32,7 @@
 
   <mat-card class="chat-inbox">
     <mat-card class="friend">
-      <img class="friend-img" src="" alt="">
+      <img alt="" class="friend-img" src="">
       <p class="friend-name">Do Hoang Nam</p>
     </mat-card>
     <mat-card class="chat-box">
@@ -41,8 +41,8 @@
       </div>
     </mat-card>
     <mat-card class="user-chat">
-      <input class="user-input" type="text" name="message" id="" [(ngModel)]="message">
-      <button class="user-submit-btn" mat-raised-button (click)="sendMessage()">Send</button>
+      <input [(ngModel)]="message" class="user-input" id="" name="message" type="text">
+      <button (click)="sendMessage()" class="user-submit-btn" mat-raised-button>Send</button>
     </mat-card>
   </mat-card>
 

@@ -3,7 +3,7 @@
     <section class="section">
       <div class="tbl-content">
         <div class="table">
-          <a class="tag" href="" [routerLink]="['/notes', 'view', note._id]" *ngFor="let note of notes">
+          <a *ngFor="let note of notes" [routerLink]="['/notes', 'view', note._id]" class="tag" href="">
             <p class="title">{{note.noteTitle}}</p>
             <p class="date">{{note.noteDate | date:"dd-MM-yyyy hh:mm:ss"}}</p>
           </a>
@@ -17,7 +17,7 @@
     <section class="section">
       <div class="tbl-content">
         <div class="table">
-          <a class="tag" href="" [routerLink]="['/plans', 'view', plan._id]" *ngFor="let plan of plans">
+          <a *ngFor="let plan of plans" [routerLink]="['/plans', 'view', plan._id]" class="tag" href="">
             <p class="title">{{plan.planTitle}}</p>
             <p class="date">{{plan.planDate | date:"dd-MM-yyyy hh:mm:ss"}}</p>
           </a>

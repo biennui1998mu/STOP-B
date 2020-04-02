@@ -8,9 +8,9 @@ describe('ReadnoteComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReadnoteComponent ]
+      declarations: [ReadnoteComponent],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

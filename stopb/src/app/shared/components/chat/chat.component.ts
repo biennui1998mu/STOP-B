@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {SocketService} from "../../../services/socket.service";
-import {User} from "../../interface/User";
+import { SocketService } from "../../../services/socket.service";
+import { User } from "../../interface/User";
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.scss']
+  styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnInit {
 
@@ -15,8 +15,9 @@ export class ChatComponent implements OnInit {
   user: User = null;
 
   constructor(
-    private socketService: SocketService
-  ) {}
+    private socketService: SocketService,
+  ) {
+  }
 
   sendMessage() {
     this.socketService.sendMessage(this.message);

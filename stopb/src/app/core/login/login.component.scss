@@ -1,7 +1,4 @@
 .container {
-  //min-height: 100vh;
-  //display: grid;
-  //place-content: center;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -9,6 +6,7 @@
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.51);
   padding: 2rem;
   border-radius: 3px;
+  background: white;
 
   .inner-form {
     display: flex;
@@ -16,13 +14,14 @@
     width: 400px;
     margin: 2.5rem 0 1rem 0;
 
-    .inputfiel {
+    .inputField {
       background: var(--main-color);
     }
 
-    .parenBtn{
+    .parenBtn {
       text-align: center;
-      .button{
+
+      .button {
         width: 10rem;
         height: 3rem;
       }
@@ -32,11 +31,11 @@
 
 }
 
-.background{
+.background {
   width: 100vw;
   height: 100vh;
   background-image: url("background-image/background STOP B.jpg");
-  object-fit: cover;
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
 }

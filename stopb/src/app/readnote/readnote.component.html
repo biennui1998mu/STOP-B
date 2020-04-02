@@ -19,14 +19,14 @@
             rows="10">
   </textarea>
   <div class="btn">
-    <button mat-raised-button (click)="updateNote()" [disabled]="readNoteForm.invalid">Save</button>
+    <button (click)="updateNote()" [disabled]="readNoteForm.invalid" mat-raised-button>Save</button>
     <button mat-raised-button>Done/Disable</button>
-    <button mat-raised-button (click)="showAlertDelete()">Delete</button>
+    <button (click)="showAlertDelete()" mat-raised-button>Delete</button>
   </div>
 
-  <mat-card class="alertDelete" *ngIf="alertDelete">
+  <mat-card *ngIf="alertDelete" class="alertDelete">
     <p>Do you confirm Delete this note ?</p>
-    <button class="alert-btn-delete" mat-raised-button (click)="deleteNote(noteId.value)">Delete</button>
-    <button class="alert-btn-cancel" mat-raised-button (click)="hideAlertDelete()">Cancel</button>
+    <button (click)="deleteNote(noteId.value)" class="alert-btn-delete" mat-raised-button>Delete</button>
+    <button (click)="hideAlertDelete()" class="alert-btn-cancel" mat-raised-button>Cancel</button>
   </mat-card>
 </form>

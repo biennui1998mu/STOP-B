@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Task} from '../../models/Task';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Task } from '../../models/Task';
 
 @Component({
   selector: 'app-new-task',
   templateUrl: './new-task.component.html',
-  styleUrls: ['./new-task.component.scss']
+  styleUrls: ['./new-task.component.scss'],
 })
 export class NewTaskComponent implements OnInit {
 
@@ -33,7 +33,7 @@ export class NewTaskComponent implements OnInit {
     this._task = Object.assign(
       {},
       this.task,
-      {title: newTitle}
+      { title: newTitle },
     );
   }
 

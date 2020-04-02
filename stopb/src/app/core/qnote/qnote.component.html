@@ -1,4 +1,4 @@
-<form action="" [formGroup]="createNoteFrom">
+<form [formGroup]="createNoteFrom" action="">
   <mat-card class="general-information">
     <mat-card-title>
       Note Information
@@ -6,15 +6,15 @@
     <mat-card-content class="general-section-content">
       <mat-form-field appearance="fill" class="span-all">
         <mat-label>Title</mat-label>
-        <input matInput required
+        <input formControlName="noteTitle" matInput
                name="noteTitle"
-               formControlName="noteTitle"
+               required
                required>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="span-all">
         <mat-label>Priority</mat-label>
-        <mat-select required name="notePriority" formControlName="notePriority">
+        <mat-select formControlName="notePriority" name="notePriority" required>
           <mat-option value="true">Important</mat-option>
           <mat-option value="false">Normal</mat-option>
         </mat-select>
@@ -22,9 +22,9 @@
 
       <mat-form-field appearance="fill" class="span-all">
         <mat-label>Choose a date</mat-label>
-        <input [matDatepicker]="picker" matInput
+        <input [matDatepicker]="picker" formControlName="noteDate"
+               matInput
                name="noteDate"
-               formControlName="noteDate"
                required>
         <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
@@ -52,11 +52,11 @@
     <mat-card-content class="detail-section-content">
       <!--  note-input-paper + red/green/blue/orange/...  -->
       <textarea class="note-input-paper hand-writing mat-elevation-z5 red"
+                formControlName="notePara"
                 maxlength="200"
                 minlength="0"
-                placeholder="Detail of the note..."
                 name="notePara"
-                formControlName="notePara"
+                placeholder="Detail of the note..."
                 required></textarea>
       <small class="count-character">
         0/200
@@ -65,11 +65,11 @@
   </mat-card>
 
   <mat-card class="confirmation">
-    <button class="button"
-            color="primary"
-            mat-raised-button
+    <button (click)="CreateNote()"
             [disabled]="createNoteFrom.invalid"
-            (click)="CreateNote()">
+            class="button"
+            color="primary"
+            mat-raised-button>
       Create Note
     </button>
   </mat-card>

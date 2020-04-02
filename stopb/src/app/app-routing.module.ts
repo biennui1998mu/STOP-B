@@ -7,9 +7,7 @@ import { ReadnoteComponent } from "./readnote/readnote.component";
 import { ReadplanComponent } from "./readplan/readplan.component";
 import { LayoutsComponent } from './shared/layouts/layouts.component';
 import { LoginComponent } from './core/login/login.component';
-import {AuthenticateGuard} from "./shared/guard/authenticate.guard";
-import {AccountComponent} from "./shared/components/account/account.component";
-
+import { AuthenticateGuard } from "./shared/guard/authenticate.guard";
 
 const routes: Routes = [
   {

@@ -1,23 +1,23 @@
 <form class="plan-board">
-  <input class="title" maxlength="100"
-         name="noteTitle"
-         [ngModel]="formPlan.planTitle" [value]="formPlan?.planTitle">
+  <input [ngModel]="formPlan.planTitle" [value]="formPlan?.planTitle"
+         class="title"
+         maxlength="100" name="noteTitle">
   <mat-form-field class="dob">
     <mat-label>Choose a date</mat-label>
-    <input matInput
-           [matDatepicker]="picker"
-           [value]="formPlan?.planDate"
+    <input [matDatepicker]="picker"
            [ngModel]="formPlan.planDate"
+           [value]="formPlan?.planDate"
+           matInput
            name="noteDate">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
   <mat-card class="listTask">
     <div class="task">
-        <input class="task-input" matInput [disabled]="inputTaskField" name="taskTitle">
-        <button class="task-btn-activate" mat-raised-button (click)="getInputTaskFieldActivate()">Activate</button>
-        <button class="task-btn-disable" mat-raised-button (click)="getInputTaskFieldDisable()">Disable</button>
-        <button class="task-btn-delete" mat-raised-button>Delete</button>
+      <input [disabled]="inputTaskField" class="task-input" matInput name="taskTitle">
+      <button (click)="getInputTaskFieldActivate()" class="task-btn-activate" mat-raised-button>Activate</button>
+      <button (click)="getInputTaskFieldDisable()" class="task-btn-disable" mat-raised-button>Disable</button>
+      <button class="task-btn-delete" mat-raised-button>Delete</button>
     </div>
   </mat-card>
   <div class="btn">
