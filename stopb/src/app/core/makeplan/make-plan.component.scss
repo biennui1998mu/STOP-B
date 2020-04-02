@@ -31,8 +31,6 @@
     }
 
     .btn-create {
-      grid-row: 1/2;
-      //grid-column: 1/2;
       button {
         margin-right: 1rem;
 
@@ -58,5 +56,47 @@
   .button {
     width: 80%;
     margin: 3rem 0 0 0;
+  }
+}
+
+.wrapper {
+  display: grid;
+  grid-template-areas: 'info tasks' 'confirm tasks';
+  grid-template-columns: 350px auto;
+  grid-template-rows: max-content auto;
+  grid-gap: 1rem;
+  padding: 1rem;
+
+  .plan-info {
+    grid-area: info;
+    background: white;
+    display: flex;
+    flex-direction: column;
+
+    > * {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .task-dynamic {
+    grid-area: tasks;
+    display: flex;
+    flex-direction: column;
+    align-self: start;
+
+    > * {
+      margin-bottom: 1rem;
+    }
+
+    .btn-confirm {
+      align-self: flex-end;
+    }
+  }
+
+  .confirmation {
+    grid-area: confirm;
+    display: flex;
+    justify-content: flex-end;
+    align-self: flex-end;
   }
 }

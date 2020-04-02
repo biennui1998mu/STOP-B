@@ -1,0 +1,51 @@
+<div class="wrapper">
+  <mat-card [formGroup]="createPlanForm" class="plan-info">
+    <h2 class="title">Plan Info</h2>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input formControlName="planTitle" matInput maxlength="100" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="planPriority" required>
+        <mat-option value="Important">Important</mat-option>
+        <mat-option value="Normal">Normal</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Choose a date</mat-label>
+      <input [matDatepicker]="picker" formControlName="planDate" matInput>
+      <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Member</mat-label>
+      <mat-select formControlName="planMember" multiple>
+        <mat-option *ngFor="let member of memberList" [value]="member">{{member}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-card>
+
+  <mat-card class="task-dynamic">
+    <h2>List task</h2>
+
+    <app-new-task (taskUpdated)="updateTask($event, index)"
+                  *ngFor="let task of tasks, let index = index"
+                  [task]="task"></app-new-task>
+    <button (click)="addTask()"
+            class="btn-confirm"
+            mat-raised-button>
+      Create new task
+    </button>
+  </mat-card>
+
+  <mat-card class="confirmation">
+    <button color="primary" mat-raised-button>
+      Create
+    </button>
+  </mat-card>
+</div>

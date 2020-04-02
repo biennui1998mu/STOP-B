@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './core/login/login.component';
 import { HomepageComponent } from './core/homepage/homepage.component';
 import { QnoteComponent } from './core/qnote/qnote.component';
-import { MakeplanComponent } from './core/makeplan/makeplan.component';
+import { MakePlanComponent } from './core/makeplan/make-plan.component';
 import { ReadnoteComponent } from './readnote/readnote.component';
 import { ReadplanComponent } from './readplan/readplan.component';
 import { SharedComponentModule } from "./shared/components/shared-component.module";
@@ -22,7 +22,7 @@ import { AuthenticateGuard } from "./shared/guard/authenticate.guard";
     LoginComponent,
     HomepageComponent,
     QnoteComponent,
-    MakeplanComponent,
+    MakePlanComponent,
     ReadnoteComponent,
     ReadplanComponent,
   ],
