@@ -16,7 +16,7 @@ export class QnoteComponent implements OnInit {
 
   constructor(
     private uiStateService: UiStateService,
-    private generalService: NoteService,
+    private noteService: NoteService,
     private formBuilder: FormBuilder,
     private router: Router,
   ) {
@@ -60,9 +60,8 @@ export class QnoteComponent implements OnInit {
   }
 
   CreateNote() {
-    return this.generalService.noteCreate(this.createNoteFrom.value).subscribe(succes => {
-      console.log(succes);
-      if (succes) {
+    return this.noteService.noteCreate(this.createNoteFrom.value).subscribe(success => {
+      if (success) {
         this.router.navigateByUrl('/dashboard');
       }
     });

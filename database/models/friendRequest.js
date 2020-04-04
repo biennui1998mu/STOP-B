@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const friendsSchema = new Schema({
+const friendRequestSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
     requester: String,
     recipient: String,
-    status: Boolean
+    status: Number
 });
 
-module.exports = mongoose.model('Friends', friendsSchema);
+module.exports = mongoose.model('friendRequest', friendRequestSchema);

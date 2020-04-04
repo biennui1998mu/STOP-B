@@ -10,13 +10,13 @@ const  userSchema = new Schema({
         unique: true},
     password : {
         type: String,
-        required: true,
-        // match: /^[a-zA-Z]\w{3,14}$/
+        required: true
     },
     name : {type: String, required: true},
     dob : {type: Date, required: true},
+    userStatus: Boolean,
     avatar : String,
-    status: Boolean
+    // friends: {type: [mongoose.Schema.Types.ObjectId]}
 });
 
 module.exports = mongoose.model('User' ,userSchema);

@@ -33,11 +33,11 @@ const upload = multer({
 });
 
 const User = require('../database/models/user');
+const friendRequest = require('../database/models/friendRequest')
 
-//list user
-router.get('/', (req, res, next) => {
+// take all user from list user
+router.post('/', (req, res, next) => {
     User.find()
-        .select('_id username password name dob avatar')
         .exec()
         .then(users => {
             if (users.length >= 1) {
@@ -51,10 +51,7 @@ router.get('/', (req, res, next) => {
                             name: user.name,
                             dob: user.dob,
                             avatar: user.avatar,
-                            request: {
-                                type: 'GET',
-                                url: 'http://localhost:3000/users/' + user._id
-                            }
+                            userStatus: Boolean
                         }
                     })
                 };
@@ -75,24 +72,22 @@ router.get('/', (req, res, next) => {
         })
 });
 
-//search by ID
-router.get('/:userId', (req, res, next) => {
+// take user by ID
+router.post('/view', (req, res, next) => {
     const id = req.params.userId;
+    if (!id) {
+        // ... xu ly validate
+    }
     User.findById(id)
-        // .select('_id username password name dob avatar')
         .exec()
         .then(user => {
             if (user) {
                 res.status(200).json({
-                    user: user,
-                    request: {
-                        type: 'GET',
-                        url: 'http://localhost:3000/users'
-                    }
+                    user: user
                 })
             } else {
                 res.status(404).json({
-                    message: 'No user found by ID'
+                    message: 'No user found by id'
                 })
             }
             res.status(200).json(user);
@@ -105,29 +100,32 @@ router.get('/:userId', (req, res, next) => {
         })
 });
 
-//Search by string
+// Search user by username or name
 router.post('/search', (req, res) => {
-    const getUsername = req.body.username;
+    const input = req.body.search;
 
-    if(getUsername.length < 3){
+    if(input.length < 2){
         return res.json({
-            message: 'Must be at least 3 character'
+            message: 'Must be at least 2 character'
         })
     }else{
         User.find({
-            username : new RegExp(getUsername)
+            $or: [
+                {username: new RegExp(input)},
+                {name: new RegExp(input)}
+            ]
         }, function (err, users) {
             if(users){
                 return res.json(users);
             }else{
                 return err;
             }
-        }).limit(10)
+        }).limit(10);
     }
 });
 
-//signup
-router.post('/signup', upload.single('avatar'), (req, res, next) => {
+// signup
+router.post('/signUp', upload.single('avatar'), (req, res, next) => {
     User
         .find({username: req.body.username})
         .exec()
@@ -149,6 +147,7 @@ router.post('/signup', upload.single('avatar'), (req, res, next) => {
                             password: hash,
                             name: req.body.name,
                             dob: req.body.dob,
+                            avatar : req.body.avatar
                         });
                         user.save()
                             .then(result => {
@@ -160,10 +159,7 @@ router.post('/signup', upload.single('avatar'), (req, res, next) => {
                                         password: result.password,
                                         name: result.name,
                                         dob: result.dob,
-                                        response: {
-                                            type: 'GET',
-                                            url: 'http://localhost:3000/users/' + result._id
-                                        }
+                                        avatar : result.avatar
                                     }
                                 })
                             })
@@ -178,8 +174,8 @@ router.post('/signup', upload.single('avatar'), (req, res, next) => {
         })
 });
 
-//signin
-router.post('/signin', async (req, res, next) => {
+// signin
+router.post('/signIn', async (req, res, next) => {
     const {username, password} = req.body;
 
     const user = await User.findOne({username: username}).exec();
@@ -253,12 +249,37 @@ router.post('/signin', async (req, res, next) => {
     //     });
 });
 
-router.delete('/:userid', checkAuth, (req, res, next) => {
-    User.remove({id: req.params.userid})
+// Update user
+router.post('/update/:userId', (req, res) => {
+    const id = req.params.userId;
+    const updateOps = {...req.body};
+
+    console.log(updateOps);
+
+    User.update({_id: id}, {$set: updateOps})
+        .exec()
+        .then(result => {
+            console.log(result);
+            return res.status(200).json({
+                message: 'User updated',
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).json({
+                Error: err
+            });
+        });
+});
+
+// Delete user
+router.post('/delete/:userId', (req, res, next) => {
+    const id = req.params.userId;
+    User.remove({id: id})
         .exec()
         .then(result => {
             res.status(200).json({
-                message: 'User was deleted'
+                message: 'User was deleted',
             });
         })
         .catch(err => {
@@ -267,6 +288,11 @@ router.delete('/:userid', checkAuth, (req, res, next) => {
                 Error: err,
             })
         });
+});
+
+router.post('/sendRequest', (req, res) => {
+    const id = req.params._id
+    User.find(id)
 });
 
 module.exports = router;

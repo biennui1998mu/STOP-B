@@ -75,7 +75,6 @@ export class ReadnoteComponent implements OnInit {
   deleteNote(id: string) {
     return this.noteService.deleteNote(id).subscribe(success => {
       if (success) {
-        alert('Delete note success');
         this.router.navigateByUrl('/dashboard');
       }
     });

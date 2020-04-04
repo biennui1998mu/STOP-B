@@ -1,10 +1,11 @@
 const express = require('express');
-const router = express.Router();
+const router =  express.Router();
 const mongoose = require('mongoose');
+const checkAuth = require("../middleware/check-auth");
 
 const Task = require('../database/models/task');
 
-//get task from plan
+// Take task from db by ID
 router.post('/view', (req, res, next) => {
     const id = req.body.taskId;
     if(!id){
@@ -33,9 +34,14 @@ router.post('/view', (req, res, next) => {
 // Create task
 router.post('/createTask', (req, res, next) => {
     const task = new Task({
-        _id : mongoose.Schema.Types.ObjectId,
+        _id : new mongoose.Types.ObjectId,
         taskTitle : req.body.taskTitle,
-        taskPara : req.body.taskPara
+        taskDescription : req.body.taskDescription,
+        taskPriority : req.body.taskPriority,
+        taskStartDate: Date.now(),
+        taskEndDate: req.body.taskEndDate,
+        taskStatus : req.body.taskStatus,
+        taskManager : req.body.taskManager,
     });
     task.save()
         .then(result => {
@@ -43,8 +49,13 @@ router.post('/createTask', (req, res, next) => {
                 message: 'created task successfully',
                 createdTask: {
                     _id: result._id,
-                    taskTitle: result.taskTitle,
-                    // taskPara : req.body.taskPara
+                    taskTitle : result.taskTitle,
+                    taskDescription : result.taskDescription,
+                    taskPriority : result.taskPriority,
+                    taskStartDate: result.taskStartDate,
+                    taskEndDate: result.taskEndDate,
+                    taskStatus : result.taskStatus,
+                    taskManager : result.taskManager,
                 }
             })
         })
@@ -56,6 +67,45 @@ router.post('/createTask', (req, res, next) => {
         })
 });
 
+// Update task by ID
+router.post('/update/:taskId', (req, res) => {
+    const id = req.params.taskId;
+    const updateOps = {...req.body};
 
+    console.log(updateOps);
+
+    Task.update({_id: id}, {$set: updateOps})
+        .exec()
+        .then(result => {
+            console.log(result);
+            return res.status(200).json({
+                message: 'Task updated',
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).json({
+                Error: err
+            });
+        });
+});
+
+// Delete task by ID
+router.post('/delete/:taskId', (req, res) => {
+    const id = req.params.taskId;
+    Task.remove({_id: id})
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message: 'Task was deleted',
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                Error: err,
+            })
+        });
+});
 
 module.exports = router;

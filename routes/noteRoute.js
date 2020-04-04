@@ -5,8 +5,8 @@ const checkAuth = require("../middleware/check-auth");
 
 const Note = require('../database/models/note');
 
-// Take all from list
-router.get('/', checkAuth, (req, res, next) => {
+// Take all notes from list
+router.post('/', (req, res) => {
     Note.find()
         .exec()
         .then(docs => {
@@ -16,23 +16,15 @@ router.get('/', checkAuth, (req, res, next) => {
                     return {
                         _id: doc._id,
                         noteTitle: doc.noteTitle,
-                        notePara: doc.notePara,
+                        noteDescription: doc.noteDescription,
                         notePriority: doc.notePriority,
-                        noteDate: doc.noteDate,
-                        request: {
-                            type: 'GET',
-                            url: 'http://localhost:3000/notes/' + doc._id
-                        }
+                        noteStartDate: doc.noteStartDate,
+                        noteStatus: doc.noteStatus,
+                        noteProjectId: doc.noteProjectId,
                     }
                 })
             };
-            // if(doc.length > 0){
             res.status(200).json(response)
-            // }else{
-            //     res.status(404).json({
-            //         message: 'There is no note that you can find'
-            //     })
-            // }
         })
         .catch(err => {
             console.log(err);
@@ -42,8 +34,8 @@ router.get('/', checkAuth, (req, res, next) => {
         });
 });
 
-// Search by ID
-router.post('/view', checkAuth, (req, res, next) => {
+// Take note from db by ID
+router.post('/view', (req, res) => {
     const id = req.body.noteId;
     if (!id) {
         // ... xu ly validate
@@ -51,15 +43,9 @@ router.post('/view', checkAuth, (req, res, next) => {
     Note.findById(id)
         .exec()
         .then(doc => {
-            console.log("From database", doc);
             if (doc) {
                 return res.status(200).json({
                     note: doc,
-                    request: {
-                        type: 'GET',
-                        // description: 'Get all notes',
-                        url: 'http://localhost:3000/notes/'
-                    }
                 });
             }
             return res.status(404).json({
@@ -74,35 +60,39 @@ router.post('/view', checkAuth, (req, res, next) => {
         })
 });
 
-//Search by string
+// Search by string
 router.post('/search', (req, res) => {
-    const getTitle = req.body.noteTitle;
+    const input = req.body.search;
 
-    if(getTitle.length < 2){
+    if(input.length < 2){
         return res.json({
             message: 'Must be at least 2 character'
         })
     }else{
         Note.find({
-            noteTitle : new RegExp(getTitle)
+            $or: [
+                {noteTitle: new RegExp(input)},
+                {noteDescription: new RegExp(input)}
+            ]
         }, function (err, notes) {
             if(notes){
                 return res.json(notes);
             }else{
                 return err;
             }
-        }).limit(10)
+        }).limit(10);
     }
 });
 
-// Create note
-router.post('/createNote', checkAuth, (req, res, next) => {
+// Create new note
+router.post('/createNote', (req, res) => {
     const note = new Note({
         _id: new mongoose.Types.ObjectId(),
         noteTitle: req.body.noteTitle,
-        notePara: req.body.notePara,
+        noteDescription: req.body.noteDescription,
         notePriority: req.body.notePriority,
-        noteDate: req.body.noteDate
+        noteStartDate: Date.now(),
+        noteProjectId: req.body.noteProjectId
     });
     note.save()
         .then(result => {
@@ -112,12 +102,10 @@ router.post('/createNote', checkAuth, (req, res, next) => {
                 createdNote: {
                     _id: result._id,
                     noteTitle: result.noteTitle,
-                    notePara: result.notePara,
+                    noteDescription: result.noteDescription,
                     notePriority: result.notePriority,
-                    request: {
-                        type: 'GET',
-                        url: 'http://localhost:3000/notes/' + result._id
-                    }
+                    noteStartDate: result.noteStartDate,
+                    noteProjectId: result.noteProjectId
                 }
             });
         })
@@ -129,8 +117,8 @@ router.post('/createNote', checkAuth, (req, res, next) => {
         });
 });
 
-
-router.patch('/:noteId', (req, res, next) => {
+// Update note by ID
+router.post('/update/:noteId', (req, res) => {
     const id = req.params.noteId;
     const updateOps = {...req.body};
 
@@ -142,10 +130,6 @@ router.patch('/:noteId', (req, res, next) => {
             console.log(result);
             return res.status(200).json({
                 message: 'Note updated',
-                request: {
-                    type: 'GET',
-                    url: 'http://localhost:3000/notes/' + id
-                }
             });
         })
         .catch(err => {
@@ -156,21 +140,14 @@ router.patch('/:noteId', (req, res, next) => {
         });
 });
 
-router.delete('/:noteId', (req, res, next) => {
+// Delete note by ID
+router.post('/delete/:noteId', (req, res) => {
     const id = req.params.noteId;
     Note.remove({_id: id})
         .exec()
         .then(result => {
             res.status(200).json({
                 message: 'Note was deleted',
-                request: {
-                    type: 'POST',
-                    url: 'http://localhost:3000/notes',
-                    body: {
-                        noteTitle: 'String',
-                        notePriority: 'Boolean'
-                    }
-                }
             });
         })
         .catch(err => {

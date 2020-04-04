@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task } from "../../shared/models/Task";
 import { UiStateService } from '../../shared/services/state/ui-state.service';
+import {PlanService} from "../../services/plan.service";
+import {Router} from "@angular/router";
+import {TaskService} from "../../services/task.service";
 
 @Component({
   selector: 'app-makePlan',
@@ -14,10 +17,14 @@ export class MakePlanComponent implements OnInit {
   tasks: Task[] = [];
 
   createPlanForm: FormGroup;
+  createTaskForm: FormGroup;
 
   constructor(
     private uiStateService: UiStateService,
     private formBuilder: FormBuilder,
+    private planService: PlanService,
+    private taskService: TaskService,
+    private router: Router
   ) {
     this.uiStateService.setPageTitle({
       current: {
@@ -25,6 +32,20 @@ export class MakePlanComponent implements OnInit {
         path: '/plan/create',
       },
     });
+  }
+
+  ngOnInit(): void {
+    this.createPlanForm = this.formBuilder.group({
+      planTitle: ['', [Validators.required, Validators.minLength(2)]],
+      planPriority: ['', [Validators.required]],
+      planDate: ['', [Validators.required]],
+      planMember: ['', [Validators.required]],
+    });
+    this.createTaskForm = this.formBuilder.group(({
+      _id: [''],
+      taskTitle: ['', [Validators.required, Validators.minLength(2)]],
+      taskPara: ['']
+    }))
   }
 
   get planTitle() {
@@ -43,13 +64,12 @@ export class MakePlanComponent implements OnInit {
     return this.createPlanForm.get('planMember');
   }
 
-  ngOnInit(): void {
-    this.createPlanForm = this.formBuilder.group({
-      planTitle: ['', [Validators.required, Validators.minLength(2)]],
-      planPriority: ['', [Validators.required]],
-      planDate: ['', [Validators.required]],
-      planMember: ['', [Validators.required]],
-    });
+  get taskTitle() {
+    return this.createTaskForm.get('taskTitle');
+  }
+
+  get taskPara() {
+    return this.createTaskForm.get('taskPara');
   }
 
   addTask() {
@@ -59,10 +79,26 @@ export class MakePlanComponent implements OnInit {
   }
 
   updateTask(newVal: Task, index: number) {
+    console.log(newVal);
     if (newVal) {
       this.tasks.splice(index, 1, newVal);
     } else {
       this.tasks.splice(index, 1);
     }
+  }
+
+  createTask(){
+    return this.taskService.taskCreate(this.createTaskForm.value).subscribe()
+  }
+  deleteTask(id: string){
+    return this.taskService.taskDelete(id).subscribe();
+  }
+
+  createPlan(){
+      return this.planService.planCreate(this.createPlanForm.value).subscribe( success => {
+        if (!success) {
+          this.router.navigateByUrl('/dashboard');
+        }
+      })
   }
 }

@@ -2,26 +2,29 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-
-const mongoDB = 'mongodb://localhost:27017/stopb';
-mongoose.connect(mongoDB, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-
 mongoose.Promise = global.Promise;
+
+const username = process.env.DB_USER;
+const password = process.env.DB_PASSWORD;
+const dbName = process.env.DB_NAME;
+
+mongoose.connect(`mongodb://${username}:${password}@nosama-shard-00-00-dstgw.gcp.mongodb.net:27017,nosama-shard-00-01-dstgw.gcp.mongodb.net:27017,nosama-shard-00-02-dstgw.gcp.mongodb.net:27017/${dbName}?replicaSet=NOsama-shard-0&ssl=true&authSource=admin`, {
+    useNewUrlParser: true,
+}, (status) => {
+    console.log(status);
+});
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 const noteRoutes = require('./routes/noteRoute');
-const planRoutes = require('./routes/planRoute');
+const projectRoutes = require('./routes/projectRoute');
 const userRoutes = require('./routes/userRoute');
+const taskRoutes = require('./routes/taskRoute')
 
 const corsOptions = {
     origin: '*',
@@ -42,8 +45,9 @@ app.use(cookieParser());
 
 //routes handle request
 app.use('/notes', noteRoutes);
-app.use('/plans', planRoutes);
+app.use('/projects', projectRoutes);
 app.use('/users', userRoutes);
+app.use('/tasks', taskRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('not found');
@@ -54,7 +58,7 @@ app.use((req, res, next) => {
 app.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.json({
-        error : {
+        error: {
             message: error.message
         }
     })
@@ -64,7 +68,7 @@ app.use((error, req, res, next) => {
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-const user=["nohope1"];
+const user = ["nohope1"];
 
 io.on('connection', (socket) => {
     console.log('Đăng nhập mới: ' + socket.id);
@@ -72,10 +76,10 @@ io.on('connection', (socket) => {
         console.log('ID: ' + socket.id + ' đã out');
     });
     socket.on("SENT-USER-LOGIN-TO-CLIENT", function (data) {
-        if(user.indexOf(data) >= 0){
+        if (user.indexOf(data) >= 0) {
             //fail
             socket.emit("SERVER-SEND-LOGIN-FAIL");
-        }else{
+        } else {
             // success
             user.push(data);
             socket.emit("SERVER-SEND-DK-TC", data);

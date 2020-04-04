@@ -10,8 +10,8 @@
     <mat-form-field appearance="outline">
       <mat-label>Priority</mat-label>
       <mat-select formControlName="planPriority" required>
-        <mat-option value="Important">Important</mat-option>
-        <mat-option value="Normal">Normal</mat-option>
+        <mat-option value="true">Important</mat-option>
+        <mat-option value="false">Normal</mat-option>
       </mat-select>
     </mat-form-field>
 
@@ -35,7 +35,7 @@
 
     <app-new-task (taskUpdated)="updateTask($event, index)"
                   *ngFor="let task of tasks, let index = index"
-                  [task]="task"></app-new-task>
+                  [task]="task" [formGroup]="createTaskForm"></app-new-task>
     <button (click)="addTask()"
             class="btn-confirm"
             mat-raised-button>
@@ -44,7 +44,10 @@
   </mat-card>
 
   <mat-card class="confirmation">
-    <button color="primary" mat-raised-button>
+    <button color="primary"
+            (click)="createPlan()"
+            [disabled]="createPlanForm.invalid && createTaskForm.invalid"
+            mat-raised-button>
       Create
     </button>
   </mat-card>

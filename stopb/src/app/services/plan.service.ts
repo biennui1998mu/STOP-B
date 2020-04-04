@@ -27,23 +27,19 @@ export class PlanService {
 
   planCreate(credentials: {
     planTitle: string,
+    planTaskID: string,
     planPriority: boolean,
     planDate: string,
     planMember: []
   }) {
     return this.http.post<{
-      token: string;
+      // token: string;
       message: string,
       createdplan?: Plan,
       error: any
-    }>(`${this.url}/createPlan`, credentials, { headers: this.header }).pipe(
+    }>(`${this.url}/createPlan`, credentials, { headers: this.header}).pipe(
       map(result => {
-        if (result.createdplan && result.token) {
-          this.tokenService.setToken(result.token);
-          return true;
-        } else {
-          return false;
-        }
+        return !!result.createdplan;
       }),
       catchError(error => {
         console.log(error);
@@ -73,12 +69,12 @@ export class PlanService {
     );
   }
 
-  readPlan(planId: string) {
+  readPlan(projectId: string) {
     return this.http.post<{
       token: string,
       error: any,
       plan: Plan
-    }>(`${this.url}/view`, { planId: planId }, { headers: this.header }).pipe(
+    }>(`${this.url}/view`, { projectId: projectId }, { headers: this.header }).pipe(
       map(result => {
         if (result.plan) {
           return result.plan;
@@ -96,45 +92,4 @@ export class PlanService {
 
   }
 
-  taskCreate(credentials: {
-    taskTitle: string,
-    taskPara: string
-  }) {
-    return this.http.post<{
-      message: string,
-      createdTask?: Task,
-      error: any
-    }>(`${this.url}/createTask`, credentials).pipe(
-      map(result => {
-        if (result.createdTask) {
-          return true;
-        } else {
-          return false;
-        }
-      }),
-      catchError(error => {
-        console.log(error);
-        return of(false);
-      }),
-    );
-  }
-
-  getTask(taskId: string) {
-    return this.http.post<{
-      error: any,
-      task: Task
-    }>(`${this.url}/view`, { taskId: taskId }).pipe(
-      map(result => {
-        if (result.task) {
-          return result.task;
-        } else {
-          return {};
-        }
-      }),
-      catchError(error => {
-        console.log(error);
-        return error;
-      }),
-    );
-  }
 }
