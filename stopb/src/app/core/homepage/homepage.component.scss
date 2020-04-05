@@ -96,6 +96,7 @@
       grid-gap: 0.5rem;
       grid-template-columns: 1fr;
       grid-template-rows: repeat(3, max-content);
+      text-decoration: none;
 
       .header {
         position: relative;
