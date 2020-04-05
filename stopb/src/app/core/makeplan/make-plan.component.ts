@@ -90,12 +90,10 @@ export class MakePlanComponent implements OnInit {
   createTask(){
     return this.taskService.taskCreate(this.createTaskForm.value).subscribe()
   }
-  deleteTask(id: string){
-    return this.taskService.taskDelete(id).subscribe();
-  }
+
 
   createPlan(){
-      return this.planService.planCreate(this.createPlanForm.value).subscribe( success => {
+      return this.planService.projectCreate(this.createPlanForm.value).subscribe( success => {
         if (!success) {
           this.router.navigateByUrl('/dashboard');
         }

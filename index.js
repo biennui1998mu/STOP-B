@@ -70,23 +70,12 @@ app.use((error, req, res, next) => {
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-const user = ["nohope1"];
-
 io.on('connection', (socket) => {
-    console.log('Đăng nhập mới: ' + socket.id);
+    let token = socket.handshake.query.token;
+    console.log('Đăng nhập mới: ' + token);
     socket.on('disconnect', function () {
         console.log('ID: ' + socket.id + ' đã out');
     });
-    socket.on("SENT-USER-LOGIN-TO-CLIENT", function (data) {
-        if (user.indexOf(data) >= 0) {
-            //fail
-            socket.emit("SERVER-SEND-LOGIN-FAIL");
-        } else {
-            // success
-            user.push(data);
-            socket.emit("SERVER-SEND-DK-TC", data);
-        }
-    })
 });
 
 http.listen(PORT, () => {

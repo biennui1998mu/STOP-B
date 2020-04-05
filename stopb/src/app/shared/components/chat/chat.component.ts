@@ -18,24 +18,8 @@ export class ChatComponent implements OnInit {
   ) {
   }
 
-  sendMessage() {
-    this.socketService.sendMessage(this.message);
-    this.message = '';
-  }
-
   ngOnInit() {
-    this.socketService.getMessages().subscribe(
-      (message: string) => {
-        this.messages.push(message);
-      });
+    this.socketService.setupSocketConnection();
   }
 
-
-  // getMyInfo(username: string){
-  //   return this.userService.getMyInfo(username).subscribe( (data: User) => {
-  //     this.username.setValue(data.username);
-  //     this.name.setValue(data.name);
-  //     this.dob.setValue(data.dob);
-  //   })
-  // }
 }

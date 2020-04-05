@@ -138,7 +138,7 @@ router.post('/delete/:taskId', (req, res) => {
 });
 
 // query 2 tasks, high priority
-router.post('/iptTask', (req, res) => {
+router.post('/importantTask', (req, res) => {
     Task.find({
         taskPriority: {
             $lte : 2
