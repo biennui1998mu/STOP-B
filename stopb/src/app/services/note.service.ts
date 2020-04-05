@@ -28,7 +28,6 @@ export class NoteService {
     noteTitle: string,
     noteDescription: string,
     notePriority: number,
-    noteStartDate: string,
     noteProjectId: string
   }) {
     return this.http.post<{
@@ -98,7 +97,6 @@ export class NoteService {
     noteTitle: string,
     noteDescription: string,
     notePriority: number,
-    noteStartDate: string,
     noteProjectId: string
   }) {
     return this.http.post<{

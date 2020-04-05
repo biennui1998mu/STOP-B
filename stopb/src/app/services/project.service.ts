@@ -75,6 +75,25 @@ export class ProjectService {
     );
   }
 
+  getProjectHighPriority(){
+    return this.http.post<{
+      projects: Project[],
+      err: any
+    }>(`${this.url}/iptProject`, { headers: this.header}).pipe(
+      map( result => {
+        if(result.projects){
+          return result;
+        }else{
+          return []
+        }
+      }),
+      catchError(error => {
+        console.log(error);
+        return [];
+      })
+    )
+  }
+
   readProject(projectId: string) {
     return this.http.post<{
       token: string,

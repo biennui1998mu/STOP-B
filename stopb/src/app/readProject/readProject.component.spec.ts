@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReadplanComponent } from './readplan.component';
+import { ReadplanComponent } from './readProject.component';
 
 describe('ReadplanComponent', () => {
   let component: ReadplanComponent;

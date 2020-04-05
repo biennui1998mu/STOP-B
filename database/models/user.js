@@ -16,7 +16,7 @@ const  userSchema = new Schema({
     dob : {type: Date, required: true},
     userStatus: Boolean,
     avatar : String,
-    // friends: {type: [mongoose.Schema.Types.ObjectId]}
+    friends: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'}
 });
 
 module.exports = mongoose.model('User' ,userSchema);

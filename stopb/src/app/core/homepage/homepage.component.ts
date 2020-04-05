@@ -36,7 +36,7 @@ export class HomepageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getNote();
-    this.getProject();
+    this.getProjectHighPriority();
   }
 
   getNote() {
@@ -45,8 +45,8 @@ export class HomepageComponent implements OnInit {
     });
   }
 
-  getProject() {
-    this.projectService.getAllProject().subscribe(result => {
+  getProjectHighPriority() {
+    this.projectService.getProjectHighPriority().subscribe(result => {
       this.projects = result.projects;
     });
   }

@@ -5,6 +5,35 @@ const checkAuth = require("../middleware/check-auth");
 
 const Task = require('../database/models/task');
 
+// Take all tasks from list
+router.post('/', (req, res) => {
+    Task.find()
+        .exec()
+        .then(docs => {
+            const response = {
+                count: docs.length,
+                tasks : docs.map(doc => {
+                    return {
+                        _id: doc._id,
+                        taskTitle: doc.taskTitle,
+                        taskDescription: doc.taskDescription,
+                        taskPriority: doc.taskPriority,
+                        taskStartDate: doc.taskStartDate,
+                        taskEndDate: doc.taskEndDate,
+                        taskStatus: doc.taskStatus,
+                        taskManager: doc.taskManager
+                    }
+                })
+            };
+            res.status(200).json(response)
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        })
+});
+
 // Take task from db by ID
 router.post('/view', (req, res, next) => {
     const id = req.body.taskId;
@@ -41,7 +70,7 @@ router.post('/createTask', (req, res, next) => {
         taskStartDate: Date.now(),
         taskEndDate: req.body.taskEndDate,
         taskStatus : req.body.taskStatus,
-        taskManager : req.body.taskManager,
+        taskManager : req.body.taskManager
     });
     task.save()
         .then(result => {
@@ -106,6 +135,23 @@ router.post('/delete/:taskId', (req, res) => {
                 Error: err,
             })
         });
+});
+
+// query 2 tasks, high priority
+router.post('/iptTask', (req, res) => {
+    Task.find({
+        taskPriority: {
+            $lte : 2
+        },
+        taskStatus: true,
+
+    }, function (err, tasks) {
+        if(tasks){
+            return res.json(tasks);
+        }else{
+            return err;
+        }
+    }).limit(2)
 });
 
 module.exports = router;

@@ -51,7 +51,7 @@ router.post('/', (req, res, next) => {
                             name: user.name,
                             dob: user.dob,
                             avatar: user.avatar,
-                            userStatus: Boolean
+                            userStatus: user.userStatus
                         }
                     })
                 };
@@ -102,7 +102,7 @@ router.post('/view', (req, res, next) => {
 
 // Search user by username or name
 router.post('/search', (req, res) => {
-    const input = req.body.search;
+    const input = req.body.input;
 
     if(input.length < 2){
         return res.json({
@@ -288,11 +288,6 @@ router.post('/delete/:userId', (req, res, next) => {
                 Error: err,
             })
         });
-});
-
-router.post('/sendRequest', (req, res) => {
-    const id = req.params._id
-    User.find(id)
 });
 
 module.exports = router;

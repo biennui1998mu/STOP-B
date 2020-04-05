@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const checkAuth = require("../middleware/check-auth");
 
 const Project = require('../database/models/project');
+const Task = require('../database/models/task');
 
 // Take all projects from list
 router.post('/', (req, res) => {
@@ -172,6 +173,27 @@ router.post('/delete/:projectId', (req, res) => {
                 Error : err,
             })
         });
+});
+
+// query 3 projects, high priority
+router.post('/iptProject', (req, res) => {
+    Project.find({
+        // $or: [
+        //     {projectPriority: 1},
+        //     {projectPriority: 2},
+        // ],
+        projectPriority: {
+            $lte : 2
+        },
+        projectStatus: true,
+
+    }, function (err, projects) {
+        if(projects){
+            return res.json(projects);
+        }else{
+            return err;
+        }
+    }).limit(3)
 });
 
 module.exports = router;

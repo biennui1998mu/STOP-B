@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const projectSchema = new Schema({
     _id : mongoose.Schema.Types.ObjectId,
-    projectUserId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+    projectUserId: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     projectTitle: {type: String, required: true},
     projectDescription: String,
     projectPriority: {type: Number, required: true},

@@ -26,15 +26,86 @@ export class TaskService {
 
   taskCreate(credentials: {
     taskTitle: string,
-    taskPara: string
+    taskDescription: string,
+    taskPriority: number,
+    taskStartDate: string,
+    taskEndDate: string,
+    taskStatus: boolean,
+    taskManager: string
   }) {
     return this.http.post<{
+      // token: string;
       message: string,
       createdTask?: Task,
       error: any
-    }>(`${this.url}/createTask`, credentials).pipe(
+    }>(`${this.url}/createProject`, credentials, { headers: this.header}).pipe(
       map(result => {
-        if (result.createdTask) {
+        return !!result.createdTask;
+      }),
+      catchError(error => {
+        console.log(error);
+        return of(false);
+      }),
+    );
+  }
+
+  getAllTask() {
+    return this.http.post<{
+      token: string,
+      error: any,
+      count: number,
+      tasks: Task[]
+    }>(`${this.url}`, { headers: this.header }).pipe(
+      map(result => {
+        if (result.tasks) {
+          return result;
+        } else {
+          return [];
+        }
+      }),
+      catchError(error => {
+        console.log(error);
+        return [];
+      }),
+    );
+  }
+
+  readTask(taskId: string) {
+    return this.http.post<{
+      token: string,
+      error: any,
+      task: Task
+    }>(`${this.url}/view`, { taskId: taskId }, { headers: this.header }).pipe(
+      map(result => {
+        if (result.task) {
+          return result.task;
+        }
+        return {};
+      }),
+      catchError(error => {
+        console.log(error);
+        return error;
+      }),
+    );
+  }
+
+  updateTask(taskId: string, credentials: {
+    taskId: string,
+    taskTitle: string,
+    taskDescription: string,
+    taskPriority: number,
+    taskStartDate: string,
+    taskEndDate: string,
+    taskStatus: boolean,
+    taskManager: string
+  }) {
+    return this.http.post<{
+      message: string,
+      updatedTask?: Task,
+      error: any
+    }>(`${this.url}/update`, credentials).pipe(
+      map(result => {
+        if (result.updatedTask) {
           return true;
         } else {
           return false;
@@ -47,36 +118,17 @@ export class TaskService {
     );
   }
 
-  getTask(taskId: string) {
+  DeleteTask(taskId: string) {
     return this.http.post<{
-      error: any,
-      task: Task
-    }>(`${this.url}/view`, { taskId: taskId }).pipe(
+      message: string
+    }>(`${this.url}/delete`, {taskId: taskId}).pipe(
       map(result => {
-        if (result.task) {
-          return result.task;
-        } else {
-          return {};
-        }
+        return !!result.message;
       }),
       catchError(error => {
         console.log(error);
-        return error;
+        return of(false);
       }),
     );
-  }
-
-  taskDelete(taskId: string){
-    return this.http.delete<{
-      message: string
-    }>(`${this.url}/${taskId}`).pipe(
-      map( result => {
-        return !!result.message;
-      }),
-      catchError( error => {
-        console.log(error);
-        return of(false);
-      })
-    )
   }
 }

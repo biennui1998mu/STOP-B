@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { Plan } from "../shared/interface/Project";
+import { Project } from "../shared/interface/Project";
 import { ProjectService } from "../services/project.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Task } from '../shared/interface/Task';
 
 @Component({
-  selector: 'app-readplan',
-  templateUrl: './readplan.component.html',
-  styleUrls: ['./readplan.component.scss'],
+  selector: 'app-readProject',
+  templateUrl: './readProject.component.html',
+  styleUrls: ['./readProject.component.scss'],
 })
-export class ReadplanComponent implements OnInit {
+export class ReadProjectComponent implements OnInit {
 
-  formPlan: Plan = null;
+  formPlan: Project = null;
   formTask: Task = null;
 
   inputTaskField: boolean;
@@ -48,7 +48,7 @@ export class ReadplanComponent implements OnInit {
   }
 
   readPlan(id: string) {
-    return this.planService.readPlan(id).subscribe((data: Plan) => {
+    return this.planService.readProject(id).subscribe((data: Project) => {
       this.formPlan = data;
       console.log(data);
     });

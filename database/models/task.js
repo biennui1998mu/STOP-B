@@ -13,4 +13,4 @@ const taskSchema = new Schema({
     taskManager: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'}
 });
 
-module.exports = mongoose.model('Task' , taskSchema)
+module.exports = mongoose.model('Task' , taskSchema);

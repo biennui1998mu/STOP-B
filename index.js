@@ -24,7 +24,8 @@ const PORT = process.env.PORT || 5000;
 const noteRoutes = require('./routes/noteRoute');
 const projectRoutes = require('./routes/projectRoute');
 const userRoutes = require('./routes/userRoute');
-const taskRoutes = require('./routes/taskRoute')
+const taskRoutes = require('./routes/taskRoute');
+const friendRoutes = require('./routes/FriendRoute');
 
 const corsOptions = {
     origin: '*',
@@ -48,6 +49,7 @@ app.use('/notes', noteRoutes);
 app.use('/projects', projectRoutes);
 app.use('/users', userRoutes);
 app.use('/tasks', taskRoutes);
+app.use('/friends', friendRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('not found');
