@@ -79,10 +79,10 @@ export class ProjectService {
     return this.http.post<{
       projects: Project[],
       err: any
-    }>(`${this.url}/iptProject`, { headers: this.header}).pipe(
+    }>(`${this.url}/importantProject`, { headers: this.header}).pipe(
       map( result => {
         if(result.projects){
-          return result;
+          return result.projects;
         }else{
           return []
         }

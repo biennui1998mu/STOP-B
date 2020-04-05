@@ -176,7 +176,7 @@ router.post('/delete/:projectId', (req, res) => {
 });
 
 // query 3 projects, high priority
-router.post('/iptProject', (req, res) => {
+router.post('/importantProject', (req, res) => {
     Project.find({
         // $or: [
         //     {projectPriority: 1},

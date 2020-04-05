@@ -58,7 +58,7 @@ export class TaskService {
     }>(`${this.url}`, { headers: this.header }).pipe(
       map(result => {
         if (result.tasks) {
-          return result;
+          return result.tasks;
         } else {
           return [];
         }
