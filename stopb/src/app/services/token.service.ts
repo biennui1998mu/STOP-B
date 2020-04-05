@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as jwtDecode from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -20,4 +21,9 @@ export class TokenService {
     localStorage.clear();
   }
 
+  decodeJwt(){
+    const token = localStorage.getItem('token');
+    const decoded = jwtDecode(token);
+    console.log(decoded);
+  }
 }

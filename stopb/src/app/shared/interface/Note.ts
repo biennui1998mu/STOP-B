@@ -1,7 +1,10 @@
 export interface Note {
   _id: string,
+  noteUserId: string,
   noteTitle: string,
-  notePara: string,
-  notePriority: boolean,
-  noteDate: string
+  noteDescription: string,
+  notePriority: number,
+  noteStartDate: string,
+  noteStatus: boolean,
+  noteProjectId: string
 }

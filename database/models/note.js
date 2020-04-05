@@ -4,12 +4,13 @@ const Schema = mongoose.Schema;
 
 const noteSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
+    noteUserId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     noteTitle: { type: String, required: true},
     noteDescription: String,
     notePriority: {type: Number, required: true},
     noteStartDate: Date,
     noteStatus: Boolean,
-    noteProjectId: {type: [mongoose.Schema.Types.ObjectId], ref: 'Project'},
+    noteProjectId: {type: mongoose.Schema.Types.ObjectId, ref: 'Project'},
 });
 
 module.exports = mongoose.model('Note', noteSchema);

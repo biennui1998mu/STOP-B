@@ -3,8 +3,8 @@ import { UiStateService } from '../../shared/services/state/ui-state.service';
 import { HttpClient } from "@angular/common/http";
 import { Note } from "../../shared/interface/Note";
 import { NoteService } from "../../services/note.service";
-import { PlanService } from "../../services/plan.service";
-import { Plan } from "../../shared/interface/Plan";
+import { ProjectService } from "../../services/project.service";
+import { Project } from "../../shared/interface/Project";
 
 @Component({
   selector: 'app-homepage',
@@ -18,13 +18,13 @@ export class HomepageComponent implements OnInit {
   dob: string;
 
   notes: Note[] = [];
-  plans: Plan[] = [];
+  projects: Project[] = [];
 
   constructor(
     private uiStateService: UiStateService,
     private http: HttpClient,
     private noteService: NoteService,
-    private planService: PlanService,
+    private projectService: ProjectService,
   ) {
     this.uiStateService.setPageTitle({
       current: {
@@ -36,18 +36,18 @@ export class HomepageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getNote();
-    this.getPlan();
+    this.getProject();
   }
 
   getNote() {
-    this.noteService.getNote().subscribe(result => {
+    this.noteService.getAllNote().subscribe(result => {
       this.notes = result.notes;
     });
   }
 
-  getPlan() {
-    this.planService.getPlan().subscribe(result => {
-      this.plans = result.plans;
+  getProject() {
+    this.projectService.getAllProject().subscribe(result => {
+      this.projects = result.projects;
     });
   }
 }

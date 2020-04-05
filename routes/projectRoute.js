@@ -44,7 +44,7 @@ router.post('/view', (req, res) => {
     if(!id) {
         // ... xu ly validate
     }
-    Plan.findById(id)
+    Project.findById(id)
         .populate(['projectTaskID'])
         .exec()
         .then(doc => {
@@ -110,7 +110,7 @@ router.post('/createProject', (req, res) => {
             console.log(result);
             res.status(200).json({
                 message: 'Project has been created',
-                createdPlan: {
+                createdProject: {
                     _id: result._id,
                     projectTitle: result.projectTitle,
                     projectDescription: result.projectDescription,

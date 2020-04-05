@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Note } from "../shared/interface/Note";
+import { Project } from "../shared/interface/Project";
 import { catchError, map } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { of } from "rxjs";
 import { TokenService } from "./token.service";
+import { Task } from '../shared/interface/Task';
+import {Note} from "../shared/interface/Note";
 
 @Injectable({
   providedIn: 'root',
 })
-export class NoteService {
+export class ProjectService {
 
-  private url = "http://localhost:3000/notes";
+  private url = "http://localhost:3000/projects";
   private header: HttpHeaders;
 
   constructor(
@@ -24,21 +26,26 @@ export class NoteService {
     });
   }
 
-  noteCreate(credentials: {
-    noteTitle: string,
-    noteDescription: string,
-    notePriority: number,
-    noteStartDate: string,
-    noteProjectId: string
+  projectCreate(credentials: {
+    projectTitle: string,
+    projectDescription: string,
+    projectPriority: number,
+    projectStartDate: string,
+    projectEndDate: string,
+    projectStatus: boolean,
+    projectTaskID: string,
+    projectManager: string,
+    projectModerator: string,
+    projectMember: string
   }) {
     return this.http.post<{
-      token: string;
+      // token: string;
       message: string,
-      createdNote?: Note,
+      createdProject?: Project,
       error: any
-    }>(`${this.url}/createNote`, credentials, { headers: this.header }).pipe(
+    }>(`${this.url}/createProject`, credentials, { headers: this.header}).pipe(
       map(result => {
-        return !!result.createdNote;
+        return !!result.createdProject;
       }),
       catchError(error => {
         console.log(error);
@@ -47,15 +54,15 @@ export class NoteService {
     );
   }
 
-  getAllNote() {
+  getAllProject() {
     return this.http.post<{
       token: string,
       error: any,
       count: number,
-      notes: Note[]
+      projects: Project[]
     }>(`${this.url}`, { headers: this.header }).pipe(
       map(result => {
-        if (result.notes) {
+        if (result.projects) {
           return result;
         } else {
           return [];
@@ -68,23 +75,17 @@ export class NoteService {
     );
   }
 
-  /**
-   * Tim thong tin cua note bang ID cua note
-   * @param noteId
-   */
-  readNote(noteId: string) {
+  readProject(projectId: string) {
     return this.http.post<{
       token: string,
       error: any,
-      message: string,
-      note: Note
-    }>(`${this.url}/view`, { noteId: noteId }, { headers: this.header }).pipe(
+      project: Project
+    }>(`${this.url}/view`, { projectId: projectId }, { headers: this.header }).pipe(
       map(result => {
-        if (result.note) {
-          return result.note;
-        } else {
-          return {};
+        if (result.project) {
+          return result.project;
         }
+        return {};
       }),
       catchError(error => {
         console.log(error);
@@ -93,21 +94,27 @@ export class NoteService {
     );
   }
 
-  updateNote(noteId: string, credentials: {
-    noteId: string,
-    noteTitle: string,
-    noteDescription: string,
-    notePriority: number,
-    noteStartDate: string,
-    noteProjectId: string
+  updateProject(projectId: string, credentials: {
+    projectId: string,
+    projectUserId: string,
+    projectTitle: string,
+    projectDescription: string,
+    projectPriority: number,
+    projectStartDate: string,
+    projectEndDate: string,
+    projectStatus: boolean,
+    projectTaskID: string,
+    projectManager: string,
+    projectModerator: string,
+    projectMember: string
   }) {
     return this.http.post<{
       message: string,
-      updatedNote?: Note,
+      updatedProject?: Project,
       error: any
     }>(`${this.url}/update`, credentials).pipe(
       map(result => {
-        if (result.updatedNote) {
+        if (result.updatedProject) {
           return true;
         } else {
           return false;
@@ -120,10 +127,10 @@ export class NoteService {
     );
   }
 
-  deleteNote(noteId: string) {
+  deleteProject(projectId: string) {
     return this.http.post<{
       message: string
-    }>(`${this.url}/delete`, {noteId: noteId}).pipe(
+    }>(`${this.url}/delete`, {projectId: projectId}).pipe(
       map(result => {
         return !!result.message;
       }),
@@ -133,4 +140,5 @@ export class NoteService {
       }),
     );
   }
+
 }

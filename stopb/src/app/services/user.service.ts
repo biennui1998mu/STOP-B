@@ -21,23 +21,4 @@ export class UserService {
     });
   }
 
-  getMyInfo(username: string) {
-    return this.http.post<{
-      token: string,
-      error: any,
-      user: User
-    }>(`${this.url}/view`, { username: username }, { headers: this.header }).pipe(
-      map(result => {
-        if (result.user) {
-          return result.user;
-        } else {
-          return {};
-        }
-      }),
-      catchError(error => {
-        console.log(error);
-        return error;
-      }),
-    );
-  }
 }

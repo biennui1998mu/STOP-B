@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
         cb(null, './uploads');
     },
     filename: function (req, file, cb) {
-        cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
+        cb(null, new Date().toISOString().replace(/:/g, '-') + " " + file.originalname);
     }
 });
 
@@ -147,7 +147,7 @@ router.post('/signUp', upload.single('avatar'), (req, res, next) => {
                             password: hash,
                             name: req.body.name,
                             dob: req.body.dob,
-                            avatar : req.body.avatar
+                            avatar : req.file.path
                         });
                         user.save()
                             .then(result => {
@@ -275,7 +275,7 @@ router.post('/update/:userId', (req, res) => {
 // Delete user
 router.post('/delete/:userId', (req, res, next) => {
     const id = req.params.userId;
-    User.remove({id: id})
+    User.remove({_id: id})
         .exec()
         .then(result => {
             res.status(200).json({

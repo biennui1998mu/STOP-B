@@ -5,7 +5,7 @@
         <div class="table">
           <a *ngFor="let note of notes" [routerLink]="['/notes', 'view', note._id]" class="tag" href="">
             <p class="title">{{note.noteTitle}}</p>
-            <p class="date">{{note.noteDate | date:"dd-MM-yyyy hh:mm:ss"}}</p>
+            <p class="date">{{note.noteStartDate | date:"dd-MM-yyyy hh:mm:ss"}}</p>
           </a>
         </div>
       </div>
