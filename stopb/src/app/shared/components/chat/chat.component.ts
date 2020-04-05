@@ -14,12 +14,36 @@ export class ChatComponent implements OnInit {
   username: string;
 
   constructor(
-    private socketService: SocketService,
-  ) {
+    private socketService: SocketService) {
   }
 
   ngOnInit() {
-    this.socketService.setupSocketConnection();
+    // Kết nối socket io và gán token
+    this.socketService
+      .setupSocketConnection();
+
+    // Lấy user có trong mảng User/ = online
+    this.socketService.getUserOnline();
+
+    // Lấy messages
+      this.socketService.getMessage();
+
+    // NoTi typing
+      this.socketService.noTiTyping();
+
+    // NoTi not typing
+    this.socketService.noTiNotTyping();
   }
 
+  sendMessage(){
+    this.socketService.userSendMessage(this.message);
+    this.message = '';
+  }
+
+  onFocus(){
+    this.socketService.onFocus();
+  }
+  outFocus(){
+    this.socketService.outFocus();
+  }
 }
