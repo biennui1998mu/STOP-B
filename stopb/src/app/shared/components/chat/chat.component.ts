@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { SocketService } from "../../../services/socket.service";
-import { User } from "../../interface/User";
-import * as jwtDecode from 'jwt-decode';
 
 @Component({
   selector: 'app-chat',
@@ -18,14 +16,6 @@ export class ChatComponent implements OnInit {
   constructor(
     private socketService: SocketService,
   ) {
-    this.decodeJwt();
-  }
-
-  decodeJwt(){
-    const token = localStorage.getItem('token');
-    const decoded = jwtDecode(token);
-    console.log(decoded);
-    this.username = decoded.username;
   }
 
   sendMessage() {

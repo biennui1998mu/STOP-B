@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Plan } from "../shared/interface/Plan";
-import { PlanService } from "../services/plan.service";
+import { Plan } from "../shared/interface/Project";
+import { ProjectService } from "../services/project.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Task } from '../shared/interface/Task';
 
@@ -19,7 +19,7 @@ export class ReadplanComponent implements OnInit {
   arr = new Array(14);
 
   constructor(
-    private planService: PlanService,
+    private planService: ProjectService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
   ) {

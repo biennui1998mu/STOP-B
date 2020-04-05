@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task } from "../../shared/models/Task";
 import { UiStateService } from '../../shared/services/state/ui-state.service';
-import {PlanService} from "../../services/plan.service";
+import {ProjectService} from "../../services/project.service";
 import {Router} from "@angular/router";
 import {TaskService} from "../../services/task.service";
 
@@ -22,7 +22,7 @@ export class MakePlanComponent implements OnInit {
   constructor(
     private uiStateService: UiStateService,
     private formBuilder: FormBuilder,
-    private planService: PlanService,
+    private planService: ProjectService,
     private taskService: TaskService,
     private router: Router
   ) {
