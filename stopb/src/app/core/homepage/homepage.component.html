@@ -1,28 +1,79 @@
-<mat-tab-group>
-  <mat-tab label="Note">
-    <section class="section">
-      <div class="tbl-content">
-        <div class="table">
-          <a *ngFor="let note of notes" [routerLink]="['/notes', 'view', note._id]" class="tag" href="">
-            <p class="title">{{note.noteTitle}}</p>
-            <p class="date">{{note.noteDate | date:"dd-MM-yyyy hh:mm:ss"}}</p>
-          </a>
-        </div>
-      </div>
-    </section>
-  </mat-tab>
+<!--<mat-tab-group>-->
+<!--  <mat-tab label="Note">-->
+<!--    <section class="section">-->
+<!--      <div class="tbl-content">-->
+<!--        <div class="table">-->
+<!--          <a *ngFor="let note of notes" [routerLink]="['/notes', 'view', note._id]" class="tag" href="">-->
+<!--            <p class="title">{{note.noteTitle}}</p>-->
+<!--            <p class="date">{{note.noteDate | date:"dd-MM-yyyy hh:mm:ss"}}</p>-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </section>-->
+<!--  </mat-tab>-->
 
 
-  <mat-tab label="Plan">
-    <section class="section">
-      <div class="tbl-content">
-        <div class="table">
-          <a *ngFor="let plan of plans" [routerLink]="['/plans', 'view', plan._id]" class="tag" href="">
-            <p class="title">{{plan.planTitle}}</p>
-            <p class="date">{{plan.planDate | date:"dd-MM-yyyy hh:mm:ss"}}</p>
-          </a>
-        </div>
+<!--  <mat-tab label="Plan">-->
+<!--    <section class="section">-->
+<!--      <div class="tbl-content">-->
+<!--        <div class="table">-->
+<!--          <a *ngFor="let plan of plans" [routerLink]="['/plans', 'view', plan._id]" class="tag" href="">-->
+<!--            <p class="title">{{plan.planTitle}}</p>-->
+<!--            <p class="date">{{plan.planDate | date:"dd-MM-yyyy hh:mm:ss"}}</p>-->
+<!--          </a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </section>-->
+<!--  </mat-tab>-->
+<!--</mat-tab-group>-->
+
+<div class="mission-column">
+  <div class="upper-control mat-elevation-z5">
+    <div class="title">
+      Your notes
+    </div>
+    <label class="search">
+      <input class="input-custom"
+             id="search_note"
+             name="search_note"
+             placeholder="Find your note here"
+             type="text">
+      <mat-icon class="icon-input">search</mat-icon>
+    </label>
+  </div>
+
+  <div class="list-available">
+    <div *ngFor="let note of notes"
+         [class.finished]="note.noteStatus"
+         [class.high]="note.notePriority === 1"
+         [class.medium]="note.notePriority === 2"
+         class="item mat-elevation-z1 note-card">
+      <div class="header">
+        {{note.noteTitle}}
+        <mat-icon class="icon-header">zoom_out_map</mat-icon>
       </div>
-    </section>
-  </mat-tab>
-</mat-tab-group>
+      <small class="time">
+        {{note.noteStartDate | date:"dd-MM-yyyy hh:mm:ss"}}
+      </small>
+      <textarea class="textarea-custom" disabled>{{note.noteDescription}}</textarea>
+    </div>
+
+    <a class="see-more" href="">See more</a>
+  </div>
+</div>
+
+<div class="mission-column">
+  <div class="upper-control mat-elevation-z5">
+    <div class="title">
+      Your tasks
+    </div>
+    <label class="search">
+      <input class="input-custom"
+             id="search_task"
+             name="search_note"
+             placeholder="Find your note here"
+             type="text">
+      <mat-icon class="icon-input">search</mat-icon>
+    </label>
+  </div>
+</div>

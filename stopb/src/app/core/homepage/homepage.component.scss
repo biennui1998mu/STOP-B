@@ -1,36 +1,177 @@
-.section {
-  margin: 0;
-  background: -webkit-linear-gradient(left, #fdc830, #f37335);
-  background: linear-gradient(to right, #fdc830, #f37335);
+//.section {
+//  margin: 0;
+//  background: -webkit-linear-gradient(left, #fdc830, #f37335);
+//  background: linear-gradient(to right, #fdc830, #f37335);
+//
+//  .tbl-content {
+//    height: max-content;
+//    overflow-x: auto;
+//    border: 1px solid rgba(255, 255, 255, 0.3);
+//
+//    .table {
+//      width: 100%;
+//
+//      .tag {
+//        padding: 0.5rem;
+//        text-align: left;
+//        vertical-align: middle;
+//        text-transform: uppercase;
+//        border-bottom: solid 1px rgba(255, 255, 255, 0.1);
+//        text-decoration: none;
+//        color: white;
+//        display: grid;
+//        grid-template-columns: 1fr 1fr;
+//
+//        .title {
+//          grid-column: 1/2;
+//        }
+//
+//        .date {
+//          grid-column: 2/3;
+//        }
+//      }
+//    }
+//  }
+//}
 
-  .tbl-content {
-    height: max-content;
-    overflow-x: auto;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+:host {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-gap: 1rem;
+}
 
-    .table {
-      width: 100%;
+.mission-column {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: max-content auto;
+  grid-gap: 1rem;
 
-      .tag {
-        padding: 0.5rem;
-        text-align: left;
-        vertical-align: middle;
-        text-transform: uppercase;
-        border-bottom: solid 1px rgba(255, 255, 255, 0.1);
-        text-decoration: none;
-        color: white;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+  .upper-control {
+    display: grid;
+    grid-template-columns: auto max-content;
+    grid-gap: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 4px;
+    align-items: center;
 
-        .title {
-          grid-column: 1/2;
+    .title {
+      font-size: 1.2rem;
+      text-transform: capitalize;
+      font-weight: bold;
+    }
+
+    .search {
+      position: relative;
+
+      .input-custom {
+        width: 150px;
+        padding-right: 2rem;
+      }
+
+      .icon-input {
+        position: absolute;
+        top: 50%;
+        right: 1rem;
+        transform: translate(50%, -50%);
+      }
+    }
+  }
+
+  .list-available {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 12rem);
+    overflow-y: auto;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 0.5rem;
+
+    > .item {
+      padding: calc(0.5rem - 4px) 0.5rem;
+      margin-bottom: 1rem;
+      border: 4px solid transparent;
+      display: grid;
+      grid-gap: 0.5rem;
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(3, max-content);
+
+      .header {
+        position: relative;
+        padding-right: 4rem;
+
+        .icon-header {
+          position: absolute;
+          top: 1rem;
+          right: 0.5rem;
+          transform: translate(50%, -50%);
+          cursor: pointer;
+          user-select: none;
         }
+      }
 
-        .date {
-          grid-column: 2/3;
-        }
+      .time {
+        color: #bbbbbb;
+      }
+
+      &.high {
+        border-left-color: red;
+      }
+
+      &.medium {
+        border-left-color: orange;
       }
     }
   }
 }
 
+.input-custom {
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+
+  &:hover, &:focus-within, &:focus {
+    transition: background-color 0.2s;
+    background: #f7f7f7;
+  }
+}
+
+.note-card {
+  background: var(--note-color);
+  font-family: "Comic Sans MS", sans-serif;
+  border-radius: 4px;
+
+  &.finished {
+    transition: opacity 0.3s;
+    opacity: 0.4;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+.textarea-custom {
+  width: 100%;
+  height: max-content;
+  border: none;
+  background: transparent;
+  outline: none;
+  resize: none;
+  padding: 0;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  font-family: inherit;
+}
+
+.see-more {
+  text-decoration: none;
+  color: #848484;
+  text-transform: capitalize;
+  text-align: center;
+  font-size: 0.9rem;
+}

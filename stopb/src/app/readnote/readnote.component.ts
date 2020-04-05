@@ -67,8 +67,8 @@ export class ReadnoteComponent implements OnInit {
   readNote(id: string) {
     return this.noteService.readNote(id).subscribe((data: Note) => {
       this.noteTitle.setValue(data.noteTitle);
-      this.notePara.setValue(data.notePara);
-      this.noteDate.setValue(data.noteDate);
+      this.notePara.setValue(data.noteDescription);
+      this.noteDate.setValue(data.noteStartDate);
     });
   }
 

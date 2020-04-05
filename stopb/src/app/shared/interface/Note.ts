@@ -1,7 +1,9 @@
-export interface Note {
+export interface Note<T = any> {
   _id: string,
   noteTitle: string,
-  notePara: string,
-  notePriority: boolean,
-  noteDate: string
+  noteDescription: string,
+  notePriority: number,
+  noteStartDate: string
+  noteStatus: boolean
+  noteProjectId?: T
 }
