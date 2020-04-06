@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const jwtDecode = require('jwt-decode');
 
 mongoose.Promise = global.Promise;
 
@@ -66,16 +67,71 @@ app.use((error, req, res, next) => {
     })
 });
 
+// -------------------------------------------------------------------------------------
+// io.sockets.emit gửi tới toàn bộ server
+// socket.emit gửi tới chính nó
+// socket.broadcast.emit gửi tới toàn bộ server trừ chính nó
+// io.to("socketid").emit() gửi tới người có socketid
+
+
 // Socket.io cho chat
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
+const Users = [];
+
 io.on('connection', (socket) => {
-    let token = socket.handshake.query.token;
-    console.log('Đăng nhập mới: ' + token);
-    socket.on('disconnect', function () {
-        console.log('ID: ' + socket.id + ' đã out');
-    });
+    const token = socket.handshake.query.token;
+    try {
+        const decoded = jwtDecode(token);
+        const username = decoded.username;
+
+        // show token connect
+        console.log('Đăng nhập mới: ' + username);
+
+        // show token disconnect
+        socket.on('disconnect', function () {
+            console.log('User: ' + username + ' đã out');
+        });
+
+        if(Users.indexOf(username) >= 0){
+            alert("User is online")
+        }else{
+            // truyền username vào mảng Users
+            Users.push(username);
+
+            io.sockets.emit("User-online", Users);
+
+            // logout
+            socket.on('logout', function () {
+                Users.splice(
+                    Users.indexOf(username), 1
+                );
+                socket.broadcast.emit("User-online", Users)
+            });
+
+            // lắng nghe user send message
+            socket.on("sendMessage", function (message) {
+                io.sockets.emit("Server-send-message", {
+                    username: username,
+                    message: message
+                });
+            })
+
+            // lắng nghe có người gõ chữ
+            socket.on("input-inFocus", function () {
+                const noti = username + " is typing";
+                socket.broadcast.emit("isTyping", noti);
+            });
+
+            // lắng nghe có người gõ chữ xong rồi
+            socket.on("input-outFocus", function () {
+                socket.broadcast.emit("isNotTyping");
+            })
+        }
+    } catch(error) {
+
+    }
 });
 
 http.listen(PORT, () => {

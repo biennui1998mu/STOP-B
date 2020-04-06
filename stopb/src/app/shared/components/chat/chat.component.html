@@ -17,7 +17,7 @@
         Bạn bè
       </h3>
     </div>
-    <div class="list">
+    <div class="list" id="listFriend">
       <div class="row-card friend">
         <img alt="" src="https://www.bigstockphoto.com/images/homepage/module-6.jpg">
         <h5 class="username" name="username">
@@ -36,12 +36,24 @@
       <p class="friend-name">Do Hoang Nam</p>
     </mat-card>
     <mat-card class="chat-box">
-      <div >
+      <div id="chat-box">
+
+      </div>
+      <div id="noTi-typing">
+
       </div>
     </mat-card>
     <mat-card class="user-chat">
-      <input class="user-input" id="" name="message" type="text">
-      <button class="user-submit-btn" mat-raised-button>Send</button>
+      <input class="user-input"
+             id="input-chat"
+             name="message"
+             type="text"
+             (focus)="onFocus()" (focusout)="outFocus()"
+             [(ngModel)]="message"
+      >
+      <button class="user-submit-btn"
+              mat-raised-button
+              (click)="sendMessage()">Send</button>
     </mat-card>
   </mat-card>
 
