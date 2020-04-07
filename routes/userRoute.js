@@ -104,11 +104,11 @@ router.post('/view', (req, res, next) => {
 router.post('/search', (req, res) => {
     const input = req.body.input;
 
-    if(input.length < 2){
-        return res.json({
-            message: 'Must be at least 2 character'
-        })
-    }else{
+    // if(input.length < 2){
+    //     return res.json({
+    //         message: 'Must be at least 2 character'
+    //     })
+    // }else{
         User.find({
             $or: [
                 {username: new RegExp(input)},
@@ -121,7 +121,7 @@ router.post('/search', (req, res) => {
                 return err;
             }
         }).limit(10);
-    }
+    // }
 });
 
 // signup
@@ -178,7 +178,9 @@ router.post('/signUp', upload.single('avatar'), (req, res, next) => {
 router.post('/signIn', async (req, res, next) => {
     const {username, password} = req.body;
 
-    const user = await User.findOne({username: username}).exec();
+    const user = await User.findOne({username: username})
+        .select('+password') // chi dinh print field bi hidden by default trong schema.
+        .exec();
 
     if (user.length < 1) {
         return res.status(401).json({
@@ -191,12 +193,14 @@ router.post('/signIn', async (req, res, next) => {
     if (validatePassword) {
         const token = jwt.sign({
                 username: user.username,
-                userId: user._id
+                userId: user._id,
+                name: user.name
             },
             process.env.JWT_KEY,
             {
-                expiresIn: "1h"
+                expiresIn: 3600
             });
+        console.log(jwt.verify(token, process.env.JWT_KEY));
         console.log(token);
         return res.status(200).json({
             message: 'Auth successful',

@@ -77,4 +77,22 @@
       <mat-icon class="icon-input">search</mat-icon>
     </label>
   </div>
+  <div class="list-available">
+    <a *ngFor="let project of projects"
+       [class.finished]="project.projectStatus"
+       [class.high]="project.projectPriority === 1"
+       [class.medium]="project.projectPriority === 2"
+       [routerLink]="['/projects', 'view', project._id]"
+       class="item mat-elevation-z1 note-card">
+      <div class="header">
+        {{project.projectTitle}}
+        <mat-icon class="icon-header">zoom_out_map</mat-icon>
+      </div>
+      <small class="time">
+        {{project.projectStartDate | date:"dd-MM-yyyy hh:mm:ss"}}
+      </small>
+      <textarea class="textarea-custom" disabled>{{project.projectDescription}}</textarea>
+    </a>
+    <a class="see-more" href="">See more</a>
+  </div>
 </div>

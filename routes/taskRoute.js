@@ -61,7 +61,7 @@ router.post('/view', (req, res, next) => {
 });
 
 // Create task
-router.post('/createTask', (req, res, next) => {
+router.post('/create', (req, res, next) => {
     const task = new Task({
         _id : new mongoose.Types.ObjectId,
         taskTitle : req.body.taskTitle,
@@ -138,7 +138,7 @@ router.post('/delete/:taskId', (req, res) => {
 });
 
 // query 2 tasks, high priority
-router.post('/importantTask', (req, res) => {
+router.post('/important', (req, res) => {
     Task.find({
         taskPriority: {
             $lte : 2

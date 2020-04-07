@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import * as io from 'socket.io-client';
-import { Observable } from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {TokenService} from "./token.service";
 
 @Injectable({
@@ -10,6 +10,12 @@ export class SocketService {
 
   private url = 'http://localhost:3000';
   private socket;
+
+  private _friendOnline: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  public friendOnline = this._friendOnline.asObservable();
+
+  private _getUserMessage: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  public getUserMessage = this._getUserMessage.asObservable();
 
   constructor(
     private tokenService: TokenService
@@ -24,46 +30,50 @@ export class SocketService {
     });
   }
 
-  public getUserOnline(){
+  public getUserOnline() {
+    // this không còn là this của services nữa mà là this của function
+    const _this = this;
     this.socket.on("User-online", function (Users) {
-      Users.forEach(function (i) {
-        document.getElementById('listFriend')
-          .innerHTML +=
-          "<p>" + i + "</p>"
-      })
+      if (Users) {
+          _this._friendOnline.next(Users);
+        }
       }
     )
   }
 
-  public getUserLogOut(){
+  public getUserLogOut() {
     this.socket.emit("logout");
   }
 
-  public userSendMessage(message){
+  public userSendMessage(message) {
     this.socket.emit("sendMessage", message)
   }
 
-  public getMessage(){
-      this.socket.on("Server-send-message", (data) => {
-        document.getElementById('chat-box').innerHTML +=
-          "<p>" + data.username + ": " + data.message + "</p>"
-      });
+  public getMessage() {
+    const _this = this;
+    this.socket.on("Server-send-message", function(data) {
+      if(data){
+        _this._getUserMessage.next(data);
+      }
+    });
   }
 
-  public onFocus(){
+  public onFocus() {
     this.socket.emit("input-inFocus")
   }
-  public outFocus(){
+
+  public outFocus() {
     this.socket.emit("input-outFocus")
   }
 
-  public noTiTyping(){
+  public noTiTyping() {
     this.socket.on("isTyping", (noTi) => {
       document.getElementById('noTi-typing').innerHTML +=
         "<p>" + noTi + "</p>"
     });
   }
-  public noTiNotTyping(){
+
+  public noTiNotTyping() {
     this.socket.on("isNotTyping", () => {
       document.getElementById('noTi-typing').innerHTML +=
         "<p></p>"

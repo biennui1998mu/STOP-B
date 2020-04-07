@@ -3,6 +3,11 @@ import { UiStateService } from '../../shared/services/state/ui-state.service';
 import { NoteService } from "../../services/note.service";
 import { Router } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {TokenService} from "../../services/token.service";
+
+import * as jwtDecode from 'jwt-decode';
+import {ProjectService} from "../../services/project.service";
+import {Project} from "../../shared/interface/Project";
 
 @Component({
   selector: 'app-qnote',
@@ -12,13 +17,21 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 export class QnoteComponent implements OnInit {
 
   createNoteFrom: FormGroup;
+  projects: Project[];
+
   private url = 'http://localhost:3000';
+
+  private token = this.tokenService.getToken();
+  private tokenDecoded = jwtDecode(this.token);
+  private noteUserId = this.tokenDecoded.userId;
 
   constructor(
     private uiStateService: UiStateService,
     private noteService: NoteService,
     private formBuilder: FormBuilder,
     private router: Router,
+    private tokenService: TokenService,
+    private projectService: ProjectService
   ) {
     this.uiStateService.setPageTitle({
       current: {
@@ -27,11 +40,11 @@ export class QnoteComponent implements OnInit {
       },
     });
     this.createNoteFrom = this.formBuilder.group({
-      _id: [''],
+      noteUserId: [this.noteUserId],
       noteTitle: ['', [Validators.required, Validators.minLength(2)]],
-      noteDate: ['', [Validators.required]],
-      notePara: [''],
+      noteDescription: [''],
       notePriority: [''],
+      noteProjectId: ['']
     });
 
   }
@@ -40,26 +53,23 @@ export class QnoteComponent implements OnInit {
     return this.createNoteFrom.get('noteTitle');
   }
 
-  get noteDate() {
-    return this.createNoteFrom.get('noteDate');
-  }
-
-  get notePara() {
-    return this.createNoteFrom.get('notePara');
+  get noteDescription() {
+    return this.createNoteFrom.get('noteDescription');
   }
 
   get notePriority() {
     return this.createNoteFrom.get('notePriority');
   }
 
-  get noteId() {
-    return this.createNoteFrom.get('_id');
+  get noteProjectId() {
+    return this.createNoteFrom.get('noteProjectId');
   }
 
   ngOnInit(): void {
+    this.getAllProject();
   }
 
-  CreateNote() {
+  createNote() {
     return this.noteService.noteCreate(this.createNoteFrom.value).subscribe(success => {
       if (success) {
         this.router.navigateByUrl('/dashboard');
@@ -67,4 +77,9 @@ export class QnoteComponent implements OnInit {
     });
   }
 
+  getAllProject(){
+    return this.projectService.getAllProject().subscribe(projects => {
+      this.projects = projects.projects;
+    })
+  }
 }

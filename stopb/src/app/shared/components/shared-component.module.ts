@@ -8,6 +8,7 @@ import { ChatComponent } from './chat/chat.component';
 import { SettingComponent } from './setting/setting.component';
 import { FriendsComponent } from './friends/friends.component';
 import { AccountComponent } from './account/account.component';
+import {MatListModule} from "@angular/material/list";
 
 const components = [
   NewTaskComponent,
@@ -27,10 +28,11 @@ const components = [
     ...components,
     SettingComponent,
   ],
-  imports: [
-    CommonModule,
-    CoreImportsModule,
-  ],
+    imports: [
+        CommonModule,
+        CoreImportsModule,
+        MatListModule,
+    ],
 })
 export class SharedComponentModule {
 }

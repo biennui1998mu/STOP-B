@@ -6,8 +6,8 @@ const checkAuth = require("../middleware/check-auth");
 const Note = require('../database/models/note');
 
 // Take all notes from list
-router.post('/', (req, res) => {
-    Note.find()
+router.post('/', checkAuth, (req, res) => {
+    Note.find({noteUserId : req.userData.userId})
         .exec()
         .then(docs => {
             const response = {
@@ -16,6 +16,7 @@ router.post('/', (req, res) => {
                     return {
                         _id: doc._id,
                         noteTitle: doc.noteTitle,
+                        noteUserId: doc.noteUserId,
                         noteDescription: doc.noteDescription,
                         notePriority: doc.notePriority,
                         noteStartDate: doc.noteStartDate,
@@ -85,9 +86,10 @@ router.post('/search', (req, res) => {
 });
 
 // Create new note
-router.post('/createNote', (req, res) => {
+router.post('/create', (req, res) => {
     const note = new Note({
         _id: new mongoose.Types.ObjectId(),
+        noteUserId: req.body.noteUserId,
         noteTitle: req.body.noteTitle,
         noteDescription: req.body.noteDescription,
         notePriority: req.body.notePriority,
@@ -102,6 +104,7 @@ router.post('/createNote', (req, res) => {
                 createdNote: {
                     _id: result._id,
                     noteTitle: result.noteTitle,
+                    noteUserId: req.body.noteUserId,
                     noteDescription: result.noteDescription,
                     notePriority: result.notePriority,
                     noteStartDate: result.noteStartDate,

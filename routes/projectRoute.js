@@ -8,8 +8,8 @@ const Project = require('../database/models/project');
 const Task = require('../database/models/task');
 
 // Take all projects from list
-router.post('/', (req, res) => {
-    Project.find()
+router.post('/', checkAuth, (req, res) => {
+    Project.find({projectUserId: req.userData.userId})
         .exec()
         .then(docs => {
             const response = {
@@ -18,6 +18,7 @@ router.post('/', (req, res) => {
                     return {
                         _id: doc._id,
                         projectTitle: doc.projectTitle,
+                        projectUserId: doc.projectUserId,
                         projectDescription: doc.projectDescription,
                         projectPriority: doc.projectPriority,
                         projectStartDate: doc.projectStartDate,
@@ -92,9 +93,10 @@ router.post('/search', (req, res) => {
 });
 
 // Create new project
-router.post('/createProject', (req, res) => {
+router.post('/create', (req, res) => {
     const project = new Project({
         _id: new mongoose.Types.ObjectId(),
+        projectUserId: req.body.projectUserId,
         projectTitle: req.body.projectTitle,
         projectDescription: req.body.projectDescription,
         projectPriority: req.body.projectPriority,
@@ -113,6 +115,7 @@ router.post('/createProject', (req, res) => {
                 message: 'Project has been created',
                 createdProject: {
                     _id: result._id,
+                    projectUserId: result.projectUserId,
                     projectTitle: result.projectTitle,
                     projectDescription: result.projectDescription,
                     projectPriority: result.projectPriority,
@@ -176,12 +179,9 @@ router.post('/delete/:projectId', (req, res) => {
 });
 
 // query 3 projects, high priority
-router.post('/importantProject', (req, res) => {
+router.post('/important', checkAuth, (req, res) => {
     Project.find({
-        // $or: [
-        //     {projectPriority: 1},
-        //     {projectPriority: 2},
-        // ],
+        projectUserId: req.userData.userId,
         projectPriority: {
             $lte : 2
         },

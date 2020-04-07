@@ -10,11 +10,12 @@ const  userSchema = new Schema({
         unique: true},
     password : {
         type: String,
-        required: true
+        required: true,
+        select: false // loai field password ra khoi tat ca cac query default.
     },
     name : {type: String, required: true},
     dob : {type: Date, required: true},
-    userStatus: Boolean,
+    userStatus: Number,
     avatar : String,
     friends: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'}
 });

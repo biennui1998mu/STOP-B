@@ -5,8 +5,6 @@ import { catchError, map } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { of } from "rxjs";
 import { TokenService } from "./token.service";
-import { Task } from '../shared/interface/Task';
-import {Note} from "../shared/interface/Note";
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +41,7 @@ export class ProjectService {
       message: string,
       createdProject?: Project,
       error: any
-    }>(`${this.url}/createProject`, credentials, { headers: this.header}).pipe(
+    }>(`${this.url}/create`, credentials, { headers: this.header}).pipe(
       map(result => {
         return !!result.createdProject;
       }),
@@ -55,14 +53,9 @@ export class ProjectService {
   }
 
   getAllProject() {
-    return this.http.post<{
-      token: string,
-      error: any,
-      count: number,
-      projects: Project[]
-    }>(`${this.url}`, { headers: this.header }).pipe(
+    return this.http.post<Project[]>(`${this.url}`, {} ,{ headers: this.header }).pipe(
       map(result => {
-        if (result.projects) {
+        if (result) {
           return result;
         } else {
           return [];
@@ -76,13 +69,10 @@ export class ProjectService {
   }
 
   getProjectHighPriority(){
-    return this.http.post<{
-      projects: Project[],
-      err: any
-    }>(`${this.url}/importantProject`, { headers: this.header}).pipe(
+    return this.http.post<Project[]>(`${this.url}/important`,{}, { headers: this.header}).pipe(
       map( result => {
-        if(result.projects){
-          return result.projects;
+        if(result){
+          return result;
         }else{
           return []
         }

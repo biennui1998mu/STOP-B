@@ -24,6 +24,6 @@ export class TokenService {
   decodeJwt(){
     const token = localStorage.getItem('token');
     const decoded = jwtDecode(token);
-    console.log(decoded);
+    return decoded;
   }
 }

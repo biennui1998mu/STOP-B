@@ -30,7 +30,7 @@ export class ReadProjectComponent implements OnInit {
         // trong truong hop k co id tren url thi tu ve dashboard
         this.router.navigateByUrl('/dashboard');
       } else {
-        this.readPlan(id);
+        this.readProject(id);
       }
     });
     this.inputTaskField = true;
@@ -47,7 +47,7 @@ export class ReadProjectComponent implements OnInit {
     this.inputTaskField = true;
   }
 
-  readPlan(id: string) {
+  readProject(id: string) {
     return this.planService.readProject(id).subscribe((data: Project) => {
       this.formPlan = data;
       console.log(data);

@@ -3,7 +3,7 @@
     <div class="row-card user-self">
       <img alt="" src="">
       <h3 class="username">
-        Son Nguyen
+        {{username}}
       </h3>
       <small class="status online">
         Online
@@ -18,10 +18,11 @@
       </h3>
     </div>
     <div class="list" id="listFriend">
-      <div class="row-card friend">
+      <div *ngFor="let user of listUser"
+           class="row-card friend">
         <img alt="" src="https://www.bigstockphoto.com/images/homepage/module-6.jpg">
         <h5 class="username" name="username">
-          Son Nguyen
+          {{user}}
         </h5>
         <small class="status online">
           Online
@@ -44,16 +45,17 @@
       </div>
     </mat-card>
     <mat-card class="user-chat">
-      <input class="user-input"
-             id="input-chat"
-             name="message"
-             type="text"
-             (focus)="onFocus()" (focusout)="outFocus()"
+      <input (focus)="onFocus()"
+             (focusout)="outFocus()"
              [(ngModel)]="message"
+             class="user-input"
+             id="input-chat" name="message"
+             type="text"
       >
-      <button class="user-submit-btn"
-              mat-raised-button
-              (click)="sendMessage()">Send</button>
+      <button (click)="sendMessage()"
+              class="user-submit-btn"
+              mat-raised-button>Send
+      </button>
     </mat-card>
   </mat-card>
 

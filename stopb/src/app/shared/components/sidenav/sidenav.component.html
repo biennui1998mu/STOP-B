@@ -23,17 +23,20 @@
 
   <div class="bot-buttons">
     <hr class="divider">
-    <button class="button"
+
+    <button (click)="openDialogFriends()"
+            class="button"
             color="primary"
             mat-button>
       Friends
     </button>
-    <button class="button"
+    <button (click)="openDialogSetting()"
+            class="button"
             color="primary"
             mat-button>
       Setting
     </button>
-    <button (click)="openDialog()"
+    <button (click)="openDialogAccount()"
             class="button"
             color="primary"
             mat-button routerLink="/account">

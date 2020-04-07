@@ -8,26 +8,24 @@
         <mat-label>Title</mat-label>
         <input formControlName="noteTitle" matInput
                name="noteTitle"
-               required
                required>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="span-all">
         <mat-label>Priority</mat-label>
         <mat-select formControlName="notePriority" name="notePriority" required>
-          <mat-option value="true">Important</mat-option>
-          <mat-option value="false">Normal</mat-option>
+          <mat-option value="1">Important</mat-option>
+          <mat-option value="2">Normal</mat-option>
         </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="span-all">
-        <mat-label>Choose a date</mat-label>
-        <input [matDatepicker]="picker" formControlName="noteDate"
-               matInput
-               name="noteDate"
-               required>
-        <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+        <mat-label>Project</mat-label>
+        <mat-select formControlName="noteProjectId"
+                    name="noteProjectId">
+          <mat-option>None</mat-option>
+          <mat-option *ngFor="let project of projects" value="{{project._id}}">{{project.projectTitle}}</mat-option>
+        </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="span-all">
@@ -52,7 +50,7 @@
     <mat-card-content class="detail-section-content">
       <!--  note-input-paper + red/green/blue/orange/...  -->
       <textarea class="note-input-paper hand-writing mat-elevation-z5 red"
-                formControlName="notePara"
+                formControlName="noteDescription"
                 maxlength="200"
                 minlength="0"
                 name="notePara"
@@ -65,7 +63,7 @@
   </mat-card>
 
   <mat-card class="confirmation">
-    <button (click)="CreateNote()"
+    <button (click)="createNote()"
             [disabled]="createNoteFrom.invalid"
             class="button"
             color="primary"

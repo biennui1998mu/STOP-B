@@ -21,4 +21,19 @@ export class UserService {
     });
   }
 
+  searchFriend(input: string){
+    return this.http.post<User[]>(`${this.url}/search`, {input: input}, { headers: this.header}).pipe(
+      map( result => {
+        if(result){
+          return result;
+        }else{
+          return []
+        }
+      }),
+      catchError(error => {
+        console.log(error);
+        return [];
+      })
+    )
+  }
 }

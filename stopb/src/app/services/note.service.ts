@@ -25,6 +25,7 @@ export class NoteService {
   }
 
   noteCreate(credentials: {
+    noteUserId: string,
     noteTitle: string,
     noteDescription: string,
     notePriority: number,
@@ -35,7 +36,7 @@ export class NoteService {
       message: string,
       createdNote?: Note,
       error: any
-    }>(`${this.url}/createNote`, credentials, { headers: this.header }).pipe(
+    }>(`${this.url}/create`, credentials, { headers: this.header }).pipe(
       map(result => {
         return !!result.createdNote;
       }),
@@ -52,7 +53,7 @@ export class NoteService {
       error: any,
       count: number,
       notes: Note[]
-    }>(`${this.url}`, { headers: this.header }).pipe(
+    }>(`${this.url}`, {}, { headers: this.header }).pipe(
       map(result => {
         if (result.notes) {
           return result;
@@ -121,7 +122,7 @@ export class NoteService {
   deleteNote(noteId: string) {
     return this.http.post<{
       message: string
-    }>(`${this.url}/delete`, {noteId: noteId}).pipe(
+    }>(`${this.url}/delete/${noteId}`, {noteId: noteId}).pipe(
       map(result => {
         return !!result.message;
       }),

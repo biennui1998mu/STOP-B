@@ -36,7 +36,7 @@ app.use(cors(corsOptions));
 
 //hiện dưới terminal
 app.use(morgan('dev'));
-app.use('/uploads/', express.static('uploads'))
+app.use('/uploads/', express.static('uploads'));
 app.use(bodyParser.urlencoded({
     extended: false
 }));
@@ -58,7 +58,7 @@ app.use((req, res, next) => {
     next(error);
 });
 
-app.use((error, req, res, next) => {
+app.use((error, req, res) => {
     res.status(error.status || 500);
     res.json({
         error: {
@@ -72,6 +72,7 @@ app.use((error, req, res, next) => {
 // socket.emit gửi tới chính nó
 // socket.broadcast.emit gửi tới toàn bộ server trừ chính nó
 // io.to("socketid").emit() gửi tới người có socketid
+// socket.adapter.rooms Show danh sách room đang có
 
 
 // Socket.io cho chat
@@ -92,11 +93,16 @@ io.on('connection', (socket) => {
         // show token disconnect
         socket.on('disconnect', function () {
             console.log('User: ' + username + ' đã out');
+            const index = Users.indexOf(username);
+            if (index > -1) {
+                Users.splice(index, 1);
+            }
         });
 
-        if(Users.indexOf(username) >= 0){
+        if (Users.indexOf(username) >= 0) {
+            console.log('log');
             alert("User is online")
-        }else{
+        } else {
             // truyền username vào mảng Users
             Users.push(username);
 
@@ -116,20 +122,41 @@ io.on('connection', (socket) => {
                     username: username,
                     message: message
                 });
-            })
+            });
 
             // lắng nghe có người gõ chữ
             socket.on("input-inFocus", function () {
-                const noti = username + " is typing";
+                const noti = usernameusername + " is typing";
                 socket.broadcast.emit("isTyping", noti);
             });
 
             // lắng nghe có người gõ chữ xong rồi
             socket.on("input-outFocus", function () {
                 socket.broadcast.emit("isNotTyping");
+            });
+
+            // lắng nghe sự kiện tạo room
+            socket.on("createRoom", function (room) {
+                socket.join(room);
+                // tạo getRoom để lấy room
+                socket.getRoom = room;
+                // đẩy room vào listRoom
+                const listRoom = [];
+                for (aRoom in socket.adapter.rooms) {
+                    listRoom.push(aRoom)
+                }
+                // server gửi listRoom về client
+                io.sockets.emit("getListRoom", listRoom);
+                // user sẽ tự join vào room mới tạo
+                socket.emit("joinMyRoom", room);
+            });
+
+            socket.on("userChat", function (message) {
+                // server trả về message mà user gửi lên cho những người trong room
+                io.sockets.in(socket.getRoom).emit("sentChat", message);
             })
         }
-    } catch(error) {
+    } catch (error) {
 
     }
 });
