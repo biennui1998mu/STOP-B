@@ -17,6 +17,8 @@ export class ChatComponent implements OnInit {
   username: string;
   socket;
 
+  chatWindow: boolean = false;
+
   constructor(
     private socketService: SocketService,
     private tokenService: TokenService
@@ -78,5 +80,12 @@ export class ChatComponent implements OnInit {
 
   outFocus() {
     this.socketService.outFocus();
+  }
+
+  openChat(){
+    this.chatWindow = true;
+  }
+  closeChat(){
+    this.chatWindow = false;
   }
 }

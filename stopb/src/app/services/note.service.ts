@@ -104,7 +104,7 @@ export class NoteService {
       message: string,
       updatedNote?: Note,
       error: any
-    }>(`${this.url}/update`, credentials).pipe(
+    }>(`${this.url}/update/${noteId}`,  credentials).pipe(
       map(result => {
         if (result.updatedNote) {
           return true;

@@ -37,7 +37,9 @@ const friendRequest = require('../database/models/friendRequest')
 
 // take all user from list user
 router.post('/', (req, res, next) => {
-    User.find()
+    User.find({
+
+    })
         .exec()
         .then(users => {
             if (users.length >= 1) {

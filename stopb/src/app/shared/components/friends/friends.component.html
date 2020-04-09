@@ -2,6 +2,7 @@
   <mat-tab label="List Friend">
 
   </mat-tab>
+
   <mat-tab label="Add Friend">
     <div class="add-friend">
       <mat-form-field class="input">
@@ -9,11 +10,36 @@
         <input matInput placeholder="Friend's username/name" [(ngModel)]="username">
       </mat-form-field>
       <button class="button" (click)="searchFriend()" mat-raised-button>Search</button>
-      <mat-list role="list">
-        <mat-list-item role="listitem" *ngFor="let user of User">
-          {{user.username}} <br> {{user.name}}
-        </mat-list-item>
-      </mat-list>
+      <mat-card class="box-friend" *ngFor="let user of User">
+        <img class="img" src="https://www.bigstockphoto.com/images/homepage/module-6.jpg" alt="">
+        <div class="info-friend">
+          <h5>{{user.username}}</h5>
+          <small>{{user.name}}</small>
+        </div>
+        <button mat-raised-button (click)="sendRequest()">Add friend</button>
+      </mat-card>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Notification">
+    <div class="friend-request" *ngFor="let request of requests">
+      <img class="friend-img" src="" alt="">
+      <div class="friend-info">
+        <h5>{{request.requester}}</h5>
+        <small>{{request.recipient}}</small>
+      </div>
+      <button class="btn-ignore" mat-raised-button>
+        <span class="material-icons">
+          cancel
+        </span>
+        Ignore
+      </button>
+      <button class="btn-accept" mat-raised-button>
+        <span class="material-icons">
+          check_circle
+        </span>
+        Accept
+      </button>
     </div>
   </mat-tab>
 </mat-tab-group>

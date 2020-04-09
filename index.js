@@ -126,7 +126,7 @@ io.on('connection', (socket) => {
 
             // lắng nghe có người gõ chữ
             socket.on("input-inFocus", function () {
-                const noti = usernameusername + " is typing";
+                const noti = username + " is typing";
                 socket.broadcast.emit("isTyping", noti);
             });
 

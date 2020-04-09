@@ -24,8 +24,8 @@ export class ReadnoteComponent implements OnInit {
     this.readNoteForm = this.formBuilder.group({
       _id: [''],
       noteTitle: ['', [Validators.required, Validators.minLength(2)]],
-      noteDate: ['', [], []],
-      notePara: [''],
+      noteDate: [''],
+      noteDescription: [''],
     });
 
     console.log(this.activatedRoute);
@@ -49,8 +49,8 @@ export class ReadnoteComponent implements OnInit {
     return this.readNoteForm.get('noteDate');
   }
 
-  get notePara() {
-    return this.readNoteForm.get('notePara');
+  get noteDescription() {
+    return this.readNoteForm.get('noteDescription');
   }
 
   get noteId() {
@@ -59,7 +59,7 @@ export class ReadnoteComponent implements OnInit {
 
   ngOnInit(): void {
     this.readNoteForm.valueChanges.subscribe(data => {
-      console.log(data);
+      // console.log(data);
       console.log(this.readNoteForm.invalid);
     });
   }
@@ -67,7 +67,7 @@ export class ReadnoteComponent implements OnInit {
   readNote(id: string) {
     return this.noteService.readNote(id).subscribe((data: Note) => {
       this.noteTitle.setValue(data.noteTitle);
-      this.notePara.setValue(data.noteDescription);
+      this.noteDescription.setValue(data.noteDescription);
       this.noteDate.setValue(data.noteStartDate);
     });
   }
@@ -82,7 +82,8 @@ export class ReadnoteComponent implements OnInit {
 
   updateNote() {
     return this.noteService.updateNote(
-      this.noteId.value, this.readNoteForm.value,
+      this.noteId.value,
+      this.readNoteForm.value,
     ).subscribe(updated => {
       console.log(updated);
       if (updated) {

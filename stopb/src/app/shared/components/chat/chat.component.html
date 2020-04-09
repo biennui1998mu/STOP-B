@@ -16,6 +16,7 @@
       <h3>
         Bạn bè
       </h3>
+      <button style="margin-left: 3rem" mat-raised-button (click)="openChat()">Chat</button>
     </div>
     <div class="list" id="listFriend">
       <div *ngFor="let user of listUser"
@@ -31,10 +32,11 @@
     </div>
   </div>
 
-  <mat-card class="chat-inbox">
+  <mat-card class="chat-inbox" *ngIf="chatWindow">
     <mat-card class="friend">
-      <img alt="" class="friend-img" src="">
-      <p class="friend-name">Do Hoang Nam</p>
+<!--      <img alt="" class="friend-img" src="">-->
+<!--      <p class="friend-name">Do Hoang Nam</p>-->
+      <button mat-raised-button (click)="closeChat()">Close</button>
     </mat-card>
     <mat-card class="chat-box">
       <div id="chat-box">

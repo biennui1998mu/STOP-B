@@ -21,7 +21,7 @@ export class UserService {
     });
   }
 
-  searchFriend(input: string){
+  searchUser(input: string){
     return this.http.post<User[]>(`${this.url}/search`, {input: input}, { headers: this.header}).pipe(
       map( result => {
         if(result){

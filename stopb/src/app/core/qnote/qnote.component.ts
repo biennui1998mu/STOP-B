@@ -19,11 +19,7 @@ export class QnoteComponent implements OnInit {
   createNoteFrom: FormGroup;
   projects: Project[];
 
-  private url = 'http://localhost:3000';
-
-  private token = this.tokenService.getToken();
-  private tokenDecoded = jwtDecode(this.token);
-  private noteUserId = this.tokenDecoded.userId;
+  userId: string;
 
   constructor(
     private uiStateService: UiStateService,
@@ -40,7 +36,7 @@ export class QnoteComponent implements OnInit {
       },
     });
     this.createNoteFrom = this.formBuilder.group({
-      noteUserId: [this.noteUserId],
+      noteUserId: [this.userId],
       noteTitle: ['', [Validators.required, Validators.minLength(2)]],
       noteDescription: [''],
       notePriority: [''],
@@ -67,6 +63,12 @@ export class QnoteComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllProject();
+    this.getUserId();
+  }
+
+  getUserId(){
+    const tokenDecoded = this.tokenService.decodeJwt();
+    this.userId = tokenDecoded.userId;
   }
 
   createNote() {

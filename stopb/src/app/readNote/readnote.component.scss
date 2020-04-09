@@ -1,7 +1,7 @@
 .note-board {
   display: grid;
   grid-template-columns: auto 10rem;
-  grid-template-rows: 5rem auto;
+  grid-template-rows: 5rem auto 7rem;
   grid-column-gap: 3rem;
   grid-row-gap: 2rem;
   padding: 2rem;
@@ -38,7 +38,7 @@
 
   .paragraph {
     grid-column: 1/2;
-    grid-row: 2/3;
+    grid-row: 2/4;
     outline: none;
     margin: 0 0 2rem 0;
     line-height: 2rem;
@@ -50,9 +50,14 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   }
 
-  .btn {
+  .project-link{
     grid-column: 2/3;
     grid-row: 2/3;
+  }
+
+  .btn {
+    grid-column: 2/3;
+    grid-row: 3/4;
     display: grid;
     grid-auto-rows: 2rem;
     grid-row-gap: 1rem;

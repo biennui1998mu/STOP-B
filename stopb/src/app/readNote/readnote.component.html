@@ -5,7 +5,7 @@
          maxlength="100"
          name="noteTitle">
   <mat-form-field class="dob">
-    <mat-label>Choose a date</mat-label>
+    <mat-label>Date Created</mat-label>
     <input [matDatepicker]="picker"
            formControlName="noteDate"
            matInput
@@ -14,13 +14,16 @@
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
   <textarea class="paragraph hand-writing" cols="30"
-            formControlName="notePara"
+            formControlName="noteDescription"
             name="notePara"
             rows="10">
   </textarea>
+  <mat-form-field class="project-link">
+    <mat-label>For Project</mat-label>
+    <input matInput placeholder="project 1">
+  </mat-form-field>
   <div class="btn">
     <button (click)="updateNote()" [disabled]="readNoteForm.invalid" mat-raised-button>Save</button>
-    <button mat-raised-button>Done/Disable</button>
     <button (click)="showAlertDelete()" mat-raised-button>Delete</button>
   </div>
 

@@ -104,7 +104,7 @@ router.post('/create', (req, res) => {
                 createdNote: {
                     _id: result._id,
                     noteTitle: result.noteTitle,
-                    noteUserId: req.body.noteUserId,
+                    noteUserId: result.noteUserId,
                     noteDescription: result.noteDescription,
                     notePriority: result.notePriority,
                     noteStartDate: result.noteStartDate,
