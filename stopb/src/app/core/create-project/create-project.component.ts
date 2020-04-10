@@ -8,10 +8,10 @@ import {TaskService} from "../../services/task.service";
 
 @Component({
   selector: 'app-makePlan',
-  templateUrl: './make-plan.component.html',
-  styleUrls: ['./make-plan.component.scss'],
+  templateUrl: './create-project.component.html',
+  styleUrls: ['./create-project.component.scss'],
 })
-export class MakePlanComponent implements OnInit {
+export class CreateProjectComponent implements OnInit {
 
   memberList: string[] = ['Namhoang Do', 'QHuy', 'Tuananh Nguyen', 'Khue Pham', 'Son Goku'];
   tasks: Task[] = [];
@@ -29,7 +29,7 @@ export class MakePlanComponent implements OnInit {
     this.uiStateService.setPageTitle({
       current: {
         title: 'Create Plan',
-        path: '/plan/create',
+        path: '/project/create',
       },
     });
   }

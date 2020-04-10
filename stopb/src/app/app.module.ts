@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './core/login/login.component';
 import { HomepageComponent } from './core/homepage/homepage.component';
 import { QnoteComponent } from './core/qnote/qnote.component';
-import { MakePlanComponent } from './core/makeplan/make-plan.component';
+import { CreateProjectComponent } from './core/create-project/create-project.component';
 import { ReadnoteComponent } from './readNote/readnote.component';
 import { ReadProjectComponent } from './readProject/readProject.component';
 import { SharedComponentModule } from "./shared/components/shared-component.module";
@@ -22,7 +22,7 @@ import { SocketService } from "../app/services/socket.service"
     LoginComponent,
     HomepageComponent,
     QnoteComponent,
-    MakePlanComponent,
+    CreateProjectComponent,
     ReadnoteComponent,
     ReadProjectComponent,
   ],
