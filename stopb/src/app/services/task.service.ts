@@ -31,7 +31,8 @@ export class TaskService {
     taskStartDate: string,
     taskEndDate: string,
     taskStatus: boolean,
-    taskManager: string
+    taskManager: string,
+    projectId : string
   }) {
     return this.http.post<{
       // token: string;
@@ -97,7 +98,8 @@ export class TaskService {
     taskStartDate: string,
     taskEndDate: string,
     taskStatus: boolean,
-    taskManager: string
+    taskManager: string,
+    projectId: string
   }) {
     return this.http.post<{
       message: string,

@@ -15,13 +15,14 @@ router.post('/', (req, res) => {
                 tasks : docs.map(doc => {
                     return {
                         _id: doc._id,
+                        taskManager: doc.taskManager,
+                        projectId: doc.projectId,
                         taskTitle: doc.taskTitle,
                         taskDescription: doc.taskDescription,
                         taskPriority: doc.taskPriority,
                         taskStartDate: doc.taskStartDate,
                         taskEndDate: doc.taskEndDate,
-                        taskStatus: doc.taskStatus,
-                        taskManager: doc.taskManager
+                        taskStatus: doc.taskStatus
                     }
                 })
             };
@@ -64,13 +65,14 @@ router.post('/view', (req, res, next) => {
 router.post('/create', (req, res, next) => {
     const task = new Task({
         _id : new mongoose.Types.ObjectId,
+        taskManager : req.body.taskManager,
+        projectId : req.body.projectId,
         taskTitle : req.body.taskTitle,
         taskDescription : req.body.taskDescription,
         taskPriority : req.body.taskPriority,
         taskStartDate: Date.now(),
         taskEndDate: req.body.taskEndDate,
-        taskStatus : req.body.taskStatus,
-        taskManager : req.body.taskManager
+        taskStatus : req.body.taskStatus
     });
     task.save()
         .then(result => {
@@ -78,13 +80,14 @@ router.post('/create', (req, res, next) => {
                 message: 'created task successfully',
                 createdTask: {
                     _id: result._id,
+                    taskManager : result.taskManager,
+                    projectId : result.projectId,
                     taskTitle : result.taskTitle,
                     taskDescription : result.taskDescription,
                     taskPriority : result.taskPriority,
                     taskStartDate: result.taskStartDate,
                     taskEndDate: result.taskEndDate,
-                    taskStatus : result.taskStatus,
-                    taskManager : result.taskManager,
+                    taskStatus : result.taskStatus
                 }
             })
         })

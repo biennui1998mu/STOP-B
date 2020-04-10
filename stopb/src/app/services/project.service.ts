@@ -31,7 +31,6 @@ export class ProjectService {
     projectStartDate: string,
     projectEndDate: string,
     projectStatus: boolean,
-    projectTaskID: string,
     projectManager: string,
     projectModerator: string,
     projectMember: string
@@ -112,7 +111,6 @@ export class ProjectService {
     projectStartDate: string,
     projectEndDate: string,
     projectStatus: boolean,
-    projectTaskID: string,
     projectManager: string,
     projectModerator: string,
     projectMember: string

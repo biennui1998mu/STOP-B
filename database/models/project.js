@@ -11,7 +11,6 @@ const projectSchema = new Schema({
     projectStartDate: Date,
     projectEndDate: Date,
     projectStatus: Boolean,
-    projectTaskID: { type: [mongoose.Schema.Types.ObjectId], ref: 'Task'},
     projectManager: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'},
     projectModerator: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'},
     projectMember: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'}

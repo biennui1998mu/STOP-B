@@ -24,7 +24,6 @@ router.post('/', checkAuth, (req, res) => {
                         projectStartDate: doc.projectStartDate,
                         projectEndDate: doc.projectEndDate,
                         projectStatus: doc.projectStatus,
-                        projectTaskID: doc.projectTaskID,
                         projectManager: doc.projectManager,
                         projectModerator: doc.projectModerator,
                         projectMember: doc.projectMember
@@ -103,7 +102,6 @@ router.post('/create', (req, res) => {
         projectStartDate: Date.now(),
         projectEndDate: req.body.projectEndDate,
         projectStatus: req.body.projectStatus,
-        projectTaskID: req.body.projectTaskID,
         projectManager: req.body.projectManager,
         projectModerator: req.body.projectModerator,
         projectMember: req.body.projectMember
@@ -122,7 +120,6 @@ router.post('/create', (req, res) => {
                     projectStartDate: result.projectStartDate,
                     projectEndDate: result.projectEndDate,
                     projectStatus: result.projectStatus,
-                    projectTaskID: result.projectTaskID,
                     projectManager: result.projectManager,
                     projectModerator: result.projectModerator,
                     projectMember: result.projectMember
@@ -185,7 +182,7 @@ router.post('/important', checkAuth, (req, res) => {
         projectPriority: {
             $lte : 2
         },
-        projectStatus: true,
+        projectStatus: true
 
     }, function (err, projects) {
         if(projects){
