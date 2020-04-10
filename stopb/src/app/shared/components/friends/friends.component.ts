@@ -14,14 +14,13 @@ import {TokenService} from "../../../services/token.service";
 })
 export class FriendsComponent implements OnInit {
 
-  userId: string;
-  friendId: string;
-
-  User: User[];
+  users: User[];
   username: string;
 
   requestForm: FormGroup;
   requests: FriendRequest[] = [];
+
+  friends: User[];
 
   constructor(
     private router: Router,
@@ -31,27 +30,47 @@ export class FriendsComponent implements OnInit {
     private friendService: FriendService
   ) {
     this.requestForm = this.formBuilder.group({
-      requester: [this.userId],
-      recipient: [this.friendId],
+      _id: [],
+      requester: [],
+      recipient: [],
       status: [0]
     });
+  }
+
+  get requestId(){
+    return this.requestForm.get('_id');
+  }
+
+  // friendId
+  get recipient(){
+    return this.requestForm.get('recipient');
+  }
+
+  // userId
+  get requester(){
+    return this.requestForm.get('requester');
+  }
+
+  get status(){
+    return this.requestForm.get('status');
   }
 
   ngOnInit(): void {
     this.getUserId();
     this.getAllRequest();
+    this.getFriends();
+    // this.getFriendOnline();
   }
 
   getUserId(){
     const tokenDecoded = this.tokenService.decodeJwt();
-    this.userId = tokenDecoded.userId;
+    this.requester.setValue(tokenDecoded.userId);
   }
 
   searchFriend() {
-    return this.userService.searchUser(this.username).subscribe(user => {
-        this.User = user;
-        this.friendId= user._id;
-        console.log(user);
+    return this.userService.searchUser(this.username).subscribe(users => {
+        this.users = users;
+        console.log(users);
       }
     )
   }
@@ -63,19 +82,46 @@ export class FriendsComponent implements OnInit {
     })
   }
 
-  sendRequest(){
+  sendRequest(friendId: string){
+    this.recipient.setValue(friendId);
+    console.log(friendId);
     return this.friendService.sendRequest(this.requestForm.value).subscribe( success => {
       console.log(success);
       if(success){
+
       }
     })
   }
 
-  setRequestStatus() {
-    return this.friendService.setRequestStatus(this.requestForm.value).subscribe(updated => {
+  setRequestStatus(
+    status: number,
+    friendId: string,
+    userId: string,
+    requestId: string
+  ) {
+    this.status.setValue(status);
+    this.requester.setValue(friendId);
+    this.recipient.setValue(userId);
+    this.requestId.setValue(requestId);
+    return this.friendService.setRequestStatus(this.requestId.value, this.requestForm.value).subscribe(updated => {
       console.log(updated);
       if (updated) {
+
       }
     });
   }
+
+  getFriends(){
+    return this.friendService.getFriends().subscribe( result => {
+      console.log(result);
+      this.friends = result;
+    })
+  }
+
+  // getFriendOnline(){
+  //   return this.friendService.getFriendOnline().subscribe( result => {
+  //     console.log(result);
+  //     this.friends = result;
+  //   })
+  // }
 }

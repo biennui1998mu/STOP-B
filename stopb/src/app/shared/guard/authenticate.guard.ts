@@ -27,8 +27,6 @@ export class AuthenticateGuard implements CanActivateChild {
     if (this.authorizeService.isAuthorize) {
       return true;
     }
-    console.log(next);
-    console.log(state);
     this.router.navigateByUrl('/login');
     return false;
   }
