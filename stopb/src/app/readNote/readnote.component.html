@@ -23,7 +23,7 @@
     <input matInput placeholder="project 1">
   </mat-form-field>
   <div class="btn">
-    <button (click)="updateNote()" [disabled]="readNoteForm.invalid" mat-raised-button>Save</button>
+    <button (click)="updateNote()" [disabled]="readNoteForm.invalid || !readNoteForm.dirty" mat-raised-button>Save</button>
     <button (click)="showAlertDelete()" mat-raised-button>Delete</button>
   </div>
 

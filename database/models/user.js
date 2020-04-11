@@ -16,8 +16,7 @@ const  userSchema = new Schema({
     name : {type: String, required: true},
     dob : {type: Date, required: true},
     userStatus: Number,
-    avatar : String,
-    friends: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'}
+    avatar : String
 });
 
 module.exports = mongoose.model('User' ,userSchema);

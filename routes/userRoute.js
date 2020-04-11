@@ -103,11 +103,6 @@ router.post('/view', checkAuth, (req, res, next) => {
 router.post('/search', (req, res) => {
     const input = req.body.input;
 
-    // if(input.length < 2){
-    //     return res.json({
-    //         message: 'Must be at least 2 character'
-    //     })
-    // }else{
         User.find({
             $or: [
                 {username: new RegExp(input)},

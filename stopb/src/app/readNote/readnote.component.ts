@@ -87,6 +87,7 @@ export class ReadnoteComponent implements OnInit {
     ).subscribe(updated => {
       console.log(updated);
       if (updated) {
+
         this.router.navigateByUrl('/dashboard');
       }
     });
