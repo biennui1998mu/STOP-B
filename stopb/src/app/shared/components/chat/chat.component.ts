@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {SocketService} from "../../../services/socket.service";
-import {TokenService} from "../../../services/token.service";
 import {distinctUntilChanged} from "rxjs/operators";
+import {UserService} from "../../../services/user.service";
+import {User} from "../../interface/User";
 
 @Component({
   selector: 'app-chat',
@@ -14,14 +15,17 @@ export class ChatComponent implements OnInit {
   messages: string[] = [];
   listUser: string[] = [];
 
-  username: string;
   socket;
+
+  username: string;
+  avatar: string;
+  userStatus: number;
 
   chatWindow: boolean = false;
 
   constructor(
     private socketService: SocketService,
-    private tokenService: TokenService
+    private userService: UserService
   ) {
   }
 
@@ -65,8 +69,14 @@ export class ChatComponent implements OnInit {
   }
 
   getUserData() {
-    const tokenDecoded = this.tokenService.decodeJwt();
-    this.username = tokenDecoded.username;
+    return this.userService.getUserData().subscribe( (result: User) => {
+      if(result){
+        this.username = result.username;
+        this.avatar = result.avatar;
+        this.userStatus = result.userStatus;
+        console.log(result);
+      }
+    })
   }
 
   sendMessage() {

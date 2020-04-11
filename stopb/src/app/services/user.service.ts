@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {catchError, map} from "rxjs/operators";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {User} from "../shared/interface/User";
@@ -22,12 +22,28 @@ export class UserService {
     });
   }
 
-  searchUser(input: string){
-    return this.http.post<User[]>(`${this.url}/search`, {input: input}, { headers: this.header}).pipe(
-      map( result => {
-        if(result){
+  getUserData() {
+    return this.http.post<User>(`${this.url}/view`, {}, {headers: this.header}).pipe(
+      map(result => {
+        if (result) {
           return result;
-        }else{
+        } else {
+          return {};
+        }
+      }),
+      catchError(error => {
+        console.log(error);
+        return error;
+      }),
+    );
+  }
+
+  searchUser(input: string) {
+    return this.http.post<User[]>(`${this.url}/search`, {input: input}, {headers: this.header}).pipe(
+      map(result => {
+        if (result) {
+          return result;
+        } else {
           return []
         }
       }),
@@ -38,7 +54,7 @@ export class UserService {
     )
   }
 
-  updateUser(userId: string, userStatus: number){
+  updateUser(userId: string, userStatus: number) {
     return this.http.post<User>(`${this.url}/update/${userId}`, {userStatus: userStatus}).pipe(
       map(result => {
         if (result) {
