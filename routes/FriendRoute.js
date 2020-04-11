@@ -7,26 +7,45 @@ const User = require('../database/models/user');
 const friendRequest = require('../database/models/friendRequest');
 
 // Get all friend from list
-router.post('/list', (req, res) => {
-    // const userId = req.userData.userId;
-    const userId = req.body.userId;
+router.post('/list', checkAuth, async (req, res) => {
+    const userId = req.userData.userId;
+    // const userId = req.body.userId;
 
-    if(!userId){
+    if (!userId) {
         // ... xu ly validate
     }
-    friendRequest.find({
-        $or: [
-            {requester: userId},
-            {recipient: userId},
-        ],
-        status: 1
-    }, function (err, friends) {
-        if(friends){
-            return res.json(friends);
-        }else{
-            return err;
+    let listFriendRequest = [];
+    try {
+        listFriendRequest = await friendRequest.find({
+            $or: [
+                {requester: userId},
+                {recipient: userId},
+            ],
+            status: 1
+        }).populate('requester recipient').exec();
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            Error: e
+        });
+    }
+
+    if (listFriendRequest.length === 0) {
+        // neu chua ket ban thi cu tra ve array rong, k can xu ly gi them
+        return res.json([]);
+    }
+
+    // Array chua friend
+    const arrayParser = [];
+
+    listFriendRequest.forEach(request => {
+        if (request.requester._id.toString() === userId) {
+            arrayParser.push(request.recipient);
+        } else {
+            arrayParser.push(request.requester);
         }
     });
+    return res.json(arrayParser);
 });
 
 // send friend request
@@ -57,20 +76,20 @@ router.post('/add', checkAuth, (req, res) => {
 // Get friend request
 router.post('/request', checkAuth, (req, res) => {
     friendRequest.find({
-        recipient: req.userData.userId
-        // recipient: req.body.userId
+        recipient: req.userData.userId,
+        status: 0
     }, function (err, requests) {
-        if(requests){
+        if (requests) {
             return res.json(requests);
-        }else{
+        } else {
             return err;
         }
     })
 });
 
 // add friend request - change status of request to 1 or 2
-router.post('/request/update', checkAuth, (req, res) => {
-    const id = req.body._id;
+router.post('/request/update/:requestId', (req, res) => {
+    const id = req.params.requestId;
     const updateOps = {...req.body};
 
     console.log(updateOps);
@@ -89,6 +108,19 @@ router.post('/request/update', checkAuth, (req, res) => {
                 Error: err
             });
         });
+});
+
+// Check friend online
+router.post('/online', (req,res) => {
+    User.find({
+        userStatus: 1
+    }, function (err, requests) {
+        if (requests) {
+            return res.json(requests);
+        } else {
+            return err;
+        }
+    })
 });
 
 module.exports = router;

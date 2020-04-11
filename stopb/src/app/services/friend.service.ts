@@ -4,6 +4,7 @@ import {TokenService} from "./token.service";
 import {catchError, map} from "rxjs/operators";
 import {of} from "rxjs";
 import {FriendRequest} from "../shared/interface/FriendRequest";
+import {User} from "../shared/interface/User";
 
 @Injectable({
   providedIn: 'root'
@@ -22,14 +23,10 @@ export class FriendService {
   }
 
   getAllRequest() {
-    return this.http.post<{
-      token: string,
-      error: any,
-      requests: FriendRequest[]
-    }>(`${this.url}/request`, {}, { headers: this.header }).pipe(
+    return this.http.post<FriendRequest[]>(`${this.url}/request`, {}, { headers: this.header }).pipe(
       map(result => {
-        if (result.requests) {
-          return result.requests;
+        if (result) {
+          return result;
         } else {
           return [];
         }
@@ -62,19 +59,15 @@ export class FriendService {
     );
   }
 
-  setRequestStatus(credentials: {
+  setRequestStatus(requestId:string, credentials: {
     _id: string,
     requester: string,
     recipient: string,
     status: number
   }) {
-    return this.http.post<{
-      message: string,
-      updateStatus?: FriendRequest,
-      error: any
-    }>(`${this.url}/request/update`, credentials).pipe(
+    return this.http.post<FriendRequest[]>(`${this.url}/request/update/${requestId}`, credentials, {headers: this.header}).pipe(
       map(result => {
-        if (result.updateStatus) {
+        if (result) {
           return true;
         } else {
           return false;
@@ -85,5 +78,37 @@ export class FriendService {
         return of(false);
       }),
     );
+  }
+
+  getFriends(){
+    return this.http.post<User[]>(`${this.url}/list`, {}, { headers: this.header }).pipe(
+      map(result => {
+        if (result) {
+          return result;
+        } else {
+          return [];
+        }
+      }),
+      catchError(error => {
+        console.log(error);
+        return [];
+      }),
+    );
+  }
+
+  getFriendOnline(){
+    return this.http.post<User>(`${this.url}/online`, {}, { headers: this.header }).pipe(
+      map(result => {
+        if (result) {
+          return result;
+        } else {
+          return [];
+        }
+      }),
+      catchError(error => {
+        console.log(error);
+        return [];
+      })
+    )
   }
 }

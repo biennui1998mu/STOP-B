@@ -3,6 +3,7 @@ import {catchError, map} from "rxjs/operators";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {User} from "../shared/interface/User";
 import {TokenService} from "./token.service";
+import {of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,22 @@ export class UserService {
       catchError(error => {
         console.log(error);
         return [];
+      })
+    )
+  }
+
+  updateUser(userId: string, userStatus: number){
+    return this.http.post<User>(`${this.url}/update/${userId}`, {userStatus: userStatus}).pipe(
+      map(result => {
+        if (result) {
+          return true;
+        } else {
+          return false;
+        }
+      }),
+      catchError(error => {
+        console.log(error);
+        return of(false);
       })
     )
   }

@@ -1,6 +1,12 @@
 <mat-tab-group>
   <mat-tab label="List Friend">
-
+    <mat-card class="box-friend" *ngFor="let friend of friends">
+<!--      <img class="img" src="https://www.bigstockphoto.com/images/homepage/module-6.jpg" alt="">-->
+      <div class="info-friend">
+        <h5>{{friend.username}}</h5>
+        <small>{{friend.userStatus}}</small>
+      </div>
+    </mat-card>
   </mat-tab>
 
   <mat-tab label="Add Friend">
@@ -10,13 +16,16 @@
         <input matInput placeholder="Friend's username/name" [(ngModel)]="username">
       </mat-form-field>
       <button class="button" (click)="searchFriend()" mat-raised-button>Search</button>
-      <mat-card class="box-friend" *ngFor="let user of User">
+      <mat-card class="box-friend" *ngFor="let user of users">
         <img class="img" src="https://www.bigstockphoto.com/images/homepage/module-6.jpg" alt="">
         <div class="info-friend">
           <h5>{{user.username}}</h5>
           <small>{{user.name}}</small>
         </div>
-        <button mat-raised-button (click)="sendRequest()">Add friend</button>
+        <button mat-raised-button
+                (click)="sendRequest(user._id)">
+          Add friend
+        </button>
       </mat-card>
     </div>
   </mat-tab>
@@ -28,13 +37,13 @@
         <h5>{{request.requester}}</h5>
         <small>{{request.recipient}}</small>
       </div>
-      <button class="btn-ignore" mat-raised-button>
+      <button class="btn-ignore" mat-raised-button (click)="setRequestStatus(2, request.requester, request.recipient, request._id)">
         <span class="material-icons">
           cancel
         </span>
         Ignore
       </button>
-      <button class="btn-accept" mat-raised-button>
+      <button class="btn-accept" mat-raised-button (click)="setRequestStatus(1, request.requester, request.recipient, request._id)">
         <span class="material-icons">
           check_circle
         </span>

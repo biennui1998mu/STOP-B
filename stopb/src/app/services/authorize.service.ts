@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { catchError, map } from "rxjs/operators";
-import { of } from "rxjs";
-import { TokenService } from "./token.service";
-import { Router } from "@angular/router";
-import { DataStateService } from "./data-state.service";
-import { User } from "../shared/interface/User";
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {catchError, map} from "rxjs/operators";
+import {of} from "rxjs";
+import {TokenService} from "./token.service";
+import {Router} from "@angular/router";
+import {DataStateService} from "./data-state.service";
+import {User} from "../shared/interface/User";
 import * as io from 'socket.io-client';
 
 @Injectable({
@@ -30,10 +30,22 @@ export class AuthorizeService {
   }
 
   get isAuthorize() {
-    return !!this.tokenService.getToken();
+    // return !!this.tokenService.getToken();
     // "" => false
     // null/undefined => false
     // "..." => true
+
+    const token = this.tokenService.getToken();
+    if (!token) return false;
+
+    try {
+      // TODO: API check token tren server
+      this.tokenService.decodeJwt(token);
+      return true;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
   }
 
   login(credentials: {

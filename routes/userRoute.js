@@ -149,6 +149,7 @@ router.post('/signUp', upload.single('avatar'), (req, res, next) => {
                             password: hash,
                             name: req.body.name,
                             dob: req.body.dob,
+                            userStatus: 2,
                             avatar : req.file.path
                         });
                         user.save()
@@ -161,6 +162,7 @@ router.post('/signUp', upload.single('avatar'), (req, res, next) => {
                                         password: result.password,
                                         name: result.name,
                                         dob: result.dob,
+                                        userStatus: result.userStatus,
                                         avatar : result.avatar
                                     }
                                 })
@@ -213,46 +215,6 @@ router.post('/signIn', async (req, res, next) => {
             message: 'Auth fail 3'
         });
     }
-
-    // User.find({username: req.body.username})
-    //     .exec()
-    //     .then(user => {
-    //         if(user.length < 1){
-    //             return res.status(401).json({
-    //                 message:  'Auth fail 1'
-    //             });
-    //         }
-    //         bcrypt.compare(req.body.password,  user[0].password, (err, result) => {
-    //             if(err){
-    //                 return res.status(401).json({
-    //                     message:  'Auth fail 2'
-    //                 });
-    //             }
-    //             if(result){
-    //                 const token = jwt.sign({
-    //                     username: user[0].username,
-    //                     userid: user[0]._id
-    //                 },
-    //                     process.env.JWT_KEY,
-    //                     {
-    //                         expiresIn: "1h"
-    //                     });
-    //                 return res.status(200).json({
-    //                     message:  'Auth successful',
-    //                     token: token
-    //                 });
-    //             }
-    //             res.status(401).json({
-    //                 message:  'Auth fail 3'
-    //             });
-    //         })
-    //     })
-    //     .catch(err => {
-    //         console.log(err);
-    //         res.status(500).json({
-    //             Error : err,
-    //         })
-    //     });
 });
 
 // Update user
