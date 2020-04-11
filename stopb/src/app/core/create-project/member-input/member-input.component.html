@@ -1,0 +1,36 @@
+<mat-form-field appearance="outline">
+  <mat-label>Members</mat-label>
+  <mat-chip-list #chipList
+                 aria-label="Fruit selection"
+                 required>
+    <mat-chip (removed)="removeMember(member)"
+              *ngFor="let member of listMember"
+              [removable]="member._id !== currentUser.userId"
+              color="accent">
+      {{member.name}} <small class="text-muted"> - {{member.username}}</small>
+      <mat-icon *ngIf="member._id !== currentUser.userId"
+                matChipRemove>
+        cancel
+      </mat-icon>
+    </mat-chip>
+    <input #memberSearchInput
+           (matChipInputTokenEnd)="addMember($event)"
+           [formControl]="memberFormSearch"
+           [matAutocomplete]="memberAutoComplete"
+           [matChipInputFor]="chipList"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           placeholder="Search manager...">
+  </mat-chip-list>
+  <mat-autocomplete #memberAutoComplete="matAutocomplete"
+                    (optionSelected)="selectedManager($event)">
+    <mat-option *ngFor="let member of filteredMember"
+                [value]="member">
+      {{member.name}}
+      <small class="text-muted"> - {{member.username}}</small>
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+
+<mat-error *ngIf="memberNotFound.length > 0">
+  {{memberNotFound}}
+</mat-error>

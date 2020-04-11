@@ -14,7 +14,9 @@ import { SharedServicesModule } from './shared/services/shared-services.module';
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { AuthenticateGuard } from "./shared/guard/authenticate.guard";
-import { SocketService } from "../app/services/socket.service"
+import { SocketService } from "../app/services/socket.service";
+import { ManagerInputComponent } from './core/create-project/manager-input/manager-input.component';
+import { MemberInputComponent } from './core/create-project/member-input/member-input.component'
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { SocketService } from "../app/services/socket.service"
     CreateProjectComponent,
     ReadnoteComponent,
     ReadProjectComponent,
+    ManagerInputComponent,
+    MemberInputComponent,
   ],
   imports: [
     CoreImportsModule,

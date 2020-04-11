@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as jwtDecode from 'jwt-decode';
 
 @Injectable({
@@ -7,6 +7,15 @@ import * as jwtDecode from 'jwt-decode';
 export class TokenService {
 
   constructor() {
+  }
+
+  get user() {
+    try {
+      return this.decodeJwt();
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   }
 
   setToken(token) {
@@ -21,7 +30,13 @@ export class TokenService {
     localStorage.clear();
   }
 
-  decodeJwt(token?){
+  decodeJwt(token?): {
+    username: string,
+    userId: string,
+    name: string,
+    iat: number,
+    exp: number,
+  } {
     const tokenToDecode = token || localStorage.getItem('token');
     return jwtDecode(tokenToDecode);
   }

@@ -1,0 +1,36 @@
+<mat-form-field appearance="outline">
+  <mat-label>Managers</mat-label>
+  <mat-chip-list #chipList
+                 aria-label="Fruit selection"
+                 required>
+    <mat-chip (removed)="removeManager(manager)"
+              *ngFor="let manager of listManager"
+              [removable]="manager._id !== currentUser.userId"
+              color="primary">
+      {{manager.name}} <small class="text-muted"> - {{manager.username}}</small>
+      <mat-icon *ngIf="manager._id !== currentUser.userId"
+                matChipRemove>
+        cancel
+      </mat-icon>
+    </mat-chip>
+    <input #managerSearchInput
+           (matChipInputTokenEnd)="addManager($event)"
+           [formControl]="managerFormSearch"
+           [matAutocomplete]="managerAutoComplete"
+           [matChipInputFor]="chipList"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           placeholder="Search manager...">
+  </mat-chip-list>
+  <mat-autocomplete #managerAutoComplete="matAutocomplete"
+                    (optionSelected)="selectedManager($event)">
+    <mat-option *ngFor="let manager of filteredManager"
+                [value]="manager">
+      {{manager.name}}
+      <small class="text-muted"> - {{manager.username}}</small>
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+
+<mat-error *ngIf="managerNotFound.length > 0">
+  {{managerNotFound}}
+</mat-error>

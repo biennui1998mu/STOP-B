@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Task } from "../../shared/models/Task";
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UiStateService } from '../../shared/services/state/ui-state.service';
-import {ProjectService} from "../../services/project.service";
-import {Router} from "@angular/router";
-import {TaskService} from "../../services/task.service";
+import { ProjectService } from "../../services/project.service";
+import { Router } from "@angular/router";
+import { TaskService } from "../../services/task.service";
+import { User } from '../../shared/interface/User';
+import { TokenService } from '../../services/token.service';
+import { MatAutocomplete } from '@angular/material/autocomplete';
+import { UserService } from '../../services/user.service';
+import { MatVerticalStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-makePlan',
@@ -12,19 +16,27 @@ import {TaskService} from "../../services/task.service";
   styleUrls: ['./create-project.component.scss'],
 })
 export class CreateProjectComponent implements OnInit {
+  @ViewChild('projectFormCreate')
+  projectFormCreate: MatVerticalStepper;
 
-  memberList: string[] = ['Namhoang Do', 'QHuy', 'Tuananh Nguyen', 'Khue Pham', 'Son Goku'];
-  tasks: Task[] = [];
+  // @ViewChild('managerAutoComplete')
+  // managerAutocompleteInput: MatAutocomplete;
+  //
+  // @ViewChild('managerSearchInput')
+  // managerSearchInput: ElementRef<HTMLInputElement>;
 
-  createPlanForm: FormGroup;
-  createTaskForm: FormGroup;
+  projectForm: FormGroup;
+  taskForm: FormGroup;
+  taskArray: FormArray;
 
   constructor(
+    private tokenService: TokenService,
     private uiStateService: UiStateService,
     private formBuilder: FormBuilder,
     private planService: ProjectService,
     private taskService: TaskService,
-    private router: Router
+    private userService: UserService,
+    private router: Router,
   ) {
     this.uiStateService.setPageTitle({
       current: {
@@ -34,69 +46,81 @@ export class CreateProjectComponent implements OnInit {
     });
   }
 
+  get projectTitle() {
+    return this.projectForm.get('projectTitle');
+  }
+
+  get projectPriority() {
+    return this.projectForm.get('projectPriority');
+  }
+
+  get projectDate() {
+    return this.projectForm.get('projectDate');
+  }
+
+  get projectManager() {
+    return this.projectForm.get('projectManager');
+  }
+
+  get projectMember() {
+    return this.projectForm.get('projectMember');
+  }
+
+  get createdTasks() {
+    return this.taskForm.get('createdTasks') as FormArray;
+  }
+
   ngOnInit(): void {
-    this.createPlanForm = this.formBuilder.group({
-      planTitle: ['', [Validators.required, Validators.minLength(2)]],
-      planPriority: ['', [Validators.required]],
-      planDate: ['', [Validators.required]],
-      planMember: ['', [Validators.required]],
+    this.projectForm = this.formBuilder.group({
+      projectTitle: ['', [Validators.required, Validators.minLength(2)]],
+      projectPriority: ['', [Validators.required]],
+      projectDate: ['', [Validators.required]],
+      projectManager: [[], [
+        Validators.required,
+        Validators.maxLength(5),
+      ]],
+      projectMember: [[], [
+        Validators.required,
+        Validators.maxLength(50),
+      ]],
     });
-    this.createTaskForm = this.formBuilder.group(({
-      _id: [''],
-      taskTitle: ['', [Validators.required, Validators.minLength(2)]],
-      taskPara: ['']
-    }))
-  }
 
-  get planTitle() {
-    return this.createPlanForm.get('planTitle');
-  }
-
-  get planPriority() {
-    return this.createPlanForm.get('planPriority');
-  }
-
-  get planDate() {
-    return this.createPlanForm.get('planDate');
-  }
-
-  get planMember() {
-    return this.createPlanForm.get('planMember');
-  }
-
-  get taskTitle() {
-    return this.createTaskForm.get('taskTitle');
-  }
-
-  get taskPara() {
-    return this.createTaskForm.get('taskPara');
-  }
-
-  addTask() {
-    this.tasks.push({
-      title: '',
+    this.taskForm = this.formBuilder.group({
+      createdTasks: this.formBuilder.array([]),
     });
+
+    this.projectForm.valueChanges.subscribe(
+      s => console.log(s),
+    );
+
   }
 
-  updateTask(newVal: Task, index: number) {
-    console.log(newVal);
-    if (newVal) {
-      this.tasks.splice(index, 1, newVal);
-    } else {
-      this.tasks.splice(index, 1);
-    }
+  createTask() {
+    this.taskArray = this.createdTasks as FormArray;
+    this.taskArray.push(this.createTaskForm());
   }
 
-  createTask(){
-    return this.taskService.taskCreate(this.createTaskForm.value).subscribe()
-  }
+  // createTask() {
+  //   return this.taskService.taskCreate(this.createTaskForm.value).subscribe();
+  // }
+  //
+  //
+  // createPlan() {
+  //   return this.planService.projectCreate(this.createPlanForm.value).subscribe(success => {
+  //     if (!success) {
+  //       this.router.navigateByUrl('/dashboard');
+  //     }
+  //   });
 
-
-  createPlan(){
-      return this.planService.projectCreate(this.createPlanForm.value).subscribe( success => {
-        if (!success) {
-          this.router.navigateByUrl('/dashboard');
-        }
-      })
+  private createTaskForm(): FormGroup {
+    return this.formBuilder.group({
+      taskTitle: ['', [
+        Validators.required, Validators.minLength(2),
+      ]],
+      taskDescription: [''],
+      taskPriority: ['', Validators.required],
+      taskStartDate: [''],
+      taskEndDate: [''],
+    });
   }
 }

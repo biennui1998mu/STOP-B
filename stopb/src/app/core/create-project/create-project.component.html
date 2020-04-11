@@ -1,54 +1,129 @@
-<div class="wrapper">
-  <mat-card [formGroup]="createPlanForm" class="plan-info">
-    <h2 class="title">Plan Info</h2>
+<mat-vertical-stepper #projectFormCreate
+                      [linear]="true"
+                      disableRipple="true">
+  <mat-step [stepControl]="projectForm">
+    <form [formGroup]="projectForm"
+          class="flex flex-d-column">
+      <ng-template matStepLabel>Project information</ng-template>
+      <mat-form-field appearance="outline">
+        <mat-label>Project Title</mat-label>
+        <input formControlName="projectTitle"
+               matInput
+               placeholder="Project Valorant"
+               required>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Title</mat-label>
-      <input formControlName="planTitle" matInput maxlength="100" required>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Priority</mat-label>
+        <mat-select formControlName="projectPriority" required>
+          <mat-option value="true">Important</mat-option>
+          <mat-option value="false">Normal</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Priority</mat-label>
-      <mat-select formControlName="planPriority" required>
-        <mat-option value="true">Important</mat-option>
-        <mat-option value="false">Normal</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Starting Date</mat-label>
+        <input [matDatepicker]="picker"
+               formControlName="projectDate"
+               matInput
+               required>
+        <mat-datepicker-toggle [for]="picker"
+                               matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Choose a date</mat-label>
-      <input [matDatepicker]="picker" formControlName="planDate" matInput>
-      <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
+      <app-manager-input [projectManager]="projectManager"
+                         class="grid">
+      </app-manager-input>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Member</mat-label>
-      <mat-select formControlName="planMember" multiple>
-        <mat-option *ngFor="let member of memberList" [value]="member">{{member}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </mat-card>
+      <app-member-input [projectManager]="projectManager"
+                        [projectMember]="projectMember"
+                        class="grid">
+      </app-member-input>
 
-  <mat-card class="task-dynamic">
-    <h2>List task</h2>
+      <div class="flex justify-content-flex-end">
+        <button [disabled]="projectForm.invalid"
+                color="primary"
+                mat-raised-button
+                matStepperNext>
+          Next
+        </button>
+      </div>
+    </form>
+  </mat-step>
 
-    <app-new-task (taskUpdated)="updateTask($event, index)"
-                  *ngFor="let task of tasks, let index = index"
-                  [task]="task" [formGroup]="createTaskForm"></app-new-task>
-    <button (click)="addTask()"
-            class="btn-confirm"
-            mat-raised-button>
-      Create new task
-    </button>
-  </mat-card>
+  <mat-step [stepControl]="taskForm" optional>
+    <form [formGroup]="taskForm">
+      <ng-template matStepLabel>Tasks</ng-template>
 
-  <mat-card class="confirmation">
-    <button color="primary"
-            (click)="createPlan()"
-            [disabled]="createPlanForm.invalid && createTaskForm.invalid"
-            mat-raised-button>
-      Create
-    </button>
-  </mat-card>
-</div>
+      <div *ngFor="let task of createdTasks.controls; let i = index;"
+           formArrayName="taskArray">
+        <div [formGroupName]="i">
+          <mat-form-field>
+            <mat-label>Title</mat-label>
+            <input formControlName="taskTitle"
+                   matInput
+                   placeholder="your title..."
+                   required>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Description</mat-label>
+            <input formControlName="taskTitle"
+                   matInput
+                   placeholder="Ex. 1 Main St, New York, NY"
+                   required>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Priority</mat-label>
+            <input formControlName="taskPriority"
+                   matInput
+                   placeholder="Ex. 1 Main St, New York, NY"
+                   required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Starting Date</mat-label>
+            <input [matDatepicker]="pickerTaskStart"
+                   formControlName="taskStartDate"
+                   matInput
+                   required>
+            <mat-datepicker-toggle [for]="pickerTaskStart"
+                                   matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #pickerTaskStart></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>End Date</mat-label>
+            <input [matDatepicker]="pickerTaskEnd"
+                   formControlName="taskEndDate"
+                   matInput
+                   required>
+            <mat-datepicker-toggle [for]="pickerTaskEnd"
+                                   matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #pickerTaskEnd></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <button (click)="createTask()"
+              mat-raised-button>
+        Add Task
+      </button>
+
+      <div class="flex justify-content-flex-end">
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <p>You are now done.</p>
+    <div class="flex justify-content-flex-end">
+      <button mat-button matStepperPrevious>
+        Back
+      </button>
+      <button (click)="projectFormCreate.reset()" mat-button>Reset</button>
+    </div>
+  </mat-step>
+</mat-vertical-stepper>

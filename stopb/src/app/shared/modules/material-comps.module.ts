@@ -12,6 +12,9 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatCardModule } from "@angular/material/card";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 const modules = [
   BrowserAnimationsModule,
@@ -26,6 +29,9 @@ const modules = [
   MatCheckboxModule,
   MatCardModule,
   MatTableModule,
+  MatStepperModule,
+  MatChipsModule,
+  MatAutocompleteModule,
 ];
 
 @NgModule({
