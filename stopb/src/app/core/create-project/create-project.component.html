@@ -53,12 +53,14 @@
   </mat-step>
 
   <mat-step [stepControl]="taskForm" optional>
-    <form [formGroup]="taskForm">
+    <form [formGroup]="taskForm"
+          class="flex flex-d-column">
       <ng-template matStepLabel>Tasks</ng-template>
 
       <div *ngFor="let task of createdTasks.controls; let i = index;"
-           formArrayName="taskArray">
-        <div [formGroupName]="i">
+           formArrayName="createdTasks">
+        <div [formGroupName]="i"
+             class="flex flex-d-column">
           <mat-form-field>
             <mat-label>Title</mat-label>
             <input formControlName="taskTitle"
@@ -68,9 +70,9 @@
           </mat-form-field>
           <mat-form-field>
             <mat-label>Description</mat-label>
-            <input formControlName="taskTitle"
+            <input formControlName="taskDescription"
                    matInput
-                   placeholder="Ex. 1 Main St, New York, NY"
+                   placeholder="Description"
                    required>
           </mat-form-field>
           <mat-form-field>

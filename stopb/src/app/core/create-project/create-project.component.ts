@@ -1,12 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UiStateService } from '../../shared/services/state/ui-state.service';
 import { ProjectService } from "../../services/project.service";
 import { Router } from "@angular/router";
 import { TaskService } from "../../services/task.service";
-import { User } from '../../shared/interface/User';
 import { TokenService } from '../../services/token.service';
-import { MatAutocomplete } from '@angular/material/autocomplete';
 import { UserService } from '../../services/user.service';
 import { MatVerticalStepper } from '@angular/material/stepper';
 
@@ -18,12 +16,6 @@ import { MatVerticalStepper } from '@angular/material/stepper';
 export class CreateProjectComponent implements OnInit {
   @ViewChild('projectFormCreate')
   projectFormCreate: MatVerticalStepper;
-
-  // @ViewChild('managerAutoComplete')
-  // managerAutocompleteInput: MatAutocomplete;
-  //
-  // @ViewChild('managerSearchInput')
-  // managerSearchInput: ElementRef<HTMLInputElement>;
 
   projectForm: FormGroup;
   taskForm: FormGroup;
@@ -71,28 +63,11 @@ export class CreateProjectComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.projectForm = this.formBuilder.group({
-      projectTitle: ['', [Validators.required, Validators.minLength(2)]],
-      projectPriority: ['', [Validators.required]],
-      projectDate: ['', [Validators.required]],
-      projectManager: [[], [
-        Validators.required,
-        Validators.maxLength(5),
-      ]],
-      projectMember: [[], [
-        Validators.required,
-        Validators.maxLength(50),
-      ]],
-    });
+    this.projectFormBuilder();
 
     this.taskForm = this.formBuilder.group({
       createdTasks: this.formBuilder.array([]),
     });
-
-    this.projectForm.valueChanges.subscribe(
-      s => console.log(s),
-    );
-
   }
 
   createTask() {
@@ -121,6 +96,22 @@ export class CreateProjectComponent implements OnInit {
       taskPriority: ['', Validators.required],
       taskStartDate: [''],
       taskEndDate: [''],
+    });
+  }
+
+  private projectFormBuilder() {
+    this.projectForm = this.formBuilder.group({
+      projectTitle: ['', [Validators.required, Validators.minLength(2)]],
+      projectPriority: ['', [Validators.required]],
+      projectDate: ['', [Validators.required]],
+      projectManager: [[], [
+        Validators.required,
+        Validators.maxLength(5),
+      ]],
+      projectMember: [[], [
+        Validators.required,
+        Validators.maxLength(50),
+      ]],
     });
   }
 }
