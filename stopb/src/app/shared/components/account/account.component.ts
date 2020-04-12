@@ -38,7 +38,6 @@ export class AccountComponent implements OnInit {
       if(result){
         event.preventDefault();
         this.authorizeService.logout();
-        this.socketService.getUserLogOut();
         this.dialog.close();
       }
     });

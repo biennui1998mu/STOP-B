@@ -16,11 +16,10 @@
       <h3>
         Bạn bè
       </h3>
-      <button style="margin-left: 3rem" mat-raised-button (click)="openChat()">Chat</button>
     </div>
     <div class="list" id="listFriend">
       <div *ngFor="let user of listUser"
-           class="row-card friend">
+           class="row-card friend" (click)="openChat()">
         <img alt="" src="https://www.bigstockphoto.com/images/homepage/module-6.jpg">
         <h5 class="username">
           {{user}}
@@ -42,19 +41,15 @@
       <div id="chat-box">
 
       </div>
-      <div id="noTi-typing">
-
-      </div>
     </mat-card>
     <mat-card class="user-chat">
-      <input (focus)="onFocus()"
-             (focusout)="outFocus()"
+      <input
              [(ngModel)]="message"
              class="user-input"
              id="input-chat" name="message"
              type="text"
       >
-      <button (click)="sendMessage()"
+      <button 
               class="user-submit-btn"
               mat-raised-button>Send
       </button>

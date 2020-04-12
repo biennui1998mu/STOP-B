@@ -4,14 +4,13 @@ const Schema = mongoose.Schema;
 
 const projectSchema = new Schema({
     _id : mongoose.Schema.Types.ObjectId,
-    projectUserId: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     projectTitle: {type: String, required: true},
     projectDescription: String,
     projectPriority: {type: Number, required: true},
     projectStartDate: Date,
     projectEndDate: Date,
-    projectStatus: Boolean,
-    projectManager: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'},
+    projectStatus: {type: Boolean, required: true},
+    projectManager: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     projectModerator: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'},
     projectMember: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'}
 });

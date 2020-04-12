@@ -147,6 +147,7 @@
   display: grid;
   grid-template-areas: 'avatar name' 'avatar status';
   grid-template-rows: max-content auto;
+  cursor: pointer;
 
   img {
     grid-area: avatar;

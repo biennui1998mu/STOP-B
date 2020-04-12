@@ -26,7 +26,7 @@ export class AuthorizeService {
     this.header = new HttpHeaders({
       "Authorize": this.tokenService.getToken(),
     });
-    this.socket = io(this.url);
+    // this.socket = io(this.url);
   }
 
   get isAuthorize() {
