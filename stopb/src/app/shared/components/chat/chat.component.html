@@ -16,10 +16,9 @@
       <h3>
         Bạn bè
       </h3>
-      <button style="margin-left: 3rem" mat-raised-button (click)="openChat()">Chat</button>
     </div>
     <div class="list" id="listFriend">
-      <div *ngFor="let user of listUser"
+      <div *ngFor="let user of listUser"  (click)="openChat()"
            class="row-card friend">
         <img alt="" src="https://www.bigstockphoto.com/images/homepage/module-6.jpg">
         <h5 class="username">
