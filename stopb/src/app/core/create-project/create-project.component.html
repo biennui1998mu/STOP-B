@@ -2,7 +2,7 @@
                         [linear]="true">
   <mat-step [stepControl]="projectForm">
     <form [formGroup]="projectForm"
-          class="flex flex-d-column">
+          class="flex flex-d-column content-container">
       <ng-template matStepLabel>Project information</ng-template>
       <h1 class="text-muted fw-lighter">Information</h1>
       <hr class="mb-1rem">
@@ -67,9 +67,10 @@
     </form>
   </mat-step>
 
-  <mat-step [stepControl]="taskForm" optional>
+  <mat-step [stepControl]="taskForm"
+            optional>
     <form [formGroup]="taskForm"
-          class="flex flex-d-column">
+          class="flex flex-d-column content-container">
       <ng-template matStepLabel>Tasks</ng-template>
 
       <div *ngFor="let task of createdTasks.controls; let i = index;"

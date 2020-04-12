@@ -1,26 +1,77 @@
-.navigation-bar {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background: white;
+.menu {
+  grid-area: menu;
+  grid-template-columns: 1fr;
+  height: inherit;
+  overflow: auto;
 
-  .top-buttons, .bot-buttons {
-    display: flex;
-    flex-direction: column;
+  .url-header, .url-link, .url-item {
+    grid-template-columns: max-content auto;
+    grid-gap: 1rem;
+    align-content: center;
+    align-items: center;
+  }
 
-    .divider {
-      width: 80%;
-      margin: 1rem auto;
+  .url-link {
+    transition: background-color 0.2s;
+
+    &:before {
+      position: absolute;
+      content: '';
+      top: 0.25rem;
+      left: 0;
+      bottom: 0.25rem;
+      width: 4px;
+      background: transparent;
+      transition: background-color 0.2s;
+    }
+
+    &:hover {
+      background: rgba(64, 64, 64, 0.8);
+    }
+
+    &.active {
+      &:before {
+        background: #00c851;
+      }
     }
   }
 
-  .top-buttons {
-    padding: 1rem;
+  .combo-url {
+    overflow: hidden;
 
-    .button {
-      margin-bottom: 1rem;
+    .url-item {
+      display: none;
+      font-size: 0.8rem;
+
+      &.active {
+        &:before {
+          position: absolute;
+          content: '';
+          top: 0;
+          left: 0;
+          bottom: 0;
+          width: 4px;
+          background: #00c851;
+        }
+      }
+    }
+
+    &.active {
+      .url-item {
+        display: grid;
+      }
     }
   }
+}
+
+.social {
+  grid-area: social;
+}
+
+.user {
+  grid-area: user;
+}
+
+.sticky {
+  z-index: 100;
 }

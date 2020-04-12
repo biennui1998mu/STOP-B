@@ -1,46 +1,58 @@
-<div class="navigation-bar mat-elevation-z5">
-  <div class="top-buttons">
-    <button class="button"
-            color="primary"
-            mat-flat-button
-            routerLink="/dashboard">
-      Dashboard
-    </button>
-    <button class="button"
-            color="primary"
-            mat-flat-button
-            routerLink="/note/create">
-      Quick Note
-    </button>
-    <button class="button"
-            color="primary"
-            mat-flat-button
-            routerLink="/project/create">
-      Create Project
-    </button>
-    <hr class="divider">
+<div class="relative menu">
+  <div class="text-muted user-select-none pl1 pt1 pb05 top0 bg-darker sticky fw-lighter">
+    Navigation
+  </div>
+  <a [routerLinkActiveOptions]="{exact: true}"
+     class="td-none text-white user-select-none p1em grid relative url-link"
+     routerLink="/dashboard"
+     routerLinkActive="active">
+    <mat-icon>dashboard</mat-icon>
+    Dashboard
+  </a>
+
+  <div [class.active]="noteSectionOpen"
+       class="td-none user-select-none flex flex-d-col relative combo-url">
+    <div (click)="defaultSectionClick('note', '/note')"
+         class="cursor-pointer p1em grid relative url-header">
+      <mat-icon>note</mat-icon>
+      Notes
+    </div>
+    <a [routerLinkActiveOptions]="{exact: true}"
+       [routerLinkActive]="['active']"
+       [routerLink]="['/note']"
+       class="td-none bg-darkest relative user-select-none text-muted p05 pl3 tt-capitalize url-item">
+      <mat-icon>note</mat-icon>
+      All notes
+    </a>
+    <a [routerLinkActiveOptions]="{exact: true}"
+       [routerLinkActive]="['active']"
+       [routerLink]="['/note', 'create']"
+       class="td-none bg-darkest relative user-select-none text-muted p05 pl3 tt-capitalize url-item">
+      <mat-icon>add_circle</mat-icon>
+      Create note
+    </a>
   </div>
 
-  <div class="bot-buttons">
-    <hr class="divider">
-
-    <button (click)="openDialogFriends()"
-            class="button"
-            color="primary"
-            mat-button>
-      Friends
-    </button>
-    <button (click)="openDialogSetting()"
-            class="button"
-            color="primary"
-            mat-button>
-      Setting
-    </button>
-    <button (click)="openDialogAccount()"
-            class="button"
-            color="primary"
-            mat-button routerLink="/account">
-      Account
-    </button>
+  <div [class.active]="projectSectionOpen"
+       class="td-none user-select-none flex flex-d-col relative combo-url">
+    <div (click)="defaultSectionClick('project', '/project')"
+         class="cursor-pointer p1em grid relative url-header">
+      <mat-icon>assignment</mat-icon>
+      Projects
+    </div>
+    <a [routerLinkActiveOptions]="{exact: true}"
+       [routerLinkActive]="['active']"
+       [routerLink]="['/project']"
+       class="td-none bg-darkest relative user-select-none text-muted p05 pl3 tt-capitalize url-item">
+      <mat-icon>assignment</mat-icon>
+      Projects
+    </a>
+    <a [routerLinkActiveOptions]="{exact: true}"
+       [routerLinkActive]="['active']"
+       [routerLink]="['/project', 'create']"
+       class="td-none bg-darkest relative user-select-none text-muted p05 pl3 tt-capitalize url-item">
+      <mat-icon>add_circle</mat-icon>
+      Create Project
+    </a>
   </div>
 </div>

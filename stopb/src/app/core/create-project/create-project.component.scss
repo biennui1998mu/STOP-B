@@ -2,6 +2,11 @@
   min-height: 100%;
 }
 
+.content-container {
+  max-width: 600px !important;
+  margin: auto !important;
+}
+
 .mat-form-field {
   margin-top: 16px;
 }

@@ -15,6 +15,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 const modules = [
   BrowserAnimationsModule,
@@ -32,6 +34,8 @@ const modules = [
   MatStepperModule,
   MatChipsModule,
   MatAutocompleteModule,
+  MatToolbarModule,
+  MatSidenavModule
 ];
 
 @NgModule({
