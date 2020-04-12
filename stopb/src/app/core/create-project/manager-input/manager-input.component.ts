@@ -9,7 +9,7 @@ import { UserService } from '../../../services/user.service';
 import { TokenService } from '../../../services/token.service';
 
 @Component({
-  selector: 'app-manager-input',
+  selector: 'app-moderator-input',
   templateUrl: './manager-input.component.html',
   styleUrls: ['./manager-input.component.scss'],
 })
@@ -20,7 +20,7 @@ export class ManagerInputComponent implements OnInit {
   managerAutocompleteInput: MatAutocomplete;
 
   @Input()
-  projectManager: AbstractControl;
+  projectModerator: AbstractControl;
 
   @Input()
   projectMember: AbstractControl;
@@ -39,7 +39,7 @@ export class ManagerInputComponent implements OnInit {
   }
 
   get listManager() {
-    return this.projectManager.value as User[];
+    return this.projectModerator.value as User[];
   }
 
   get currentUser() {
@@ -53,7 +53,7 @@ export class ManagerInputComponent implements OnInit {
   removeManager(manager: User) {
     const currentList = this.listManager;
     const newList = currentList.filter(user => user._id !== manager._id);
-    this.projectManager.setValue(newList);
+    this.projectModerator.setValue(newList);
   }
 
   addManager($event: MatChipInputEvent) {
@@ -84,7 +84,7 @@ export class ManagerInputComponent implements OnInit {
     this.filteredManager = this.filteredManager.filter(
       user => user._id !== newUser._id,
     );
-    this.projectManager.setValue(currentManagers);
+    this.projectModerator.setValue(currentManagers);
   }
 
   private searchManageFormSub() {

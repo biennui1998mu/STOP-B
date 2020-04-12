@@ -1,108 +1,5 @@
-.table {
-  display: grid;
-  grid-template-columns: 0.5fr 1fr;
-  grid-column-gap: 1rem;
-  margin-top: 1rem;
-
-  .table-left {
-    grid-column: 1/2;
-    border-right: 1px solid rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-
-    mat-form-field {
-      width: 80%;
-    }
-  }
-
-  .table-right {
-    border-left: 1px solid rgba(0, 0, 0, 0.5);
-    grid-column: 2/3;
-    padding: 0 1rem 0 1rem;
-    background: var(--main-color);
-    border-radius: 4px;
-    display: grid;
-    grid-template-rows: 3rem auto;
-    //grid-template-columns: 1fr;
-
-
-    mat-form-field {
-      width: 100%;
-    }
-
-    .btn-create {
-      button {
-        margin-right: 1rem;
-
-      }
-    }
-
-    .tasks {
-      grid-row: 2/3;
-      //grid-column: 1/2;
-      .eachTask {
-        width: 25rem;
-        margin-bottom: 1rem;
-
-        //.button{
-        //  margin-top: -2rem;
-        //  width: 6rem;
-        //}
-      }
-    }
-
-  }
-
-  .button {
-    width: 80%;
-    margin: 3rem 0 0 0;
-  }
-}
-
-.wrapper {
-  display: grid;
-  grid-template-areas: 'info tasks' 'confirm tasks';
-  grid-template-columns: 350px auto;
-  grid-template-rows: max-content auto;
-  grid-gap: 1rem;
-  padding: 1rem;
-
-  .plan-info {
-    grid-area: info;
-    background: white;
-    display: flex;
-    flex-direction: column;
-
-    > * {
-      margin-bottom: 1rem;
-    }
-  }
-
-  .task-dynamic {
-    grid-area: tasks;
-    display: flex;
-    flex-direction: column;
-    align-self: start;
-
-    > * {
-      margin-bottom: 1rem;
-    }
-
-    .btn-confirm {
-      align-self: flex-end;
-    }
-  }
-
-  .confirmation {
-    grid-area: confirm;
-    display: flex;
-    justify-content: flex-end;
-    align-self: flex-end;
-  }
-}
-
-.mat-stepper-vertical {
-  height: 100%;
+.mat-stepper-horizontal {
+  min-height: 100%;
 }
 
 .mat-form-field {
@@ -111,6 +8,10 @@
 
 .text-muted {
   color: #848484;
+}
+
+.fw-lighter {
+  font-weight: lighter;
 }
 
 .grid {
@@ -127,4 +28,33 @@
 
 .justify-content-flex-end {
   justify-content: flex-end;
+}
+
+.project-meta {
+  grid-template-areas: 'description end-date' 'description priority';
+  grid-gap: 1rem;
+  grid-template-columns: auto 200px;
+  grid-template-rows: max-content auto;
+
+  .priority {
+    grid-area: priority;
+    align-self: start;
+  }
+
+  .end-date {
+    grid-area: end-date;
+    align-self: start;
+  }
+
+  .description {
+    grid-area: description;
+  }
+
+  .mat-form-field {
+    margin-top: 0;
+  }
+}
+
+.mb-1rem {
+  margin-bottom: 1rem;
 }

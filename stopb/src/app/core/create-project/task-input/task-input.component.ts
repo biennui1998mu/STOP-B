@@ -9,23 +9,19 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-member-input',
-  templateUrl: './member-input.component.html',
-  styleUrls: ['./member-input.component.scss'],
+  selector: 'app-task-input',
+  templateUrl: './task-input.component.html',
+  styleUrls: ['./task-input.component.scss'],
 })
-export class MemberInputComponent implements OnInit {
+export class TaskInputComponent implements OnInit {
   @ViewChild('memberSearchInput')
   memberSearchInput: ElementRef<HTMLInputElement>;
-  @ViewChild('memberAutoComplete')
-  memberAutocompleteInput: MatAutocomplete;
 
   @Input()
   projectMember: AbstractControl;
 
   @Input()
   projectModerator: AbstractControl;
-
-  memberNotFound: string = '';
 
   filteredMember: User[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -61,11 +57,7 @@ export class MemberInputComponent implements OnInit {
   }
 
   addMember($event: MatChipInputEvent) {
-    if ($event.value.length < 2) {
-      this.memberNotFound = 'Must have at least 2 characters!';
-    } else if (this.filteredMember.length == 0) {
-      this.memberNotFound = 'No result found to add.';
-    } else if (
+    if (
       $event.value.length > 2 &&
       this.filteredMember.length > 0
     ) {
@@ -80,7 +72,6 @@ export class MemberInputComponent implements OnInit {
   }
 
   private addMemberToForm(newUser: User) {
-    this.memberNotFound = '';
     const currentMember = this.listMember;
     currentMember.push(newUser);
     this.memberSearchInput.nativeElement.value = '';

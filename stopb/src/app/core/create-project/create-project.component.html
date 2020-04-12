@@ -1,10 +1,11 @@
-<mat-vertical-stepper #projectFormCreate
-                      [linear]="true"
-                      disableRipple="true">
+<mat-horizontal-stepper #projectFormCreate
+                        [linear]="true">
   <mat-step [stepControl]="projectForm">
     <form [formGroup]="projectForm"
           class="flex flex-d-column">
       <ng-template matStepLabel>Project information</ng-template>
+      <h1 class="text-muted fw-lighter">Information</h1>
+      <hr class="mb-1rem">
       <mat-form-field appearance="outline">
         <mat-label>Project Title</mat-label>
         <input formControlName="projectTitle"
@@ -13,31 +14,45 @@
                required>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Priority</mat-label>
-        <mat-select formControlName="projectPriority" required>
-          <mat-option value="true">Important</mat-option>
-          <mat-option value="false">Normal</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <div class="grid project-meta">
 
-      <mat-form-field appearance="outline">
-        <mat-label>Starting Date</mat-label>
-        <input [matDatepicker]="picker"
-               formControlName="projectDate"
-               matInput
-               required>
-        <mat-datepicker-toggle [for]="picker"
-                               matSuffix></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="description">
+          <mat-label>Project Description</mat-label>
+          <textarea [matTextareaAutosize]="false"
+                    formControlName="projectDescription"
+                    matInput
+                    placeholder="Project FPS shooter"
+                    required
+                    style="min-height: 127px; width: 100%; resize: vertical"></textarea>
+        </mat-form-field>
 
-      <app-manager-input [projectManager]="projectManager"
-                         class="grid">
-      </app-manager-input>
+        <mat-form-field appearance="outline" class="priority">
+          <mat-label>Priority</mat-label>
+          <mat-select formControlName="projectPriority" required>
+            <mat-option style="color: red" value="true">Important</mat-option>
+            <mat-option value="false">Normal</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-      <app-member-input [projectManager]="projectManager"
-                        [projectMember]="projectMember"
+        <mat-form-field appearance="outline" class="end-date">
+          <mat-label>End Date</mat-label>
+          <input [matDatepicker]="picker"
+                 formControlName="projectEndDate"
+                 matInput>
+          <mat-datepicker-toggle [for]="picker"
+                                 matSuffix></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+      </div>
+      <h1 class="text-muted fw-lighter">Member</h1>
+      <hr class="mb-1rem">
+      <app-moderator-input [projectModerator]="projectModerator"
+                           class="grid">
+      </app-moderator-input>
+
+      <app-member-input [projectMember]="projectMember"
+                        [projectModerator]="projectModerator"
                         class="grid">
       </app-member-input>
 
@@ -59,52 +74,9 @@
 
       <div *ngFor="let task of createdTasks.controls; let i = index;"
            formArrayName="createdTasks">
-        <div [formGroupName]="i"
-             class="flex flex-d-column">
-          <mat-form-field>
-            <mat-label>Title</mat-label>
-            <input formControlName="taskTitle"
-                   matInput
-                   placeholder="your title..."
-                   required>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Description</mat-label>
-            <input formControlName="taskDescription"
-                   matInput
-                   placeholder="Description"
-                   required>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Priority</mat-label>
-            <input formControlName="taskPriority"
-                   matInput
-                   placeholder="Ex. 1 Main St, New York, NY"
-                   required>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Starting Date</mat-label>
-            <input [matDatepicker]="pickerTaskStart"
-                   formControlName="taskStartDate"
-                   matInput
-                   required>
-            <mat-datepicker-toggle [for]="pickerTaskStart"
-                                   matSuffix></mat-datepicker-toggle>
-            <mat-datepicker #pickerTaskStart></mat-datepicker>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>End Date</mat-label>
-            <input [matDatepicker]="pickerTaskEnd"
-                   formControlName="taskEndDate"
-                   matInput
-                   required>
-            <mat-datepicker-toggle [for]="pickerTaskEnd"
-                                   matSuffix></mat-datepicker-toggle>
-            <mat-datepicker #pickerTaskEnd></mat-datepicker>
-          </mat-form-field>
-        </div>
+        <app-task-input [formGroupName]="i"
+                        class="grid">
+        </app-task-input>
       </div>
       <button (click)="createTask()"
               mat-raised-button>
@@ -128,4 +100,4 @@
       <button (click)="projectFormCreate.reset()" mat-button>Reset</button>
     </div>
   </mat-step>
-</mat-vertical-stepper>
+</mat-horizontal-stepper>
