@@ -1,12 +1,12 @@
 <div class="chat-sidebar mat-elevation-z5">
   <div class="top">
     <div class="row-card user-self">
-      <img alt="" src="">
+      <img alt="" src="{{avatar}}">
       <h3 class="username">
         {{username}}
       </h3>
       <small class="status online">
-        Online
+        {{userStatus}}
       </small>
     </div>
   </div>
@@ -22,7 +22,7 @@
       <div *ngFor="let user of listUser"
            class="row-card friend">
         <img alt="" src="https://www.bigstockphoto.com/images/homepage/module-6.jpg">
-        <h5 class="username" name="username">
+        <h5 class="username">
           {{user}}
         </h5>
         <small class="status online">

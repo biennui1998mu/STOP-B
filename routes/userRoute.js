@@ -75,8 +75,8 @@ router.post('/', (req, res, next) => {
 });
 
 // take user by ID
-router.post('/view', (req, res, next) => {
-    const id = req.params.userId;
+router.post('/view', checkAuth, (req, res, next) => {
+    const id = req.userData.userId;
     if (!id) {
         // ... xu ly validate
     }
@@ -84,19 +84,16 @@ router.post('/view', (req, res, next) => {
         .exec()
         .then(user => {
             if (user) {
-                res.status(200).json({
-                    user: user
-                })
+                return res.status(200).json(user)
             } else {
-                res.status(404).json({
+                return res.status(404).json({
                     message: 'No user found by id'
                 })
             }
-            res.status(200).json(user);
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({
+            return res.status(500).json({
                 error: err
             })
         })
@@ -106,11 +103,6 @@ router.post('/view', (req, res, next) => {
 router.post('/search', (req, res) => {
     const input = req.body.input;
 
-    // if(input.length < 2){
-    //     return res.json({
-    //         message: 'Must be at least 2 character'
-    //     })
-    // }else{
         User.find({
             $or: [
                 {username: new RegExp(input)},
@@ -137,6 +129,8 @@ router.post('/signUp', upload.single('avatar'), (req, res, next) => {
                     message: 'username exist'
                 });
             } else {
+                const url = `${process.env.PROTOCOL}://${process.env.HOST_NAME}:${process.env.PORT}/`;
+
                 bcrypt.hash(req.body.password, 10, (err, hash) => {
                     if (err) {
                         return res.status(500).json({
@@ -150,7 +144,7 @@ router.post('/signUp', upload.single('avatar'), (req, res, next) => {
                             name: req.body.name,
                             dob: req.body.dob,
                             userStatus: 2,
-                            avatar : req.file.path
+                            avatar : url + "uploads/sample.png"
                         });
                         user.save()
                             .then(result => {
@@ -202,7 +196,7 @@ router.post('/signIn', async (req, res, next) => {
             },
             process.env.JWT_KEY,
             {
-                expiresIn: 3600
+                expiresIn: 7200
             });
         console.log(jwt.verify(token, process.env.JWT_KEY));
         console.log(token);

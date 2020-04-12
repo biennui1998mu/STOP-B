@@ -5,6 +5,5 @@ export interface User {
   name: string,
   dob: string,
   userStatus: number,
-  avatar: string,
-  friends: []
+  avatar: string
 }

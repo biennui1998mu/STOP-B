@@ -22,6 +22,22 @@ export class UserService {
     });
   }
 
+  getUserData() {
+    return this.http.post<User>(`${this.url}/view`, {}, { headers: this.header }).pipe(
+      map(result => {
+        if (result) {
+          return result;
+        } else {
+          return {};
+        }
+      }),
+      catchError(error => {
+        console.log(error);
+        return error;
+      }),
+    );
+  }
+
   searchUser(input: string): Observable<User[]> {
     return this.http.post<User[]>(
       `${this.url}/search`,
