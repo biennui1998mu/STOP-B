@@ -15,6 +15,8 @@ export class ChatComponent implements OnInit {
   messages: string[] = [];
   listUser: string[] = [];
 
+  socket;
+
   username: string;
   avatar: string;
   userStatus: number;
@@ -29,7 +31,39 @@ export class ChatComponent implements OnInit {
 
   ngOnInit() {
     // Kết nối socket io và gán token
-    // this.socketService.setupSocketConnection();
+    this.socketService.setupSocketConnection();
+
+    // Lấy messages
+    this.socketService.getMessage();
+
+    // NoTi typing
+    this.socketService.noTiTyping();
+
+    // NoTi not typing
+    this.socketService.noTiNotTyping();
+
+    // Lấy user có trong mảng User/ = online
+    this.socketService.getUserOnline();
+
+    // subscribe danh sach ma ben socket emit qua `friendOnline`
+    this.socketService.friendOnline
+      .pipe(
+        distinctUntilChanged()
+      ).subscribe(
+      listFriend => {
+        this.listUser = listFriend;
+      }
+    );
+
+    // subscribe danh sach ma ben socket emit qua `getUserMessage`
+    this.socketService.getUserMessage
+      .pipe(
+        distinctUntilChanged()
+      ).subscribe(
+      message => {
+        this.messages = message;
+      }
+    );
 
     this.getUserData();
   }
@@ -43,6 +77,19 @@ export class ChatComponent implements OnInit {
         console.log(result);
       }
     })
+  }
+
+  sendMessage() {
+    this.socketService.userSendMessage(this.message);
+    this.message = '';
+  }
+
+  onFocus() {
+    this.socketService.onFocus();
+  }
+
+  outFocus() {
+    this.socketService.outFocus();
   }
 
   openChat(){

@@ -27,7 +27,6 @@ const projectRoutes = require('./routes/projectRoute');
 const userRoutes = require('./routes/userRoute');
 const taskRoutes = require('./routes/taskRoute');
 const friendRoutes = require('./routes/FriendRoute');
-const chatRoutes = require('./routes/ChatRoute');
 
 const corsOptions = {
     origin: '*',
@@ -52,7 +51,6 @@ app.use('/projects', projectRoutes);
 app.use('/users', userRoutes);
 app.use('/tasks', taskRoutes);
 app.use('/friends', friendRoutes);
-app.use('/chats', chatRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('not found');
@@ -69,7 +67,101 @@ app.use((error, req, res) => {
     })
 });
 
-app.listen(PORT, () => {
+// -------------------------------------------------------------------------------------
+// io.sockets.emit gửi tới toàn bộ server
+// socket.emit gửi tới chính nó
+// socket.broadcast.emit gửi tới toàn bộ server trừ chính nó
+// io.to("socketid").emit() gửi tới người có socketid
+// socket.adapter.rooms Show danh sách room đang có
+
+
+// Socket.io cho chat
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+
+const Users = [];
+
+io.on('connection', (socket) => {
+    const token = socket.handshake.query.token;
+    try {
+        const decoded = jwtDecode(token);
+        const username = decoded.username;
+
+        // show token connect
+        console.log('Đăng nhập mới: ' + username);
+
+        // show token disconnect
+        socket.on('disconnect', function () {
+            console.log('User: ' + username + ' đã out');
+            const index = Users.indexOf(username);
+            if (index > -1) {
+                Users.splice(index, 1);
+            }
+        });
+
+        if (Users.indexOf(username) >= 0) {
+            console.log('log');
+            alert("User is online")
+        } else {
+            // truyền username vào mảng Users
+            Users.push(username);
+
+            io.sockets.emit("User-online", Users);
+
+            // logout
+            socket.on('logout', function () {
+                Users.splice(
+                    Users.indexOf(username), 1
+                );
+                socket.broadcast.emit("User-online", Users)
+            });
+
+            // lắng nghe user send message
+            socket.on("sendMessage", function (message) {
+                io.sockets.emit("Server-send-message", {
+                    username: username,
+                    message: message
+                });
+            });
+
+            // lắng nghe có người gõ chữ
+            socket.on("input-inFocus", function () {
+                const noti = username + " is typing";
+                socket.broadcast.emit("isTyping", noti);
+            });
+
+            // lắng nghe có người gõ chữ xong rồi
+            socket.on("input-outFocus", function () {
+                socket.broadcast.emit("isNotTyping");
+            });
+
+            // lắng nghe sự kiện tạo room
+            socket.on("createRoom", function (room) {
+                socket.join(room);
+                // tạo getRoom để lấy room
+                socket.getRoom = room;
+                // đẩy room vào listRoom
+                const listRoom = [];
+                for (aRoom in socket.adapter.rooms) {
+                    listRoom.push(aRoom)
+                }
+                // server gửi listRoom về client
+                io.sockets.emit("getListRoom", listRoom);
+                // user sẽ tự join vào room mới tạo
+                socket.emit("joinMyRoom", room);
+            });
+
+            socket.on("userChat", function (message) {
+                // server trả về message mà user gửi lên cho những người trong room
+                io.sockets.in(socket.getRoom).emit("sentChat", message);
+            })
+        }
+    } catch (error) {
+
+    }
+});
+
+http.listen(PORT, () => {
     console.log(`Server lives! Port: ${PORT}`);
 });
 
