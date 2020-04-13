@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const jwtDecode = require('jwt-decode');
 
 mongoose.Promise = global.Promise;
+mongoose.set('useFindAndModify', false);
 
 const username = process.env.DB_USER;
 const password = process.env.DB_PASSWORD;
@@ -15,8 +16,6 @@ const dbName = process.env.DB_NAME;
 
 mongoose.connect(`mongodb://${username}:${password}@nosama-shard-00-00-dstgw.gcp.mongodb.net:27017,nosama-shard-00-01-dstgw.gcp.mongodb.net:27017,nosama-shard-00-02-dstgw.gcp.mongodb.net:27017/${dbName}?replicaSet=NOsama-shard-0&ssl=true&authSource=admin`, {
     useNewUrlParser: true,
-}, (status) => {
-    console.log(status);
 });
 
 const app = express();
@@ -81,9 +80,9 @@ app.use((error, req, res) => {
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-const Users = [];
-
 io.on('connection', (socket) => {
+    const User = require('./database/models/user');
+
     const token = socket.handshake.query.token;
     try {
         const decoded = jwtDecode(token);
@@ -91,73 +90,54 @@ io.on('connection', (socket) => {
 
         // show token connect
         console.log('Đăng nhập mới: ' + username);
+        User.updateOne({username: username}, {$set: {userStatus: 1}})
 
         // show token disconnect
         socket.on('disconnect', function () {
             console.log('User: ' + username + ' đã out');
-            const index = Users.indexOf(username);
-            if (index > -1) {
-                Users.splice(index, 1);
-            }
+
+            User.updateOne({username: username}, {$set: {userStatus: 2}})
         });
 
-        if (Users.indexOf(username) >= 0) {
-            console.log('log');
-            alert("User is online")
-        } else {
-            // truyền username vào mảng Users
-            Users.push(username);
-
-            io.sockets.emit("User-online", Users);
-
-            // logout
-            socket.on('logout', function () {
-                Users.splice(
-                    Users.indexOf(username), 1
-                );
-                socket.broadcast.emit("User-online", Users)
+        // lắng nghe user send message
+        socket.on("sendMessage", function (message) {
+            io.sockets.emit("Server-send-message", {
+                username: username,
+                message: message
             });
+        });
 
-            // lắng nghe user send message
-            socket.on("sendMessage", function (message) {
-                io.sockets.emit("Server-send-message", {
-                    username: username,
-                    message: message
-                });
-            });
+        // lắng nghe có người gõ chữ
+        socket.on("input-inFocus", function () {
+            const noti = username + " is typing";
+            socket.broadcast.emit("isTyping", noti);
+        });
 
-            // lắng nghe có người gõ chữ
-            socket.on("input-inFocus", function () {
-                const noti = username + " is typing";
-                socket.broadcast.emit("isTyping", noti);
-            });
+        // lắng nghe có người gõ chữ xong rồi
+        socket.on("input-outFocus", function () {
+            socket.broadcast.emit("isNotTyping");
+        });
 
-            // lắng nghe có người gõ chữ xong rồi
-            socket.on("input-outFocus", function () {
-                socket.broadcast.emit("isNotTyping");
-            });
+        // lắng nghe sự kiện tạo room
+        socket.on("createRoom", function (room) {
+            socket.join(room);
+            // tạo getRoom để lấy room
+            socket.getRoom = room;
+            // đẩy room vào listRoom
+            const listRoom = [];
+            for (aRoom in socket.adapter.rooms) {
+                listRoom.push(aRoom)
+            }
+            // server gửi listRoom về client
+            io.sockets.emit("getListRoom", listRoom);
+            // user sẽ tự join vào room mới tạo
+            socket.emit("joinMyRoom", room);
+        });
 
-            // lắng nghe sự kiện tạo room
-            socket.on("createRoom", function (room) {
-                socket.join(room);
-                // tạo getRoom để lấy room
-                socket.getRoom = room;
-                // đẩy room vào listRoom
-                const listRoom = [];
-                for (aRoom in socket.adapter.rooms) {
-                    listRoom.push(aRoom)
-                }
-                // server gửi listRoom về client
-                io.sockets.emit("getListRoom", listRoom);
-                // user sẽ tự join vào room mới tạo
-                socket.emit("joinMyRoom", room);
-            });
-
-            socket.on("userChat", function (message) {
-                // server trả về message mà user gửi lên cho những người trong room
-                io.sockets.in(socket.getRoom).emit("sentChat", message);
-            })
-        }
+        socket.on("userChat", function (message) {
+            // server trả về message mà user gửi lên cho những người trong room
+            io.sockets.in(socket.getRoom).emit("sentChat", message);
+        })
     } catch (error) {
 
     }
