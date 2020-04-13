@@ -1,4 +1,5 @@
 @import "src/styles/vars";
+@import "src/styles/atomic";
 @import "src/styles/note";
 @import "src/styles/font";
 
@@ -19,4 +20,10 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background: var(--main-color);
+}
+
+.setting-modal-box {
+  mat-dialog-container {
+    padding: 0;
+  }
 }

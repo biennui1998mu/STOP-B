@@ -1,0 +1,73 @@
+.container-chat {
+  grid-template-columns: 1fr;
+  grid-template-rows: max-content auto max-content;
+}
+
+.user-pill {
+  grid-template-areas: 'avatar name' 'avatar online';
+  grid-template-columns: 2rem auto;
+  grid-template-rows: max-content max-content;
+  grid-column-gap: 0.5rem;
+  grid-row-gap: 0.115rem;
+  padding: 0.5rem;
+  margin: 0.115rem 0.5rem;
+  border-radius: 4px;
+
+  .avatar {
+    grid-area: avatar;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .name {
+    grid-area: name;
+    align-self: end;
+  }
+
+  .status-online {
+    grid-area: online;
+    align-self: start;
+    font-size: 0.65rem;
+    line-height: 0.65rem;
+    grid-template-columns: 0.5rem auto;
+
+    .icon {
+      width: 0.5rem;
+      height: 0.5rem;
+    }
+
+    &.online {
+      .icon {
+        background-color: #00c851;
+      }
+
+      .status-text {
+        color: white;
+      }
+    }
+
+    &.offline {
+      .icon {
+        background-color: #848484;
+      }
+
+      .status-text {
+        color: #848484;
+      }
+    }
+
+    &.busy {
+      .icon {
+        background-color: tomato;
+      }
+
+      .status-text {
+        color: white;
+      }
+    }
+  }
+
+  &:hover {
+    background-color: #242424;
+  }
+}

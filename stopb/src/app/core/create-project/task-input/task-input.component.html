@@ -1,0 +1,83 @@
+<mat-form-field appearance="outline"
+                class="title">
+  <mat-label>Title</mat-label>
+  <input formControlName="taskTitle"
+         matInput
+         placeholder="your title..."
+         required>
+</mat-form-field>
+<mat-form-field appearance="outline"
+                class="description">
+  <mat-label>Description</mat-label>
+  <textarea [matTextareaAutosize]="true"
+            formControlName="taskDescription"
+            matInput
+            placeholder="Description"
+            required
+            style="min-height: 111px; width: 100%; resize: vertical"></textarea>
+</mat-form-field>
+
+<mat-form-field appearance="outline" class="priority">
+  <mat-label>Priority</mat-label>
+  <mat-select formControlName="taskPriority" required>
+    <mat-option style="color: red" value="true">Important</mat-option>
+    <mat-option value="false">Normal</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field appearance="outline"
+                class="start-date">
+  <mat-label>Starting Date</mat-label>
+  <input [matDatepicker]="pickerTaskStart"
+         formControlName="taskStartDate"
+         matInput
+         required>
+  <mat-datepicker-toggle [for]="pickerTaskStart"
+                         matSuffix></mat-datepicker-toggle>
+  <mat-datepicker #pickerTaskStart></mat-datepicker>
+</mat-form-field>
+
+<mat-form-field appearance="outline"
+                class="end-date">
+  <mat-label>End Date</mat-label>
+  <input [matDatepicker]="pickerTaskEnd"
+         formControlName="taskEndDate"
+         matInput
+         required>
+  <mat-datepicker-toggle [for]="pickerTaskEnd"
+                         matSuffix></mat-datepicker-toggle>
+  <mat-datepicker #pickerTaskEnd></mat-datepicker>
+</mat-form-field>
+
+<mat-form-field appearance="outline">
+  <mat-label>Members</mat-label>
+  <mat-chip-list #chipList
+                 aria-label="Fruit selection"
+                 required>
+    <mat-chip (removed)="removeMember(member)"
+              *ngFor="let member of listMember"
+              [removable]="member._id !== currentUser.userId"
+              color="accent">
+      {{member.name}} <small class="text-muted"> - {{member.username}}</small>
+      <mat-icon *ngIf="member._id !== currentUser.userId"
+                matChipRemove>
+        cancel
+      </mat-icon>
+    </mat-chip>
+    <input #memberSearchInput
+           (matChipInputTokenEnd)="addMember($event)"
+           [formControl]="memberFormSearch"
+           [matAutocomplete]="memberAutoComplete"
+           [matChipInputFor]="chipList"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           placeholder="Search manager...">
+  </mat-chip-list>
+  <mat-autocomplete #memberAutoComplete="matAutocomplete"
+                    (optionSelected)="selectedManager($event)">
+    <mat-option *ngFor="let member of filteredMember"
+                [value]="member">
+      {{member.name}}
+      <small class="text-muted"> - {{member.username}}</small>
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

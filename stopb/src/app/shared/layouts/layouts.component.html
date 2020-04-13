@@ -1,21 +1,17 @@
-<app-sidenav class="nav-bar"></app-sidenav>
-<div class="page">
-  <div class="breadcrumb mat-elevation-z4">
-    <div class="left-side">
-      <div class="breadcrumb-routes">
-        <div class="breadcrumb-route">
-          {{(breadcrumbState | async)?.current.title}}
-        </div>
-      </div>
-
-      <!--      <div class="notifications">-->
-
-      <!--      </div>-->
+<mat-sidenav-container class="layout-container">
+  <mat-sidenav class="bg-darker cl-white side-nav-container"
+               mode="side"
+               opened>
+    <div class="grid wrapper-sidebar">
+      <app-sidenav class="navigation"></app-sidenav>
+      <app-list-friend class="social"></app-list-friend>
     </div>
-  </div>
 
-  <div class="route">
-    <router-outlet></router-outlet>
-  </div>
-</div>
-<app-chat class="chat-bar"></app-chat>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="grid relative router-content">
+      <app-router-breadcrumb></app-router-breadcrumb>
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

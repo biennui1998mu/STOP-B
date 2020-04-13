@@ -46,12 +46,16 @@ export class CreateProjectComponent implements OnInit {
     return this.projectForm.get('projectPriority');
   }
 
-  get projectDate() {
-    return this.projectForm.get('projectDate');
+  get projectDescription() {
+    return this.projectForm.get('projectDescription');
   }
 
-  get projectManager() {
-    return this.projectForm.get('projectManager');
+  get projectEndDate() {
+    return this.projectForm.get('projectEndDate');
+  }
+
+  get projectModerator() {
+    return this.projectForm.get('projectModerator');
   }
 
   get projectMember() {
@@ -102,9 +106,10 @@ export class CreateProjectComponent implements OnInit {
   private projectFormBuilder() {
     this.projectForm = this.formBuilder.group({
       projectTitle: ['', [Validators.required, Validators.minLength(2)]],
+      projectDescription: ['', [Validators.required]],
       projectPriority: ['', [Validators.required]],
-      projectDate: ['', [Validators.required]],
-      projectManager: [[], [
+      projectEndDate: ['', [Validators.required]],
+      projectModerator: [[], [
         Validators.required,
         Validators.maxLength(5),
       ]],
