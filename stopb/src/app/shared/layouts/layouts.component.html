@@ -4,20 +4,14 @@
                opened>
     <div class="grid wrapper-sidebar">
       <app-sidenav class="navigation"></app-sidenav>
-      <app-chat class="social"></app-chat>
+      <app-list-friend class="social"></app-list-friend>
     </div>
 
   </mat-sidenav>
-  <mat-sidenav-content class="flex flex-d-col">
-    <div class="breadcrumb mat-elevation-z4">
-      <div class="left-side">
-        <div class="breadcrumb-routes">
-          <div class="breadcrumb-route">
-            {{(breadcrumbState | async)?.current.title}}
-          </div>
-        </div>
-      </div>
+  <mat-sidenav-content>
+    <div class="grid relative router-content">
+      <app-router-breadcrumb></app-router-breadcrumb>
+      <router-outlet></router-outlet>
     </div>
-    <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

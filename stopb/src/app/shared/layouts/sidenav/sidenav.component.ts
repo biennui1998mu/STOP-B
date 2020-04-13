@@ -1,8 +1,7 @@
 import { AfterContentInit, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AccountComponent } from "../account/account.component";
-import { FriendsComponent } from "../friends/friends.component";
-import { SettingComponent } from "../setting/setting.component";
+import { AccountComponent } from "../../components/account/account.component";
+import { FriendsComponent } from "../../components/friends/friends.component";
 import { Router } from '@angular/router';
 
 @Component({
@@ -27,13 +26,6 @@ export class SidenavComponent implements AfterContentInit {
 
   openDialogFriends(): void {
     const dialogOpen = this.dialog.open(FriendsComponent, {
-      width: '500px',
-      height: '500px',
-    });
-  }
-
-  openDialogSetting(): void {
-    const dialogOpen = this.dialog.open(SettingComponent, {
       width: '500px',
       height: '500px',
     });
@@ -64,7 +56,8 @@ export class SidenavComponent implements AfterContentInit {
     const splitting = url.split(/\//g);
     if (splitting[1] != undefined) {
       const url = splitting[1];
-      this.defaultSectionClick(url, `/${url}`);
+      const spliceAfter = splitting.slice(2);
+      this.defaultSectionClick(url, `/${url}`, ...spliceAfter);
     }
   }
 }

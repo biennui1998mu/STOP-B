@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChatComponent } from './chat.component';
+import { QuickAccessComponent } from './quick-access.component';
 
-describe('ChatComponent', () => {
-  let component: ChatComponent;
-  let fixture: ComponentFixture<ChatComponent>;
+describe('SettingComponent', () => {
+  let component: QuickAccessComponent;
+  let fixture: ComponentFixture<QuickAccessComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ChatComponent],
+      declarations: [QuickAccessComponent],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ChatComponent);
+    fixture = TestBed.createComponent(QuickAccessComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

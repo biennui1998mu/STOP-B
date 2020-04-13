@@ -1,0 +1,27 @@
+<div class="grid p05 pl1 relative bg-white sticky top0 breadcrumb">
+  <div class="flex flex-d-col justify-center left-side">
+    <div class="breadcrumb-routes">
+      <div class="breadcrumb-route">
+        {{(breadcrumbState | async)?.current.title}}
+      </div>
+    </div>
+  </div>
+
+  <div (click)="openDialogSetting()"
+       class="grid align-items-center user-select-none cursor-pointer right-side">
+    <div class="relative grid place-item-center user-avatar">
+      <img alt=""
+           class="w100pct h100pct br50 obj-pos-center obj-fit-cover"
+           src="https://www.bigstockphoto.com/images/homepage/module-6.jpg">
+      <div class="absolute br50 status-public bg-success"></div>
+    </div>
+    <div class="flex flex-d-col justify-center user-name">
+      <span class="fw-bold whitespace-nowrap of-hidden text-overflow-ellipsis ">
+        do hoang nam
+      </span>
+      <small class="whitespace-nowrap of-hidden text-overflow-ellipsis text-muted">
+        - Not free!!!!
+      </small>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<mat-list role="list">
+  <small class="tt-capitalize whitespace-nowrap of-hidden text-overflow-ellipsis"
+         mat-subheader>
+    quick access
+  </small>
+  <mat-divider></mat-divider>
+
+  <mat-list-item class="cursor-pointer user-select-none list-item-access"
+                 mat-ripple
+                 role="button">
+    <mat-icon mat-list-icon>
+      person
+    </mat-icon>
+    <div mat-line>My Account</div>
+  </mat-list-item>
+
+  <mat-list-item class="cursor-pointer user-select-none list-item-access"
+                 mat-ripple
+                 role="button">
+    <mat-icon mat-list-icon>
+      people
+    </mat-icon>
+    <div mat-line>Friends</div>
+  </mat-list-item>
+  <mat-divider></mat-divider>
+
+  <mat-list-item (click)="logout()"
+                 class="cursor-pointer user-select-none list-item-access"
+                 mat-ripple
+                 role="button">
+    <mat-icon mat-list-icon>
+      logout
+    </mat-icon>
+    <div mat-line>Logout</div>
+  </mat-list-item>
+</mat-list>

@@ -14,10 +14,10 @@ import { SharedServicesModule } from './shared/services/shared-services.module';
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { AuthenticateGuard } from "./shared/guard/authenticate.guard";
-import { SocketService } from "../app/services/socket.service";
 import { ManagerInputComponent } from './core/create-project/manager-input/manager-input.component';
 import { MemberInputComponent } from './core/create-project/member-input/member-input.component';
-import { TaskInputComponent } from './core/create-project/task-input/task-input.component'
+import { TaskInputComponent } from './core/create-project/task-input/task-input.component';
+import { LayoutsModule } from './shared/layouts/layouts.module';
 
 @NgModule({
   declarations: [
@@ -34,6 +34,7 @@ import { TaskInputComponent } from './core/create-project/task-input/task-input.
   ],
   imports: [
     CoreImportsModule,
+    LayoutsModule,
     SharedComponentModule,
     SharedServicesModule,
     AppRoutingModule,
@@ -42,7 +43,6 @@ import { TaskInputComponent } from './core/create-project/task-input/task-input.
   ],
   providers: [
     AuthenticateGuard,
-    SocketService
   ],
   bootstrap: [AppComponent],
 })

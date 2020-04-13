@@ -5,11 +5,11 @@ import {UserService} from "../../../services/user.service";
 import {User} from "../../interface/User";
 
 @Component({
-  selector: 'app-chat',
-  templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.scss'],
+  selector: 'app-list-friend',
+  templateUrl: './list-friend.component.html',
+  styleUrls: ['./list-friend.component.scss'],
 })
-export class ChatComponent implements OnInit {
+export class ListFriendComponent implements OnInit {
 
   message: string;
   messages: string[] = [];

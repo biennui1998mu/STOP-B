@@ -29,53 +29,8 @@
   }
 }
 
-.breadcrumb {
-  grid-area: breadcrumb;
-  display: grid;
-  grid-template-columns: auto 2rem;
-  grid-template-rows: 1fr;
-  padding: 1rem;
-  background: white;
-  z-index: 2;
-
-  .left-side {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    > *:not(:last-child) {
-      margin-bottom: 0.5rem;
-    }
-
-    .notifications {
-      display: flex;
-
-      > *:not(:last-child) {
-        margin-right: 0.5rem;
-      }
-    }
-
-    .breadcrumb-routes {
-      display: flex;
-      align-items: center;
-
-      .breadcrumb-route {
-        font-weight: bold;
-        color: #2d314a;
-        margin-right: 2rem;
-        position: relative;
-        cursor: pointer;
-        font-size: 1.5rem;
-
-        &:not(:last-child):after {
-          content: '/';
-          position: absolute;
-          right: -1rem;
-          top: 0;
-          bottom: 0;
-          transform: translate(50%);
-        }
-      }
-    }
-  }
+.router-content {
+  grid-template-areas: 'top' 'body';
+  grid-template-columns: 1fr;
+  grid-template-rows: max-content auto;
 }
