@@ -120,8 +120,7 @@ router.post('/search', (req, res) => {
 
 // signup
 router.post('/signUp', upload.single('avatar'), (req, res, next) => {
-    User
-        .find({username: req.body.username})
+    User.find({username: req.body.username})
         .exec()
         .then(user => {
             if (user.length >= 1) {

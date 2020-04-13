@@ -26,7 +26,8 @@ const noteRoutes = require('./routes/noteRoute');
 const projectRoutes = require('./routes/projectRoute');
 const userRoutes = require('./routes/userRoute');
 const taskRoutes = require('./routes/taskRoute');
-const friendRoutes = require('./routes/FriendRoute');
+const friendRoutes = require('./routes/friendRoute');
+const messageRoutes = require('./routes/messageRoute');
 
 const corsOptions = {
     origin: '*',
@@ -51,6 +52,7 @@ app.use('/projects', projectRoutes);
 app.use('/users', userRoutes);
 app.use('/tasks', taskRoutes);
 app.use('/friends', friendRoutes);
+app.use('/messages', messageRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('not found');
@@ -71,7 +73,7 @@ app.use((error, req, res) => {
 // io.sockets.emit gửi tới toàn bộ server
 // socket.emit gửi tới chính nó
 // socket.broadcast.emit gửi tới toàn bộ server trừ chính nó
-// io.to("socketid").emit() gửi tới người có socketid
+// io.to(socketId).emit() gửi tới người có socketid
 // socket.adapter.rooms Show danh sách room đang có
 
 
