@@ -82,6 +82,8 @@ const io = require('socket.io')(http);
 
 io.on('connection', (socket) => {
     const User = require('./database/models/user');
+    const Message = require('./database/models/message');
+    const Room = require('./database/models/room');
 
     const token = socket.handshake.query.token;
     try {
@@ -91,12 +93,19 @@ io.on('connection', (socket) => {
         // show token connect
         console.log('Đăng nhập mới: ' + username);
         User.updateOne({username: username}, {$set: {userStatus: 1}})
+            .exec()
+            .then( result => {
+                console.log(result);
+            });
 
         // show token disconnect
         socket.on('disconnect', function () {
             console.log('User: ' + username + ' đã out');
-
             User.updateOne({username: username}, {$set: {userStatus: 2}})
+                .exec()
+                .then( result => {
+                    console.log(result);
+                })
         });
 
         // lắng nghe user send message

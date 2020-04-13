@@ -58,7 +58,6 @@ export class LoginComponent implements OnInit {
         if (status) {
           this.router.navigateByUrl('/dashboard');
           this.getUserId();
-          return this.userService.updateUser(this.userId, 1).subscribe();
         }
       });
   }

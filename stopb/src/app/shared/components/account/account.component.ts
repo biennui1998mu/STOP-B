@@ -34,15 +34,10 @@ export class AccountComponent implements OnInit {
   }
 
   logout(event: MouseEvent) {
-    return this.userService.updateUser(this.userId, 2).subscribe( result =>{
-      if(result){
-        event.preventDefault();
-        this.authorizeService.logout();
-        this.socketService.getUserLogOut();
-        this.dialog.close();
-      }
-    });
-
+    event.preventDefault();
+    this.authorizeService.logout();
+    this.socketService.getUserLogOut();
+    this.dialog.close();
   }
 
   closeDialog(event: MouseEvent): void {
