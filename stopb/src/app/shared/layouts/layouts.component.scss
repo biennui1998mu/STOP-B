@@ -33,4 +33,5 @@
   grid-template-areas: 'top' 'body';
   grid-template-columns: 1fr;
   grid-template-rows: max-content auto;
+  min-height: 100vh;
 }
