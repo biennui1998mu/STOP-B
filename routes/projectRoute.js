@@ -101,7 +101,7 @@ router.post('/create', (req, res) => {
         projectPriority: req.body.projectPriority,
         projectStartDate: Date.now(),
         projectEndDate: req.body.projectEndDate,
-        projectStatus: req.body.projectStatus,
+        projectStatus: true,
         projectManager: req.body.projectManager,
         projectModerator: req.body.projectModerator,
         projectMember: req.body.projectMember
@@ -178,7 +178,7 @@ router.post('/delete/:projectId', (req, res) => {
 // query 3 projects, high priority
 router.post('/important', checkAuth, (req, res) => {
     Project.find({
-        projectUserId: req.userData.userId,
+        projectManager: req.userData.userId,
         projectPriority: {
             $lte : 2
         },

@@ -29,8 +29,8 @@
         <mat-form-field appearance="outline" class="priority">
           <mat-label>Priority</mat-label>
           <mat-select formControlName="projectPriority" required>
-            <mat-option style="color: red" value="true">Important</mat-option>
-            <mat-option value="false">Normal</mat-option>
+            <mat-option style="color: red" value="1">Important</mat-option>
+            <mat-option value="2">Normal</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -60,45 +60,46 @@
         <button [disabled]="projectForm.invalid"
                 color="primary"
                 mat-raised-button
-                matStepperNext>
-          Next
+                matStepperNext
+                (click)="createProject()">
+          Create
         </button>
       </div>
     </form>
   </mat-step>
 
-  <mat-step [stepControl]="taskForm"
-            optional>
-    <form [formGroup]="taskForm"
-          class="flex flex-d-column content-container">
-      <ng-template matStepLabel>Tasks</ng-template>
+<!--  <mat-step [stepControl]="taskForm"-->
+<!--            optional>-->
+<!--    <form [formGroup]="taskForm"-->
+<!--          class="flex flex-d-column content-container">-->
+<!--      <ng-template matStepLabel>Tasks</ng-template>-->
 
-      <div *ngFor="let task of createdTasks.controls; let i = index;"
-           formArrayName="createdTasks">
-        <app-task-input [formGroupName]="i"
-                        class="grid">
-        </app-task-input>
-      </div>
-      <button (click)="createTask()"
-              mat-raised-button>
-        Add Task
-      </button>
+<!--      <div *ngFor="let task of createdTasks.controls; let i = index;"-->
+<!--           formArrayName="createdTasks">-->
+<!--        <app-task-input [formGroupName]="i"-->
+<!--                        class="grid">-->
+<!--        </app-task-input>-->
+<!--      </div>-->
+<!--      <button (click)="createTask()"-->
+<!--              mat-raised-button>-->
+<!--        Add Task-->
+<!--      </button>-->
 
-      <div class="flex justify-content-flex-end">
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
-      </div>
-    </form>
-  </mat-step>
+<!--      <div class="flex justify-content-flex-end">-->
+<!--        <button mat-button matStepperPrevious>Back</button>-->
+<!--        <button mat-button matStepperNext>Next</button>-->
+<!--      </div>-->
+<!--    </form>-->
+<!--  </mat-step>-->
 
-  <mat-step>
-    <ng-template matStepLabel>Done</ng-template>
-    <p>You are now done.</p>
-    <div class="flex justify-content-flex-end">
-      <button mat-button matStepperPrevious>
-        Back
-      </button>
-      <button (click)="projectFormCreate.reset()" mat-button>Reset</button>
-    </div>
-  </mat-step>
+<!--  <mat-step>-->
+<!--    <ng-template matStepLabel>Done</ng-template>-->
+<!--    <p>You are now done.</p>-->
+<!--    <div class="flex justify-content-flex-end">-->
+<!--      <button mat-button matStepperPrevious>-->
+<!--        Back-->
+<!--      </button>-->
+<!--      <button (click)="projectFormCreate.reset()" mat-button>Reset</button>-->
+<!--    </div>-->
+<!--  </mat-step>-->
 </mat-horizontal-stepper>

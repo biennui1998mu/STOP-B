@@ -5,8 +5,7 @@
 <mat-form-field appearance="outline">
   <mat-label>Members</mat-label>
   <mat-chip-list #chipList
-                 aria-label="Fruit selection"
-                 required>
+                 aria-label="Fruit selection">
     <mat-chip (removed)="removeMember(member)"
               *ngFor="let member of listMember"
               [removable]="member._id !== currentUser.userId"

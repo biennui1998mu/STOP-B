@@ -7,6 +7,7 @@ import { TaskService } from "../../services/task.service";
 import { TokenService } from '../../services/token.service';
 import { UserService } from '../../services/user.service';
 import { MatVerticalStepper } from '@angular/material/stepper';
+import validate = WebAssembly.validate;
 
 @Component({
   selector: 'app-makePlan',
@@ -19,7 +20,6 @@ export class CreateProjectComponent implements OnInit {
 
   projectForm: FormGroup;
   taskForm: FormGroup;
-  taskArray: FormArray;
 
   constructor(
     private tokenService: TokenService,
@@ -62,61 +62,47 @@ export class CreateProjectComponent implements OnInit {
     return this.projectForm.get('projectMember');
   }
 
-  get createdTasks() {
-    return this.taskForm.get('createdTasks') as FormArray;
+  get projectManager() {
+    return this.projectForm.get('projectManager');
   }
 
   ngOnInit(): void {
     this.projectFormBuilder();
+    this.getUserdata()
 
     this.taskForm = this.formBuilder.group({
       createdTasks: this.formBuilder.array([]),
     });
   }
 
-  createTask() {
-    this.taskArray = this.createdTasks as FormArray;
-    this.taskArray.push(this.createTaskForm());
-  }
-
-  // createTask() {
-  //   return this.taskService.taskCreate(this.createTaskForm.value).subscribe();
-  // }
-  //
-  //
-  // createPlan() {
-  //   return this.planService.projectCreate(this.createPlanForm.value).subscribe(success => {
-  //     if (!success) {
-  //       this.router.navigateByUrl('/dashboard');
-  //     }
-  //   });
-
-  private createTaskForm(): FormGroup {
-    return this.formBuilder.group({
-      taskTitle: ['', [
-        Validators.required, Validators.minLength(2),
-      ]],
-      taskDescription: [''],
-      taskPriority: ['', Validators.required],
-      taskStartDate: [''],
-      taskEndDate: [''],
-    });
+  getUserdata(){
+    const decoded = this.tokenService.decodeJwt();
+    this.projectManager.setValue(decoded.userId);
   }
 
   private projectFormBuilder() {
     this.projectForm = this.formBuilder.group({
+      projectManager: ['', Validators.required],
       projectTitle: ['', [Validators.required, Validators.minLength(2)]],
       projectDescription: ['', [Validators.required]],
       projectPriority: ['', [Validators.required]],
       projectEndDate: ['', [Validators.required]],
       projectModerator: [[], [
-        Validators.required,
+        // Validators.required,
         Validators.maxLength(5),
       ]],
       projectMember: [[], [
-        Validators.required,
+        // Validators.required,
         Validators.maxLength(50),
       ]],
+    });
+  }
+
+  createProject() {
+    return this.planService.projectCreate(this.projectForm.value).subscribe(success => {
+      if (success) {
+        this.router.navigateByUrl('/dashboard');
+      }
     });
   }
 }

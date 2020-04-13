@@ -21,8 +21,6 @@ export class ListFriendComponent implements OnInit {
   avatar: string;
   userStatus: number;
 
-  chatWindow: boolean = false;
-
   constructor(
     private socketService: SocketService,
     private userService: UserService
@@ -65,37 +63,22 @@ export class ListFriendComponent implements OnInit {
       }
     );
 
-    this.getUserData();
+    // this.getUserData();
   }
-
-  getUserData() {
-    return this.userService.getUserData().subscribe( (result: User) => {
-      if(result){
-        this.username = result.username;
-        this.avatar = result.avatar;
-        this.userStatus = result.userStatus;
-        console.log(result);
-      }
-    })
-  }
+  //
+  // getUserData() {
+  //   return this.userService.getUserData().subscribe( (result: User) => {
+  //     if(result){
+  //       this.username = result.username;
+  //       this.avatar = result.avatar;
+  //       this.userStatus = result.userStatus;
+  //       console.log(result);
+  //     }
+  //   })
+  // }
 
   sendMessage() {
     this.socketService.userSendMessage(this.message);
     this.message = '';
-  }
-
-  onFocus() {
-    this.socketService.onFocus();
-  }
-
-  outFocus() {
-    this.socketService.outFocus();
-  }
-
-  openChat(){
-    this.chatWindow = true;
-  }
-  closeChat(){
-    this.chatWindow = false;
   }
 }
