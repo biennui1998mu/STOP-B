@@ -6,6 +6,7 @@ import {FriendRequest} from "../../interface/FriendRequest";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {TokenService} from "../../../services/token.service";
+import {SocketService} from "../../../services/socket.service";
 
 @Component({
   selector: 'app-friends',
@@ -17,6 +18,8 @@ export class FriendsComponent implements OnInit {
   users: User[];
   username: string;
 
+  userId:string
+
   requestForm: FormGroup;
   requests: FriendRequest[] = [];
 
@@ -27,7 +30,8 @@ export class FriendsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private tokenService: TokenService,
     private userService: UserService,
-    private friendService: FriendService
+    private friendService: FriendService,
+    private socketService: SocketService
   ) {
     this.requestForm = this.formBuilder.group({
       _id: [],
@@ -59,12 +63,12 @@ export class FriendsComponent implements OnInit {
     this.getUserId();
     this.getAllRequest();
     this.getFriends();
-    // this.getFriendOnline();
   }
 
   getUserId(){
     const tokenDecoded = this.tokenService.decodeJwt();
     this.requester.setValue(tokenDecoded.userId);
+    this.userId = tokenDecoded.userId;
   }
 
   searchFriend() {
@@ -119,9 +123,9 @@ export class FriendsComponent implements OnInit {
   }
 
   // getFriendOnline(){
-  //   return this.friendService.getFriendOnline().subscribe( result => {
-  //     console.log(result);
-  //     this.friends = result;
-  //   })
-  // }
+  //   //   return this.friendService.getFriendOnline().subscribe( result => {
+  //   //     console.log(result);
+  //   //     this.friends = result;
+  //   //   })
+  //   // }
 }

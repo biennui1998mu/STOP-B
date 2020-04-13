@@ -196,7 +196,7 @@ router.post('/signIn', async (req, res, next) => {
             },
             process.env.JWT_KEY,
             {
-                expiresIn: 7200
+                expiresIn: 604800
             });
         console.log(jwt.verify(token, process.env.JWT_KEY));
         console.log(token);
