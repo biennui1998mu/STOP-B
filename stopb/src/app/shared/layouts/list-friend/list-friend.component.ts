@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {SocketService} from "../../../services/socket.service";
-import {distinctUntilChanged} from "rxjs/operators";
-import {UserService} from "../../../services/user.service";
-import {User} from "../../interface/User";
+import { Component, OnInit } from '@angular/core';
+import { SocketService } from "../../../services/socket.service";
+import { distinctUntilChanged } from "rxjs/operators";
+import { UserService } from "../../../services/user.service";
+import { MatDialog } from '@angular/material/dialog';
+import { ChatLayoutComponent } from '../chat-layout/chat-layout.component';
 
 @Component({
   selector: 'app-list-friend',
@@ -23,7 +24,8 @@ export class ListFriendComponent implements OnInit {
 
   constructor(
     private socketService: SocketService,
-    private userService: UserService
+    private userService: UserService,
+    private matDialog: MatDialog,
   ) {
   }
 
@@ -46,25 +48,27 @@ export class ListFriendComponent implements OnInit {
     // subscribe danh sach ma ben socket emit qua `friendOnline`
     this.socketService.friendOnline
       .pipe(
-        distinctUntilChanged()
+        distinctUntilChanged(),
       ).subscribe(
       listFriend => {
         this.listUser = listFriend;
-      }
+      },
     );
 
     // subscribe danh sach ma ben socket emit qua `getUserMessage`
     this.socketService.getUserMessage
       .pipe(
-        distinctUntilChanged()
+        distinctUntilChanged(),
       ).subscribe(
       message => {
         this.messages = message;
-      }
+      },
     );
 
     // this.getUserData();
+    this.openChatDialogs();
   }
+
   //
   // getUserData() {
   //   return this.userService.getUserData().subscribe( (result: User) => {
@@ -80,5 +84,19 @@ export class ListFriendComponent implements OnInit {
   sendMessage() {
     this.socketService.userSendMessage(this.message);
     this.message = '';
+  }
+
+  openChatDialogs() {
+    const dialogCounted = 1;
+    this.matDialog.open(ChatLayoutComponent, {
+      width: '280px',
+      height: `350px`,
+      position: {
+        bottom: `0.5rem`,
+        left: `${230 + 16 * dialogCounted}px`,
+      },
+      hasBackdrop: false,
+      panelClass: `setting-modal-box`,
+    });
   }
 }

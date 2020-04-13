@@ -1,0 +1,57 @@
+<div class="grid h100pct container-layout">
+  <div class="cursor-pointer user-select-none grid align-items-center top">
+    <div class="relative grid place-item-center user-avatar">
+      <img alt=""
+           class="w100pct h100pct br50 obj-fit-cover obj-pos-center"
+           src="https://www.bigstockphoto.com/images/homepage/module-6.jpg">
+      <div class="absolute br50 status-public bg-success"></div>
+    </div>
+    <div class="whitespace-nowrap of-hidden text-overflow-ellipsis fw-bold user-name">
+      Do Hoang Nam
+    </div>
+    <div (click)="closeChat()"
+         class="user-select-none grid place-item-center close-action">
+      <mat-icon>close</mat-icon>
+    </div>
+  </div>
+
+  <div #chatContext
+      class="flex-d-col flex of-auto relative pt1 pb05 chat-context">
+    <div class="flex chat-row friend">
+      <div class="flex chat-bubble">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consectetur dolorem magnam. Architecto
+        cupiditate deleniti enim eos necessitatibus reiciendis temporibus?
+      </div>
+    </div>
+    <div class="flex chat-row">
+      <div class="chat-bubble">
+        123
+      </div>
+    </div>
+    <div class="flex chat-row">
+      <div class="chat-bubble">
+        123
+      </div>
+    </div>
+    <div class="flex chat-row">
+      <div class="chat-bubble">
+        123sdasdasdasdasdasd
+      </div>
+    </div>
+    <div class="flex chat-row">
+      <div class="chat-bubble">
+        123sdasdasdasdasdasd
+      </div>
+    </div>
+  </div>
+
+  <div class="grid relative bottom">
+    <input class="br0 p05 bg-transparent chat-input"
+           placeholder="start a conversation here..."
+           type="text">
+    <div class="grid place-item-center br50 p05 cursor-pointer user-select-none send-btn"
+         matRipple>
+      <mat-icon>send</mat-icon>
+    </div>
+  </div>
+</div>

@@ -96,9 +96,9 @@ export class ManagerInputComponent implements OnInit {
         ),
         distinctUntilChanged(),
         switchMap(value => this.userService.searchUser(value)),
-        map(user => {
+        map(users => {
           const returnAvailable: User[] = [];
-          user.forEach(found => {
+          users.forEach(found => {
             const findExisted = this.listManager.find(
               manager => manager._id == found._id ||
                 found._id === this.currentUser.userId,
