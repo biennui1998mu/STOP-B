@@ -6,10 +6,10 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidenav',
-  templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.scss'],
+  templateUrl: './side-navigation.component.html',
+  styleUrls: ['./side-navigation.component.scss'],
 })
-export class SidenavComponent implements AfterContentInit {
+export class SideNavigationComponent implements AfterContentInit {
 
   noteSectionOpen = false;
   projectSectionOpen = false;
