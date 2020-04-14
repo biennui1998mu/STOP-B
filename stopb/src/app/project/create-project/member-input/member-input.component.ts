@@ -3,8 +3,8 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material
 import { AbstractControl, FormControl } from '@angular/forms';
 import { User } from '../../../shared/interface/User';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { TokenService } from '../../../services/token.service';
-import { UserService } from '../../../services/user.service';
+import { TokenService } from '../../../shared/services/token.service';
+import { UserService } from '../../../shared/services/user.service';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
 

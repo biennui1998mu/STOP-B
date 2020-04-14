@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {SocketService} from "../../../services/socket.service";
-import {UserService} from "../../../services/user.service";
+import {SocketService} from "../../services/socket.service";
+import {UserService} from "../../services/user.service";
 import {MatDialog} from '@angular/material/dialog';
 import {ChatLayoutComponent} from '../chat-layout/chat-layout.component';
-import {FriendService} from "../../../services/friend.service";
+import {FriendService} from "../../services/friend.service";
 import {User} from '../../interface/User';
 
 @Component({

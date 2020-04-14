@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UiStateService } from '../../shared/services/state/ui-state.service';
-import { ProjectService } from "../../services/project.service";
+import { ProjectService } from "../../shared/services/project.service";
 import { Router } from "@angular/router";
-import { TaskService } from "../../services/task.service";
-import { TokenService } from '../../services/token.service';
-import { UserService } from '../../services/user.service';
+import { TaskService } from "../../shared/services/task.service";
+import { TokenService } from '../../shared/services/token.service';
+import { UserService } from '../../shared/services/user.service';
 import { MatVerticalStepper } from '@angular/material/stepper';
 
 @Component({

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UiStateService } from '../../shared/services/state/ui-state.service';
 import { Router } from "@angular/router";
-import { AuthorizeService } from "../../services/authorize.service";
-import {UserService} from "../../services/user.service";
-import {TokenService} from "../../services/token.service";
+import { AuthorizeService } from "../../shared/services/authorize.service";
+import {UserService} from "../../shared/services/user.service";
+import {TokenService} from "../../shared/services/token.service";
 
 @Component({
   selector: 'app-login',

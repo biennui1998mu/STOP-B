@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UiStateService } from '../../shared/services/state/ui-state.service';
 import { HttpClient } from "@angular/common/http";
 import { Note } from "../../shared/interface/Note";
-import { NoteService } from "../../services/note.service";
-import { ProjectService } from "../../services/project.service";
+import { NoteService } from "../../shared/services/note.service";
+import { ProjectService } from "../../shared/services/project.service";
 import { Project } from "../../shared/interface/Project";
 
 @Component({

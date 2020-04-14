@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Project } from "../shared/interface/Project";
-import { ProjectService } from "../services/project.service";
+import { Project } from "../../shared/interface/Project";
+import { ProjectService } from "../../shared/services/project.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Task } from '../shared/interface/Task';
+import { Task } from '../../shared/interface/Task';
 
 @Component({
   selector: 'app-readProject',
-  templateUrl: './readProject.component.html',
-  styleUrls: ['./readProject.component.scss'],
+  templateUrl: './view-project.component.html',
+  styleUrls: ['./view-project.component.scss'],
 })
-export class ReadProjectComponent implements OnInit {
+export class ViewProjectComponent implements OnInit {
 
   formPlan: Project = null;
   formTask: Task = null;

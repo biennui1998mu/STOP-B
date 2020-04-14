@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from "../../interface/User";
-import {UserService} from "../../../services/user.service";
-import {FriendService} from "../../../services/friend.service";
+import {UserService} from "../../services/user.service";
+import {FriendService} from "../../services/friend.service";
 import {FriendRequest} from "../../interface/FriendRequest";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
-import {TokenService} from "../../../services/token.service";
-import {SocketService} from "../../../services/socket.service";
+import {TokenService} from "../../services/token.service";
+import {SocketService} from "../../services/socket.service";
 
 @Component({
   selector: 'app-friends',

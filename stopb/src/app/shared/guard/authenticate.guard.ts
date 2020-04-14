@@ -8,7 +8,7 @@ import {
   CanActivateChild
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import {AuthorizeService} from "../../services/authorize.service";
+import {AuthorizeService} from "../services/authorize.service";
 
 @Injectable({
   providedIn: 'root'

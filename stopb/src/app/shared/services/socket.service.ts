@@ -3,9 +3,9 @@ import * as io from 'socket.io-client';
 import {BehaviorSubject, of} from 'rxjs';
 import {TokenService} from "./token.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Message} from '../shared/interface/Message';
+import {Message} from '../interface/Message';
 import {catchError, map} from 'rxjs/operators';
-import {Room} from "../shared/interface/Room";
+import {Room} from "../interface/Room";
 
 @Injectable({
   providedIn: 'root',

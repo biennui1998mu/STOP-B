@@ -3,8 +3,8 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {TokenService} from "./token.service";
 import {catchError, map} from "rxjs/operators";
 import {of} from "rxjs";
-import {FriendRequest} from "../shared/interface/FriendRequest";
-import {User} from "../shared/interface/User";
+import {FriendRequest} from "../interface/FriendRequest";
+import {User} from "../interface/User";
 
 @Injectable({
   providedIn: 'root'

@@ -5,7 +5,7 @@ import { UiStateService } from '../../services/state/ui-state.service';
 import { QuickAccessComponent } from '../quick-access/quick-access.component';
 import { MatDialog } from '@angular/material/dialog';
 import { User } from "../../interface/User";
-import { UserService } from "../../../services/user.service";
+import { UserService } from "../../services/user.service";
 
 @Component({
   selector: 'app-router-breadcrumb',

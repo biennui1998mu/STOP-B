@@ -21,7 +21,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 
 const modules = [
-  BrowserAnimationsModule,
   MatFormFieldModule,
   MatInputModule,
   MatIconModule,

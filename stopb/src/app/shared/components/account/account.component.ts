@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthorizeService } from "../../../services/authorize.service";
+import { AuthorizeService } from "../../services/authorize.service";
 import { MatDialogRef } from "@angular/material/dialog";
-import {SocketService} from "../../../services/socket.service";
-import {UserService} from "../../../services/user.service";
+import {SocketService} from "../../services/socket.service";
+import {UserService} from "../../services/user.service";
 import {Token} from "@angular/compiler";
-import {TokenService} from "../../../services/token.service";
+import {TokenService} from "../../services/token.service";
 
 @Component({
   selector: 'app-account',

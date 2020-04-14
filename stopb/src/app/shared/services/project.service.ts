@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Project } from "../shared/interface/Project";
+import { Project } from "../interface/Project";
 import { catchError, map } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { of } from "rxjs";

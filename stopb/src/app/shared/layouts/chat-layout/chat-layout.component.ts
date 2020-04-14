@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
-import {SocketService} from "../../../services/socket.service";
+import {SocketService} from "../../services/socket.service";
 
 @Component({
   selector: 'app-chat-layout',

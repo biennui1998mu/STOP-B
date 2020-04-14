@@ -5,21 +5,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialCompsModule } from './material-comps.module';
 import { RouterModule } from '@angular/router';
-import { SocketService } from '../../services/socket.service';
-import { UserService } from '../../services/user.service';
+import { SocketService } from '../services/socket.service';
+import { UserService } from '../services/user.service';
 
 const modules = [
   MaterialCompsModule,
-  BrowserModule,
   ReactiveFormsModule,
   FormsModule,
-  HttpClientModule,
   RouterModule,
 ];
 
 @NgModule({
   imports: [
-    CommonModule,
     ...modules,
   ],
   exports: [

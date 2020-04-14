@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NoteService } from "../services/note.service";
+import { NoteService } from "../../shared/services/note.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Note } from "../shared/interface/Note";
+import { Note } from "../../shared/interface/Note";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {SocketService} from "./services/socket.service";
+import {SocketService} from "./shared/services/socket.service";
 
 @Component({
   selector: 'app-root',

@@ -5,8 +5,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { AbstractControl, FormControl } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
-import { UserService } from '../../../services/user.service';
-import { TokenService } from '../../../services/token.service';
+import { UserService } from '../../../shared/services/user.service';
+import { TokenService } from '../../../shared/services/token.service';
 
 @Component({
   selector: 'app-moderator-input',

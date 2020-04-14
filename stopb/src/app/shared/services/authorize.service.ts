@@ -4,8 +4,8 @@ import {catchError, map} from "rxjs/operators";
 import {of} from "rxjs";
 import {TokenService} from "./token.service";
 import {Router} from "@angular/router";
-import {DataStateService} from "./data-state.service";
-import {User} from "../shared/interface/User";
+import {DataStateService} from "./state/data-state.service";
+import {User} from "../interface/User";
 import * as io from 'socket.io-client';
 
 @Injectable({
