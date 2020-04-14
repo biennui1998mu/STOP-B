@@ -9,10 +9,9 @@ const Room = require('../database/models/room');
 // get message from room
 router.post('', (req, res) => {
     const roomId = req.body.roomId;
-
     Message.find({
         roomId: roomId
-    })
+    }).sort({createdAt: 1})
         .exec()
         .then(docs => {
             const response = {
@@ -23,7 +22,6 @@ router.post('', (req, res) => {
                         roomId: doc.roomId,
                         message: doc.message,
                         from: doc.from,
-                        // to: doc.to,
                         createdAt: doc.createdAt
                     }
                 })
@@ -53,7 +51,7 @@ router.post('/save', checkAuth, (req, res) => {
             console.log(result);
             return res.status(200).json({
                 message: "Created message successfully",
-                createdNote: {
+                createMessage: {
                     _id: result._id,
                     roomId: result.roomId,
                     message: result.message,
@@ -99,10 +97,9 @@ router.post('/room/get', checkAuth, async (req, res) => {
     try {
         room = await Room.findOne({
             $or: [
-                {listUser: [...req.body.listUser, req.userData.userId]},
-                {listUser: [req.userData.userId, ...req.body.listUser]}
+                {listUser: {$all: [...req.body.listUser, req.userData.userId]}},
+                {listUser: {$all: [req.userData.userId, ...req.body.listUser]}}
             ]
-
         }).exec();
     } catch (e) {
         console.log(e);

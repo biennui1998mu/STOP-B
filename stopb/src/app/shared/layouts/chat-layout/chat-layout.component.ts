@@ -1,7 +1,8 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {SocketService} from "../../services/socket.service";
-import { Message } from '../../interface/Message';
+import {Message} from '../../interface/Message';
+import {TokenService} from "../../services/token.service";
 
 @Component({
   selector: 'app-chat-layout',
@@ -21,7 +22,8 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
 
   constructor(
     public dialogRef: MatDialogRef<ChatLayoutComponent>,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private tokenService: TokenService
   ) {
   }
 
@@ -31,7 +33,8 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
       this.roomId = room._id;
     });
 
-    this.userGetMessage();
+    this.userListenMessage();
+    this.getAllMessage();
   }
 
   closeChat() {
@@ -56,9 +59,21 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
     })
   }
 
-  userGetMessage(){
+  userListenMessage(){
     this.socketService.getUserMessage.subscribe( result => {
+      if(result){
+        // TODO: xử lý object objects
+        console.log(result);
+      }
+    })
+  }
+
+  getAllMessage(){
+    this.socketService.getAllMessage(this.roomId).subscribe( result => {
       console.log(result);
+      // TODO: so sánh cứ mỗi userId có trong message mà trùng với
+      //  this.tokenService.user.userId thì nhét nó vào userMessage và ngược lại
+      this.userMessage = result.messages;
     })
   }
 }

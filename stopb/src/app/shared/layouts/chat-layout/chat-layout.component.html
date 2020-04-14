@@ -23,24 +23,9 @@
         cupiditate deleniti enim eos necessitatibus reiciendis temporibus?
       </div>
     </div>
-    <div class="flex chat-row">
+    <div class="flex chat-row" *ngFor="let message of userMessage">
       <div class="chat-bubble">
-        123
-      </div>
-    </div>
-    <div class="flex chat-row">
-      <div class="chat-bubble">
-        123
-      </div>
-    </div>
-    <div class="flex chat-row">
-      <div class="chat-bubble">
-        123sdasdasdasdasdasd
-      </div>
-    </div>
-    <div class="flex chat-row">
-      <div class="chat-bubble">
-        123sdasdasdasdasdasd
+        {{message.message}}
       </div>
     </div>
   </div>

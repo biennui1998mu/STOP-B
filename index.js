@@ -139,11 +139,6 @@ io.on('connection', (socket) => {
                 message: message
             });
         });
-
-        socket.on("userChat", function (message) {
-            // server trả về message mà user gửi lên cho những người trong room
-            io.sockets.in(socket.getRoom).emit("sentChat", message);
-        })
     } catch (error) {
 
     }

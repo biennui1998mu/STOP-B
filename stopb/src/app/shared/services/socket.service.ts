@@ -68,7 +68,7 @@ export class SocketService {
   public userJoinRoom(...friendsId: string[]) {
     return this.http.post<{ room: Room, message: string }>(
       `${this.url}/room/get`,
-      {listUser: friendsId},
+      {listUser: [friendsId, this.tokenService.user.userId]},
       {headers: this.header}
     ).pipe(
       map(result => {
@@ -149,8 +149,20 @@ export class SocketService {
     });
   }
 
-  getAllMessage(){
-    return this.http.post<Message[]>
+  getAllMessage(roomId){
+    return this.http.post<Message[]>(`${this.url}`, {roomId: roomId}, {headers: this.header}).pipe(
+      map( result => {
+        if(result){
+          return result;
+        }else{
+          return []
+        }
+      }),
+      catchError( error => {
+        console.log(error);
+        return [];
+      })
+    )
   }
 
 }
