@@ -6,4 +6,6 @@ export interface User {
   dob: string,
   userStatus: number,
   avatar: string
+
+  customMode?: string;
 }

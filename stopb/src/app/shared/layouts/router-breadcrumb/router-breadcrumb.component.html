@@ -12,15 +12,25 @@
     <div class="relative grid place-item-center user-avatar">
       <img alt=""
            class="w100pct h100pct br50 obj-pos-center obj-fit-cover"
-           src="{{avatar}}">
-      <div class="absolute br50 status-public bg-success"></div>
+           src="{{user?.avatar}}">
+      <div [class.bg-danger]="user?.userStatus === 3"
+           [class.bg-grayer]="user?.userStatus === 2"
+           [class.bg-success]="user?.userStatus === 1"
+           class="absolute br50 status-public"></div>
     </div>
     <div class="flex flex-d-col justify-center user-name">
       <span class="fw-bold whitespace-nowrap of-hidden text-overflow-ellipsis ">
-        {{username}}
+        {{user?.username}}
       </span>
       <small class="whitespace-nowrap of-hidden text-overflow-ellipsis text-muted">
-        {{userStatus}}
+        -
+        <ng-container *ngIf="user?.userStatus === 1">
+          {{user?.customMode ? user.customMode : 'Online'}}
+        </ng-container>
+        <ng-container *ngIf="user?.userStatus === 2">Offline</ng-container>
+        <ng-container *ngIf="user?.userStatus === 3">
+          {{user?.customMode ? user.customMode : 'Busy'}}
+        </ng-container>
       </small>
     </div>
   </div>

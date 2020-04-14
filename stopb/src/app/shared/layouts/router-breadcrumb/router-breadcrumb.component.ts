@@ -4,8 +4,8 @@ import { Breadcrumb } from '../../models/Breadcrumb';
 import { UiStateService } from '../../services/state/ui-state.service';
 import { QuickAccessComponent } from '../quick-access/quick-access.component';
 import { MatDialog } from '@angular/material/dialog';
-import {User} from "../../interface/User";
-import {UserService} from "../../../services/user.service";
+import { User } from "../../interface/User";
+import { UserService } from "../../../services/user.service";
 
 @Component({
   selector: 'app-router-breadcrumb',
@@ -15,15 +15,12 @@ import {UserService} from "../../../services/user.service";
 export class RouterBreadcrumbComponent implements OnInit {
 
   breadcrumbState: Observable<Breadcrumb>;
-
-  username: string;
-  avatar: string;
-  userStatus: number;
+  user: User = null;
 
   constructor(
     private uiStateService: UiStateService,
     private dialog: MatDialog,
-    private userService: UserService
+    private userService: UserService,
   ) {
     this.breadcrumbState = this.uiStateService.pageTitle;
   }
@@ -45,13 +42,11 @@ export class RouterBreadcrumbComponent implements OnInit {
   }
 
   getUserData() {
-    return this.userService.getUserData().subscribe( (result: User) => {
-      if(result){
-        this.username = result.username;
-        this.avatar = result.avatar;
-        this.userStatus = result.userStatus;
-        console.log(result);
-      }
-    })
+    return this.userService.getUserData()
+      .subscribe((result: User) => {
+        if (result) {
+          this.user = result;
+        }
+      });
   }
 }
