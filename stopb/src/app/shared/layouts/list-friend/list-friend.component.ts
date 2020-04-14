@@ -64,8 +64,8 @@ export class ListFriendComponent implements OnInit {
     this.message = '';
   }
 
-  requestRoomChat(roomName, friendId) {
-    this.socketService.userJoinRoom(roomName, friendId)
+  requestRoomChat(friendId) {
+    this.socketService.userJoinRoom(friendId)
       .subscribe(result => {
         console.log(result);
       })

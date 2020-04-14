@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {SocketService} from "../../services/socket.service";
+import { Message } from '../../interface/Message';
 
 @Component({
   selector: 'app-chat-layout',
@@ -8,6 +9,12 @@ import {SocketService} from "../../services/socket.service";
   styleUrls: ['./chat-layout.component.scss'],
 })
 export class ChatLayoutComponent implements OnInit, AfterViewInit {
+
+  message : string;
+  roomId : string;
+
+  userMessage: Message[];
+  friendMessage: Message[];
 
   @ViewChild('chatContext')
   chatContext: ElementRef<HTMLDivElement>;
@@ -21,7 +28,10 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.socketService.getRoomChat.subscribe(room => {
       console.log(room);
-    })
+      this.roomId = room._id;
+    });
+
+    this.userGetMessage();
   }
 
   closeChat() {
@@ -37,5 +47,18 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
    */
   scrollToBottom() {
     this.chatContext.nativeElement.scrollTop = this.chatContext.nativeElement.scrollHeight;
+  }
+
+  userSendMessage(){
+    this.socketService.userSendMessage(this.message, this.roomId).subscribe( result => {
+      console.log(result);
+      this.message = '';
+    })
+  }
+
+  userGetMessage(){
+    this.socketService.getUserMessage.subscribe( result => {
+      console.log(result);
+    })
   }
 }

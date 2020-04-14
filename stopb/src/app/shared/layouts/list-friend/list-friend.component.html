@@ -4,7 +4,7 @@
   </div>
 
   <div class="ofy-scroll relative flex flex-d-col pb1 h100pct user-list">
-    <div (click)="requestRoomChat(friend.username, friend._id)"
+    <div (click)="requestRoomChat(friend._id)"
          *ngFor="let friend of listFriend"
          class="grid relative cursor-pointer user-select-none user-pill">
       <div class="grid place-item-center of-hidden br50 avatar">

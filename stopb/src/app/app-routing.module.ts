@@ -13,7 +13,7 @@ const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
       { path: 'dashboard', component: HomepageComponent },
       {
-        path: 'project',
+        path: 'project', // lazy load
         loadChildren: () => import('./project/project.module').then(m => m.ProjectModule),
       },
       {

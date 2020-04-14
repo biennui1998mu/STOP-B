@@ -40,13 +40,12 @@ router.post('', (req, res) => {
 });
 
 // create message
-router.post('/save', (req, res) => {
+router.post('/save', checkAuth, (req, res) => {
     const message = new Message({
         _id: mongoose.Types.ObjectId(),
         roomId: req.body.roomId,
         message: req.body.message,
-        from: req.body.from,
-        // from: req.userData.userId,
+        from: req.userData.userId,
         createdAt: Date.now()
     });
     message.save()
@@ -59,7 +58,6 @@ router.post('/save', (req, res) => {
                     roomId: result.roomId,
                     message: result.message,
                     from: result.from,
-                    // to: result.to,
                     createdAt: result.createdAt
                 }
             });
@@ -95,48 +93,38 @@ router.post('/delete/:messageId', (req, res) => {
 // --------------------------------------------------------------------------------------
 
 // create room
-router.post('/room/get', checkAuth, (req, res) => {
-    // const room = new Room ({
-    //     _id: mongoose.Types.ObjectId(),
-    //     roomName: req.body.roomName,
-    //     listUser: req.body.listUser
-    // });
-    let room = null;
-    let message = '';
-    let statusCode = 200;
-    Room.findOneOrCreate({
-        roomName: req.body.roomName,
-        listUser: [req.userData.userId, ...req.body.listUser]
-    }, (err, result) => {
-        if (result) {
-            room = result;
-            message = "Created room successfully";
-        } else {
-            console.log(err);
-            message = "Error detected!";
-            statusCode = 500;
-        }
-        return res.status(statusCode).json({message, room});
-    });
+router.post('/room/get', checkAuth, async (req, res) => {
 
-    // room.save()
-    //     .then(result => {
-    //         console.log(result);
-    //         return res.status(200).json({
-    //             message: "Created room successfully",
-    //             createdNote: {
-    //                 _id: result._id,
-    //                 roomName: result.roomName,
-    //                 listUser: result.listUser
-    //             }
-    //         });
-    //     })
-    //     .catch(err => {
-    //         console.log(err);
-    //         res.status(500).json({
-    //             error: err
-    //         });
-    //     });
+    let room = null;
+    try {
+        room = await Room.findOne({
+            $or: [
+                {listUser: [...req.body.listUser, req.userData.userId]},
+                {listUser: [req.userData.userId, ...req.body.listUser]}
+            ]
+
+        }).exec();
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            message: 'Query error!', room: null
+        });
+    }
+
+    if (!room) {
+        // query tim k thay ket qua
+        room = new Room ({
+            _id: mongoose.Types.ObjectId(),
+            listUser: req.body.listUser
+        });
+        // tao record moi
+        await room.save();
+    }
+
+    return res.status(200).json({
+        message: "Created room successfully",
+        room: room,
+    });
 });
 
 // find room

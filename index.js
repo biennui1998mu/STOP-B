@@ -82,7 +82,7 @@ const io = require('socket.io')(http);
 
 io.on('connection', (socket) => {
     const User = require('./database/models/user');
-    // const Message = require('./database/models/message');
+    const Message = require('./database/models/message');
     const Room = require('./database/models/room');
 
     const token = socket.handshake.query.token;
@@ -109,14 +109,6 @@ io.on('connection', (socket) => {
                 })
         });
 
-        // lắng nghe user send message
-        socket.on("sendMessage", function (message) {
-            io.sockets.emit("Server-send-message", {
-                username: username,
-                message: message
-            });
-        });
-
         // lắng nghe có người gõ chữ
         socket.on("input-inFocus", function () {
             const noti = username + " is typing";
@@ -128,17 +120,24 @@ io.on('connection', (socket) => {
             socket.broadcast.emit("isNotTyping");
         });
 
-        // lắng nghe sự kiện tạo room
+        // lắng nghe sự kiện join room
         socket.on("userJoinRoom", function (room) {
-            console.log(room);
-            socket.join(room.roomName);
             console.log(socket.adapter.rooms);
-            Room.find({_id: room._id})
+            Room.findOne({_id: room._id})
                 .exec()
-                .then( room => {
+                .then( data => {
+                    socket.join(data._id);
                     // user sẽ tự join vào room mới tạo
-                    socket.broadcast.emit("Join", room);
+                    socket.emit("Joined", data);
                 })
+        });
+
+        // lắng nghe user send message
+        socket.on("send-Message-toServer", function (message) {
+            io.sockets.emit("Server-send-message", {
+                username: username,
+                message: message
+            });
         });
 
         socket.on("userChat", function (message) {

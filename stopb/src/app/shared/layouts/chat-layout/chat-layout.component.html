@@ -48,10 +48,10 @@
   <div class="grid relative bottom">
     <input class="br0 p05 bg-transparent chat-input"
            placeholder="start a conversation here..."
-           type="text">
-    <div class="grid place-item-center br50 p05 cursor-pointer user-select-none send-btn"
-         matRipple>
+           type="text" [(ngModel)]="message">
+    <button class="grid place-item-center br50 p05 cursor-pointer user-select-none send-btn"
+         matRipple (click)="userSendMessage()">
       <mat-icon>send</mat-icon>
-    </div>
+    </button>
   </div>
 </div>

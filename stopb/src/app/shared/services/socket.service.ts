@@ -63,10 +63,10 @@ export class SocketService {
    * @param roomName
    * @param friendsId
    */
-  public userJoinRoom(roomName, ...friendsId: string[]) {
+  public userJoinRoom(...friendsId: string[]) {
     return this.http.post<{ room: Room, message: string }>(
       `${this.url}/room/get`,
-      {roomName: roomName, listUser: friendsId},
+      {listUser: friendsId},
       {headers: this.header}
     ).pipe(
       map(result => {
@@ -112,15 +112,6 @@ export class SocketService {
     })
   }
 
-  private listenNewMessage() {
-    const _this = this;
-    this.socket.on("Server-send-message", function (data) {
-      if (data) {
-        _this._getUserMessage.next(data);
-      }
-    });
-  }
-
   private getUserOnline() {
     // this không còn là this của services nữa mà là this của function
     const _this = this;
@@ -136,14 +127,10 @@ export class SocketService {
     this.socket.emit("logout");
   }
 
-  private userSendMessage(message, credentials: {
-    roomId: string,
-    message: string,
-    from: string,
-  }) {
-    this.socket.emit("sendMessage", message);
-    return this.http.post<Message>(`${this.url}/save`, credentials, {headers: this.header}).pipe(
+  userSendMessage(message, roomId) {
+    return this.http.post<Message>(`${this.url}/save`, {message: message, roomId: roomId}, {headers: this.header}).pipe(
       map(result => {
+        this.socket.emit("send-Message-toServer", message);
         return result;
       }),
       catchError(error => {
@@ -152,4 +139,16 @@ export class SocketService {
       })
     )
   }
+
+  private listenNewMessage() {
+    const _this = this;
+    this.socket.on("Server-send-message", function (data) {
+        _this._getUserMessage.next(data);
+    });
+  }
+
+  getAllMessage(){
+    return this.http.post<Message[]>
+  }
+
 }
