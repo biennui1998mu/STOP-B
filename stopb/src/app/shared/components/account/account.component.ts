@@ -42,7 +42,6 @@ export class AccountComponent implements OnInit {
         this.dialog.close();
       }
     });
-
   }
 
   closeDialog(event: MouseEvent): void {
