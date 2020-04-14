@@ -1,134 +1,35 @@
-<!--<div class="chat-sidebar mat-elevation-z5">-->
-<!--  <div class="top">-->
-<!--    <div class="row-card user-self">-->
-<!--      <img alt="" src="{{avatar}}">-->
-<!--      <h3 class="username">-->
-<!--        {{username}}-->
-<!--      </h3>-->
-<!--      <small class="status online">-->
-<!--        {{userStatus}}-->
-<!--      </small>-->
-<!--    </div>-->
-<!--  </div>-->
-
-<!--  <div class="list-friend">-->
-<!--    <div class="title">-->
-<!--      <h3>-->
-<!--        Bạn bè-->
-<!--      </h3>-->
-<!--      <button (click)="openChat()"-->
-<!--              mat-raised-button-->
-<!--              style="margin-left: 3rem">-->
-<!--        Chat-->
-<!--      </button>-->
-<!--    </div>-->
-<!--    <div class="list" id="listFriend">-->
-<!--      <div *ngFor="let user of listUser"-->
-<!--           class="row-card friend">-->
-<!--        <img alt="" src="https://www.bigstockphoto.com/images/homepage/module-6.jpg">-->
-<!--        <h5 class="username">-->
-<!--          {{user}}-->
-<!--        </h5>-->
-<!--        <small class="status online">-->
-<!--          Online-->
-<!--        </small>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-
-<!--  <mat-card *ngIf="chatWindow" class="chat-inbox">-->
-<!--    <mat-card class="friend">-->
-<!--      &lt;!&ndash;      <img alt="" class="friend-img" src="">&ndash;&gt;-->
-<!--      &lt;!&ndash;      <p class="friend-name">Do Hoang Nam</p>&ndash;&gt;-->
-<!--      <button (click)="closeChat()" mat-raised-button>Close</button>-->
-<!--    </mat-card>-->
-<!--    <mat-card class="chat-box">-->
-<!--      <div id="chat-box">-->
-
-<!--      </div>-->
-<!--      <div id="noTi-typing">-->
-
-<!--      </div>-->
-<!--    </mat-card>-->
-<!--    <mat-card class="user-chat">-->
-<!--      <input (focus)="onFocus()"-->
-<!--             (focusout)="outFocus()"-->
-<!--             [(ngModel)]="message"-->
-<!--             class="user-input"-->
-<!--             id="input-chat" name="message"-->
-<!--             type="text"-->
-<!--      >-->
-<!--      <button (click)="sendMessage()"-->
-<!--              class="user-submit-btn"-->
-<!--              mat-raised-button>Send-->
-<!--      </button>-->
-<!--    </mat-card>-->
-<!--  </mat-card>-->
-
-<!--</div>-->
-
 <div class="relative grid container-chat">
   <div class="text-muted user-select-none bg-darker pl1 pt1 pb05 fw-lighter">
-    Friends
+    Friends - <small class="text-muted">{{listFriend.length}}</small>
   </div>
 
-  <div class="of-auto relative flex flex-d-col pb1 user-list">
-    <div class="grid relative cursor-pointer user-select-none user-pill"
+  <div class="ofy-scroll relative flex flex-d-col pb1 h100pct user-list">
+    <div (click)="openChatDialogs(friend.username, friend._id)"
          *ngFor="let friend of listFriend"
-         (click)="openChatDialogs(friend.username, friend._id)">
+         class="grid relative cursor-pointer user-select-none user-pill">
       <div class="grid place-item-center of-hidden br50 avatar">
-        <img alt=""
-             class="obj-fit-cover obj-pos-center w100pct h100pct mat-elevation-z1"
-             src="{{friend.avatar}}">
+        <img [src]="friend.avatar"
+             alt="User Avatar"
+             class="obj-fit-cover obj-pos-center w100pct h100pct mat-elevation-z1">
       </div>
-      <div class="of-hidden whitespace-nowrap text-overflow-ellipsis name">
+      <div [class.text-muted]="friend.userStatus === 2"
+           class="of-hidden whitespace-nowrap text-overflow-ellipsis name">
         {{friend.name}}
       </div>
-      <div class="flex status-online online">
+      <div [class.offline]="friend.userStatus === 2"
+           [class.online]="friend.userStatus === 1"
+           class="flex status-online">
         <div class="br50 mr02 icon"></div>
         <div class="status-text">
-          {{friend.userStatus}}
+          <ng-container *ngIf="friend.userStatus === 1">Online</ng-container>
+          <ng-container *ngIf="friend.userStatus === 2">Offline</ng-container>
+          <ng-container *ngIf="friend.userStatus === 3">Busy</ng-container>
         </div>
       </div>
     </div>
 
-<!--    <div class="grid relative cursor-pointer user-select-none user-pill">-->
-<!--      <div class="grid place-item-center of-hidden br50 avatar">-->
-<!--        <img alt=""-->
-<!--             class="obj-fit-cover obj-pos-center w100pct h100pct mat-elevation-z1"-->
-<!--             src="https://www.bigstockphoto.com/images/homepage/module-6.jpg">-->
-<!--      </div>-->
-<!--      <div class="of-hidden whitespace-nowrap text-overflow-ellipsis name">-->
-<!--        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda autem distinctio earum facere fugiat ipsa ipsum quo recusandae veritatis?-->
-<!--      </div>-->
-<!--      <div class="flex status-online offline">-->
-<!--        <div class="br50 mr02 icon"></div>-->
-<!--        <div class="status-text">-->
-<!--          Online-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
+    <div class="user-search">
 
-<!--    <div class="grid relative cursor-pointer user-select-none user-pill">-->
-<!--      <div class="grid place-item-center of-hidden br50 avatar">-->
-<!--        <img alt=""-->
-<!--             class="obj-fit-cover obj-pos-center w100pct h100pct mat-elevation-z1"-->
-<!--             src="https://www.bigstockphoto.com/images/homepage/module-6.jpg">-->
-<!--      </div>-->
-<!--      <div class="of-hidden whitespace-nowrap text-overflow-ellipsis name">-->
-<!--        Do Hoang Nam-->
-<!--      </div>-->
-<!--      <div class="flex status-online busy">-->
-<!--        <div class="br50 mr02 icon"></div>-->
-<!--        <div class="status-text">-->
-<!--          Online-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-
-  <div class="user-search">
-
+    </div>
   </div>
-</div>
 </div>

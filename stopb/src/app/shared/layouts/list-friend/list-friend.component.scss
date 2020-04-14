@@ -3,6 +3,16 @@
   grid-template-rows: max-content auto max-content;
 }
 
+.user-list {
+  &::-webkit-scrollbar-thumb {
+    border-color: #333;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: #333;
+  }
+}
+
 .user-pill {
   grid-template-areas: 'avatar name' 'avatar online';
   grid-template-columns: 2rem auto;
@@ -10,7 +20,7 @@
   grid-column-gap: 0.5rem;
   grid-row-gap: 0.115rem;
   padding: 0.5rem;
-  margin: 0.115rem 0.5rem;
+  margin: 0.115rem 0 0.115rem 0.5rem;
   border-radius: 4px;
 
   .avatar {
