@@ -4,8 +4,7 @@ import { distinctUntilChanged } from "rxjs/operators";
 import { UserService } from "../../../services/user.service";
 import { MatDialog } from '@angular/material/dialog';
 import { ChatLayoutComponent } from '../chat-layout/chat-layout.component';
-import {FriendRequest} from "../../interface/FriendRequest";
-import {FriendService} from "../../../services/friend.service";
+import { FriendService } from "../../../services/friend.service";
 import { User } from '../../interface/User';
 
 @Component({
@@ -29,7 +28,7 @@ export class ListFriendComponent implements OnInit {
     private socketService: SocketService,
     private userService: UserService,
     private matDialog: MatDialog,
-    private friendService: FriendService
+    private friendService: FriendService,
   ) {
   }
 
@@ -107,12 +106,12 @@ export class ListFriendComponent implements OnInit {
     });
   }
 
-  getFriends(){
-    this.friendService.getFriends().subscribe( result => {
+  getFriends() {
+    this.friendService.getFriends().subscribe(result => {
       console.log(result);
-      if(result){
-        this.listFriend = result
+      if (result) {
+        this.listFriend = result;
       }
-    })
+    });
   }
 }
