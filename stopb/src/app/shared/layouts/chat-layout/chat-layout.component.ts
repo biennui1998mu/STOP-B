@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {MatDialogRef} from '@angular/material/dialog';
+import {SocketService} from "../../../services/socket.service";
 
 @Component({
   selector: 'app-chat-layout',
@@ -13,10 +14,14 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
 
   constructor(
     public dialogRef: MatDialogRef<ChatLayoutComponent>,
+    private socketService: SocketService
   ) {
   }
 
   ngOnInit(): void {
+    this.socketService.getRoomChat.subscribe(room => {
+      console.log(room);
+    })
   }
 
   closeChat() {

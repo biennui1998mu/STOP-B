@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {SocketService} from "./services/socket.service";
 
 @Component({
   selector: 'app-root',
@@ -8,4 +9,10 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'stopb';
 
+  constructor(
+    private socketService: SocketService
+  ) {
+    // Kết nối socket io và gán token
+    this.socketService.setupSocketConnection();
+  }
 }

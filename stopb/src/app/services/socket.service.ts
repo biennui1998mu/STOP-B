@@ -3,7 +3,7 @@ import * as io from 'socket.io-client';
 import {BehaviorSubject, of} from 'rxjs';
 import {TokenService} from "./token.service";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import { Message } from '../shared/interface/Message';
+import {Message} from '../shared/interface/Message';
 import {catchError, map} from 'rxjs/operators';
 import {Room} from "../shared/interface/Room";
 
@@ -14,13 +14,16 @@ export class SocketService {
 
   private url = 'http://localhost:3000/messages';
   private header: HttpHeaders;
-  private socket;
+  private socket: SocketIOClient.Socket;
 
   private _friendOnline: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   public friendOnline = this._friendOnline.asObservable();
 
   private _getUserMessage: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   public getUserMessage = this._getUserMessage.asObservable();
+
+  private _getRoomChat: BehaviorSubject<Room> = new BehaviorSubject<Room>(null);
+  public getRoomChat = this._getRoomChat.asObservable();
 
   constructor(
     private tokenService: TokenService,
@@ -29,9 +32,7 @@ export class SocketService {
     this.header = new HttpHeaders({
       "Authorization": "Bearer " + this.tokenService.getToken(),
     });
-  }
 
-  setupSocketConnection() {
     this.socket = io(this.url, {
       query: {
         token: this.tokenService.getToken()
@@ -39,77 +40,47 @@ export class SocketService {
     });
   }
 
-  public getUserOnline() {
-    // this không còn là this của services nữa mà là this của function
-    const _this = this;
-    this.socket.on("User-online", function (Users) {
-      if (Users) {
-          _this._friendOnline.next(Users);
+  // Setup listener cho cac socket event.
+  setupSocketConnection() {
+    // Lấy messages
+    this.listenNewMessage();
+
+    // listen room event TODO: today job
+    this.userJoinedRoom();
+
+    // NoTi typing
+    this.noTiTyping();
+
+    // NoTi not typing
+    this.noTiNotTyping();
+
+    // Lấy user có trong mảng User/ = online
+    this.getUserOnline();
+  }
+
+  /**
+   * create/join a room chat with a selected user id
+   * @param roomName
+   * @param friendsId
+   */
+  public userJoinRoom(roomName, ...friendsId: string[]) {
+    this.socket.emit("userJoinRoom", '1');
+    return this.http.post<{ room: Room, message: string }>(
+      `${this.url}/room/get`,
+      {roomName: roomName, listUser: friendsId},
+      {headers: this.header}
+    ).pipe(
+      map(result => {
+        if (result.room) {
+          return result.room;
         }
-      }
-    )
-  }
-
-  public getUserLogOut() {
-    this.socket.emit("logout");
-  }
-
-  public userSendMessage(message, credentials: {
-    roomId: string,
-    message: string,
-    from: string,
-  }) {
-    this.socket.emit("sendMessage", message);
-    return this.http.post<Message>(`${this.url}/save`, credentials, { headers: this.header }).pipe(
-      map( result => {
-        return result;
+        return false;
       }),
-      catchError( error => {
-        console.log(error);
-        return of (false);
-      })
-    )
-  }
-
-  public userJoinRoom(roomName, friendId){
-    this.socket.emit("userJoinRoom", roomName);
-    const decoded = this.tokenService.decodeJwt();
-    const userId = decoded.userId;
-    return this.http.post<Room>(`${this.url}/findRoom`, {roomName: roomName, listUser: [userId, friendId]}, { headers: this.header }).pipe(
-      map( room => {
-        if(room){
-          this.socket.on("Joined", room);
-          return room;
-        }else{
-          return this.http.post<Room>(`${this.url}/createRoom`, {roomName: roomName, listUser: [userId, friendId]} , {headers: this.header}).pipe(
-            map( result => {
-              if(result){
-                return result
-              }else{
-                return false;
-              }
-            }),
-            catchError(error => {
-              console.log(error);
-              return of(false);
-            })
-          )
-        }
-      }),
-      catchError( error => {
+      catchError(error => {
         console.log(error);
         return of(false);
       })
     )
-  }
-
-  public getMessage() {
-    const _this = this;
-    this.socket.on("Server-send-message", function(data) {
-      if(data){
-        _this._getUserMessage.next(data);
-      }
-    });
   }
 
   public onFocus() {
@@ -132,5 +103,53 @@ export class SocketService {
       document.getElementById('noTi-typing').innerHTML +=
         "<p></p>"
     });
+  }
+
+  private userJoinedRoom() {
+    const _ = this;
+    this.socket.on("Joined", function (room: Room) {
+      _._getRoomChat.next(room);
+    })
+  }
+
+  private listenNewMessage() {
+    const _this = this;
+    this.socket.on("Server-send-message", function (data) {
+      if (data) {
+        _this._getUserMessage.next(data);
+      }
+    });
+  }
+
+  private getUserOnline() {
+    // this không còn là this của services nữa mà là this của function
+    const _this = this;
+    this.socket.on("User-online", function (Users) {
+        if (Users) {
+          _this._friendOnline.next(Users);
+        }
+      }
+    )
+  }
+
+  public getUserLogOut() {
+    this.socket.emit("logout");
+  }
+
+  private userSendMessage(message, credentials: {
+    roomId: string,
+    message: string,
+    from: string,
+  }) {
+    this.socket.emit("sendMessage", message);
+    return this.http.post<Message>(`${this.url}/save`, credentials, {headers: this.header}).pipe(
+      map(result => {
+        return result;
+      }),
+      catchError(error => {
+        console.log(error);
+        return of(false);
+      })
+    )
   }
 }

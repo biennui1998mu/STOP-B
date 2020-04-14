@@ -41,7 +41,7 @@ router.post('', (req, res) => {
 
 // create message
 router.post('/save', (req, res) => {
-    const message = new Message ({
+    const message = new Message({
         _id: mongoose.Types.ObjectId(),
         roomId: req.body.roomId,
         message: req.body.message,
@@ -95,30 +95,48 @@ router.post('/delete/:messageId', (req, res) => {
 // --------------------------------------------------------------------------------------
 
 // create room
-router.post('/createRoom', (req, res) => {
-    const room = new Room ({
-        _id: mongoose.Types.ObjectId(),
+router.post('/room/get', checkAuth, (req, res) => {
+    // const room = new Room ({
+    //     _id: mongoose.Types.ObjectId(),
+    //     roomName: req.body.roomName,
+    //     listUser: req.body.listUser
+    // });
+    let room = null;
+    let message = '';
+    let statusCode = 200;
+    Room.findOneOrCreate({
         roomName: req.body.roomName,
-        listUser: req.body.listUser
-    });
-    room.save()
-        .then(result => {
-            console.log(result);
-            return res.status(200).json({
-                message: "Created room successfully",
-                createdNote: {
-                    _id: result._id,
-                    roomName: result.roomName,
-                    listUser: result.listUser
-                }
-            });
-        })
-        .catch(err => {
+        listUser: [req.userData.userId, ...req.body.listUser]
+    }, (err, result) => {
+        if (result) {
+            room = result;
+            message = "Created room successfully";
+        } else {
             console.log(err);
-            res.status(500).json({
-                error: err
-            });
-        });
+            message = "Error detected!";
+            statusCode = 500;
+        }
+        return res.status(statusCode).json({message, room});
+    });
+
+    // room.save()
+    //     .then(result => {
+    //         console.log(result);
+    //         return res.status(200).json({
+    //             message: "Created room successfully",
+    //             createdNote: {
+    //                 _id: result._id,
+    //                 roomName: result.roomName,
+    //                 listUser: result.listUser
+    //             }
+    //         });
+    //     })
+    //     .catch(err => {
+    //         console.log(err);
+    //         res.status(500).json({
+    //             error: err
+    //         });
+    //     });
 });
 
 // find room
@@ -127,9 +145,9 @@ router.post('/findRoom', (req, res) => {
         roomName: req.body.roomName,
         listUser: [req.body.userId, req.body.friendId]
     }, function (err, room) {
-        if(room){
+        if (room) {
             return res.json(room);
-        }else{
+        } else {
             return err;
         }
     })

@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { SocketService } from "../../../services/socket.service";
-import { distinctUntilChanged } from "rxjs/operators";
-import { UserService } from "../../../services/user.service";
-import { MatDialog } from '@angular/material/dialog';
-import { ChatLayoutComponent } from '../chat-layout/chat-layout.component';
-import { FriendService } from "../../../services/friend.service";
-import { User } from '../../interface/User';
+import {Component, OnInit} from '@angular/core';
+import {SocketService} from "../../../services/socket.service";
+import {UserService} from "../../../services/user.service";
+import {MatDialog} from '@angular/material/dialog';
+import {ChatLayoutComponent} from '../chat-layout/chat-layout.component';
+import {FriendService} from "../../../services/friend.service";
+import {User} from '../../interface/User';
 
 @Component({
   selector: 'app-list-friend',
@@ -24,6 +23,8 @@ export class ListFriendComponent implements OnInit {
   avatar: string;
   userStatus: number;
 
+  chatDialogOn = false;
+
   constructor(
     private socketService: SocketService,
     private userService: UserService,
@@ -33,46 +34,17 @@ export class ListFriendComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Kết nối socket io và gán token
-    this.socketService.setupSocketConnection();
-
-    // Lấy messages
-    this.socketService.getMessage();
-
-    // NoTi typing
-    this.socketService.noTiTyping();
-
-    // NoTi not typing
-    this.socketService.noTiNotTyping();
-
-    // Lấy user có trong mảng User/ = online
-    this.socketService.getUserOnline();
-
-    // subscribe danh sach ma ben socket emit qua `friendOnline`
-    // this.socketService.friendOnline
-    //   .pipe(
-    //     distinctUntilChanged(),
-    //   ).subscribe(
-    //   listFriend => {
-    //     this.listFriend = listFriend;
-    //   },
-    // );
-
-    // subscribe danh sach ma ben socket emit qua `getUserMessage`
-    this.socketService.getUserMessage
-      .pipe(
-        distinctUntilChanged(),
-      ).subscribe(
-      message => {
-        this.messages = message;
-      },
-    );
-
-    // this.getUserData();
-    // this.openChatDialogs();
-
     // lấy friends của user
     this.getFriends();
+
+    this.socketService.getRoomChat
+      .subscribe(roomChat => {
+        if (roomChat) {
+          if (!this.chatDialogOn) {
+            this.openChatDialogs();
+          }
+        }
+      })
   }
 
   //
@@ -92,8 +64,16 @@ export class ListFriendComponent implements OnInit {
     this.message = '';
   }
 
-  openChatDialogs(roomName, friendId) {
+  requestRoomChat(roomName, friendId) {
+    this.socketService.userJoinRoom(roomName, friendId)
+      .subscribe(result => {
+        console.log(result);
+      })
+  }
+
+  openChatDialogs() {
     const dialogCounted = 1;
+    this.chatDialogOn = true;
     this.matDialog.open(ChatLayoutComponent, {
       width: '280px',
       height: `350px`,
@@ -103,12 +83,9 @@ export class ListFriendComponent implements OnInit {
       },
       hasBackdrop: false,
       panelClass: `setting-modal-box`,
-    });
-    this.socketService.userJoinRoom(roomName, friendId).subscribe( result => {
-      console.log(result);
-      if(result){
-      }
-    })
+    }).afterClosed().subscribe(
+      () => this.chatDialogOn = false
+    );
   }
 
   getFriends() {
