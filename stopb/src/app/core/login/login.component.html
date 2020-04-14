@@ -1,4 +1,7 @@
-<mat-tab-group (selectedTabChange)="changeTab($event)" [(selectedIndex)]="tab" class="container">
+<mat-tab-group (selectedTabChange)="changeTab($event)"
+               [(selectedIndex)]="tab"
+               class="container"
+               dynamicHeight>
   <mat-tab label="Sign in">
     <form #signInForm=ngForm (ngSubmit)="onSignIn()" action="" class="inner-form">
       <!--        input username-->

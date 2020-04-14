@@ -8,6 +8,7 @@ import { CreateProjectComponent } from './create-project/create-project.componen
 import { TaskInputComponent } from './create-project/task-input/task-input.component';
 import { ManagerInputComponent } from './create-project/manager-input/manager-input.component';
 import { MemberInputComponent } from './create-project/member-input/member-input.component';
+import { AllProjectComponent } from './all-project/all-project.component';
 
 const comps = [
   ViewProjectComponent,
@@ -15,6 +16,7 @@ const comps = [
   TaskInputComponent,
   ManagerInputComponent,
   MemberInputComponent,
+  AllProjectComponent,
 ];
 
 @NgModule({

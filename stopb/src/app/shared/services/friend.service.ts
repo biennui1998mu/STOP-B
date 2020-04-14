@@ -11,13 +11,15 @@ import {User} from "../interface/User";
 })
 export class FriendService {
   public url = 'http://localhost:3000/friends';
-  private header: HttpHeaders;
 
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
   ) {
-    this.header = new HttpHeaders({
+  }
+
+  get header() {
+    return new HttpHeaders({
       "Authorization": "Bearer " + this.tokenService.getToken(),
     });
   }

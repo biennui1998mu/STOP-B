@@ -12,14 +12,16 @@ import {TokenService} from "./token.service";
 export class TaskService {
 
   private url = "http://localhost:3000/tasks";
-  private header: HttpHeaders;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private tokenService: TokenService,
   ) {
-    this.header = new HttpHeaders({
+  }
+
+  get header() {
+    return new HttpHeaders({
       "Authorization": "Bearer " + this.tokenService.getToken(),
     });
   }

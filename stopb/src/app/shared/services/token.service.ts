@@ -27,6 +27,7 @@ export class TokenService {
   }
 
   clearToken() {
+    localStorage.removeItem('token');
     localStorage.clear();
   }
 

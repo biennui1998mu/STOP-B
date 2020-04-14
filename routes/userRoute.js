@@ -37,9 +37,7 @@ const friendRequest = require('../database/models/friendRequest')
 
 // take all user from list user
 router.post('/', (req, res, next) => {
-    User.find({
-
-    })
+    User.find({})
         .exec()
         .then(users => {
             if (users.length >= 1) {
@@ -103,18 +101,18 @@ router.post('/view', checkAuth, (req, res, next) => {
 router.post('/search', (req, res) => {
     const input = req.body.input;
 
-        User.find({
-            $or: [
-                {username: new RegExp(input)},
-                {name: new RegExp(input)}
-            ]
-        }, function (err, users) {
-            if(users){
-                return res.json(users);
-            }else{
-                return err;
-            }
-        }).limit(10);
+    User.find({
+        $or: [
+            {username: new RegExp(input)},
+            {name: new RegExp(input)}
+        ]
+    }, function (err, users) {
+        if (users) {
+            return res.json(users);
+        } else {
+            return err;
+        }
+    }).limit(10);
     // }
 });
 
@@ -143,7 +141,7 @@ router.post('/signUp', upload.single('avatar'), (req, res, next) => {
                             name: req.body.name,
                             dob: req.body.dob,
                             userStatus: 2,
-                            avatar : url + "uploads/sample.png"
+                            avatar: url + "uploads/sample.png"
                         });
                         user.save()
                             .then(result => {
@@ -156,7 +154,7 @@ router.post('/signUp', upload.single('avatar'), (req, res, next) => {
                                         name: result.name,
                                         dob: result.dob,
                                         userStatus: result.userStatus,
-                                        avatar : result.avatar
+                                        avatar: result.avatar
                                     }
                                 })
                             })
@@ -188,6 +186,13 @@ router.post('/signIn', async (req, res, next) => {
     const validatePassword = await bcrypt.compare(password, user.password);
 
     if (validatePassword) {
+        const toResponse = user.toObject();
+        delete toResponse.password;
+        delete toResponse.__v;
+        // let userResponse = delete toResponse.password;
+        // console.dir(toResponse);
+        // console.dir(userResponse);
+
         const token = jwt.sign({
                 username: user.username,
                 userId: user._id,
@@ -201,7 +206,8 @@ router.post('/signIn', async (req, res, next) => {
         console.log(token);
         return res.status(200).json({
             message: 'Auth successful',
-            token: token
+            token: token,
+            user: toResponse
         });
     } else {
         res.status(401).json({

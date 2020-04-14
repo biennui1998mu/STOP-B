@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QnoteComponent } from './qnote.component';
+import { AllNotesComponent } from './all-notes.component';
 
-describe('QnoteComponent', () => {
-  let component: QnoteComponent;
-  let fixture: ComponentFixture<QnoteComponent>;
+describe('AllNotesComponent', () => {
+  let component: AllNotesComponent;
+  let fixture: ComponentFixture<AllNotesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [QnoteComponent],
+      declarations: [ AllNotesComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QnoteComponent);
+    fixture = TestBed.createComponent(AllNotesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

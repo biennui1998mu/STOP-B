@@ -10,11 +10,11 @@ import {ProjectService} from "../../shared/services/project.service";
 import {Project} from "../../shared/interface/Project";
 
 @Component({
-  selector: 'app-qnote',
-  templateUrl: './qnote.component.html',
-  styleUrls: ['./qnote.component.scss'],
+  selector: 'app-create-note',
+  templateUrl: './create-note.component.html',
+  styleUrls: ['./create-note.component.scss'],
 })
-export class QnoteComponent implements OnInit {
+export class CreateNoteComponent implements OnInit {
 
   createNoteFrom: FormGroup;
   projects: Project[];
