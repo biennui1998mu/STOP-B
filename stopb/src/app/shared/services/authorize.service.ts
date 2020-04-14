@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {catchError, map} from "rxjs/operators";
-import {of} from "rxjs";
-import {TokenService} from "./token.service";
-import {Router} from "@angular/router";
-import {DataStateService} from "./state/data-state.service";
-import {User} from "../interface/User";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { catchError, map } from "rxjs/operators";
+import { of } from "rxjs";
+import { TokenService } from "./token.service";
+import { Router } from "@angular/router";
+import { DataStateService } from "./state/data-state.service";
+import { User } from "../interface/User";
 import * as io from 'socket.io-client';
 
 @Injectable({
@@ -14,7 +14,6 @@ import * as io from 'socket.io-client';
 export class AuthorizeService {
 
   private url = "http://localhost:3000";
-  private header: HttpHeaders;
   private socket;
 
   constructor(
@@ -23,10 +22,13 @@ export class AuthorizeService {
     private dataStateService: DataStateService,
     private router: Router,
   ) {
-    this.header = new HttpHeaders({
-      "Authorize": this.tokenService.getToken(),
-    });
     this.socket = io(this.url);
+  }
+
+  get header() {
+    return new HttpHeaders({
+      "Authorization": "Bearer " + this.tokenService.getToken(),
+    });
   }
 
   get isAuthorize() {
@@ -34,7 +36,6 @@ export class AuthorizeService {
     // "" => false
     // null/undefined => false
     // "..." => true
-
     const token = this.tokenService.getToken();
     if (!token) return false;
 
@@ -59,7 +60,7 @@ export class AuthorizeService {
     }>(`${this.url}/users/signin`, credentials)
       .pipe(
         map(result => {
-          if (result && result.token) {
+          if (result && result.token && result.user) {
             this.tokenService.setToken(result.token);
             // save user data globally
             this.dataStateService.saveUserState(result.user);
@@ -82,7 +83,7 @@ export class AuthorizeService {
     this.router.navigateByUrl('/login');
   }
 
-  signup(credentials: {
+  signUp(credentials: {
     username: string,
     password: string,
     name: string,

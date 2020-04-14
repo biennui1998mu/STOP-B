@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Project } from "../interface/Project";
 import { catchError, map } from "rxjs/operators";
 import { Router } from "@angular/router";
-import { of } from "rxjs";
+import { Observable, of } from "rxjs";
 import { TokenService } from "./token.service";
 
 @Injectable({
@@ -12,14 +12,16 @@ import { TokenService } from "./token.service";
 export class ProjectService {
 
   private url = "http://localhost:3000/projects";
-  private header: HttpHeaders;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private tokenService: TokenService,
   ) {
-    this.header = new HttpHeaders({
+  }
+
+  get header() {
+    return new HttpHeaders({
       "Authorization": "Bearer " + this.tokenService.getToken(),
     });
   }
@@ -40,7 +42,7 @@ export class ProjectService {
       message: string,
       createdProject?: Project,
       error: any
-    }>(`${this.url}/create`, credentials, { headers: this.header}).pipe(
+    }>(`${this.url}/create`, credentials, { headers: this.header }).pipe(
       map(result => {
         return !!result.createdProject;
       }),
@@ -52,7 +54,7 @@ export class ProjectService {
   }
 
   getAllProject() {
-    return this.http.post<Project[]>(`${this.url}`, {} ,{ headers: this.header }).pipe(
+    return this.http.post<Project[]>(`${this.url}`, {}, { headers: this.header }).pipe(
       map(result => {
         if (result) {
           return result;
@@ -67,39 +69,40 @@ export class ProjectService {
     );
   }
 
-  getProjectHighPriority(){
-    return this.http.post<Project[]>(`${this.url}/important`,{}, { headers: this.header}).pipe(
-      map( result => {
-        if(result){
+  getProjectHighPriority() {
+    return this.http.post<Project[]>(`${this.url}/important`, {}, { headers: this.header }).pipe(
+      map(result => {
+        if (result) {
           return result;
-        }else{
-          return []
+        } else {
+          return [];
         }
       }),
       catchError(error => {
         console.log(error);
         return [];
-      })
-    )
+      }),
+    );
   }
 
-  readProject(projectId: string) {
+  readProject(projectId: string): Observable<Project> {
     return this.http.post<{
       token: string,
       error: any,
-      project: Project
-    }>(`${this.url}/view`, { projectId: projectId }, { headers: this.header }).pipe(
-      map(result => {
-        if (result.project) {
-          return result.project;
-        }
-        return {};
-      }),
-      catchError(error => {
-        console.log(error);
-        return error;
-      }),
-    );
+      project: Project,
+    }>(`${this.url}/view`, { projectId: projectId }, { headers: this.header })
+      .pipe(
+        map(result => {
+          if (result && result.project) {
+            return result.project;
+          }
+          return null;
+        }),
+        catchError(error => {
+          console.log(error);
+          return of(null);
+        }),
+      );
   }
 
   updateProject(projectId: string, credentials: {
@@ -121,11 +124,7 @@ export class ProjectService {
       error: any
     }>(`${this.url}/update`, credentials).pipe(
       map(result => {
-        if (result.updatedProject) {
-          return true;
-        } else {
-          return false;
-        }
+        return !!result.updatedProject;
       }),
       catchError(error => {
         console.log(error);
@@ -137,7 +136,7 @@ export class ProjectService {
   deleteProject(projectId: string) {
     return this.http.post<{
       message: string
-    }>(`${this.url}/delete`, {projectId: projectId}).pipe(
+    }>(`${this.url}/delete`, { projectId: projectId }).pipe(
       map(result => {
         return !!result.message;
       }),

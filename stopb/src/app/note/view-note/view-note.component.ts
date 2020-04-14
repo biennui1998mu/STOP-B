@@ -5,11 +5,11 @@ import { Note } from "../../shared/interface/Note";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
-  selector: 'app-readnote',
-  templateUrl: './readnote.component.html',
-  styleUrls: ['./readnote.component.scss'],
+  selector: 'app-view-note',
+  templateUrl: './view-note.component.html',
+  styleUrls: ['./view-note.component.scss'],
 })
-export class ReadnoteComponent implements OnInit {
+export class ViewNoteComponent implements OnInit {
 
   readNoteForm: FormGroup;
 

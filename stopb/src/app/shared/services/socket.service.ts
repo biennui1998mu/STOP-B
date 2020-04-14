@@ -13,7 +13,6 @@ import {Room} from "../interface/Room";
 export class SocketService {
 
   private url = 'http://localhost:3000/messages';
-  private header: HttpHeaders;
   private socket: SocketIOClient.Socket;
 
   private _friendOnline: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
@@ -29,14 +28,17 @@ export class SocketService {
     private tokenService: TokenService,
     private http: HttpClient
   ) {
-    this.header = new HttpHeaders({
-      "Authorization": "Bearer " + this.tokenService.getToken(),
-    });
 
     this.socket = io('http://localhost:3000', {
       query: {
         token: this.tokenService.getToken()
       }
+    });
+  }
+
+  get header() {
+    return new HttpHeaders({
+      "Authorization": "Bearer " + this.tokenService.getToken(),
     });
   }
 

@@ -12,14 +12,16 @@ import { TokenService } from "./token.service";
 export class NoteService {
 
   private url = "http://localhost:3000/notes";
-  private header: HttpHeaders;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private tokenService: TokenService,
   ) {
-    this.header = new HttpHeaders({
+  }
+
+  get header() {
+    return new HttpHeaders({
       "Authorization": "Bearer " + this.tokenService.getToken(),
     });
   }

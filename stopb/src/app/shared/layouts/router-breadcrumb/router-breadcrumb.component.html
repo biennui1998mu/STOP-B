@@ -10,9 +10,9 @@
   <div (click)="openDialogSetting()"
        class="grid align-items-center user-select-none cursor-pointer right-side">
     <div class="relative grid place-item-center user-avatar">
-      <img alt=""
-           class="w100pct h100pct br50 obj-pos-center obj-fit-cover"
-           src="{{user?.avatar}}">
+      <img [src]="user?.avatar"
+           alt=""
+           class="w100pct h100pct br50 obj-pos-center obj-fit-cover">
       <div [class.bg-danger]="user?.userStatus === 3"
            [class.bg-grayer]="user?.userStatus === 2"
            [class.bg-success]="user?.userStatus === 1"

@@ -11,13 +11,15 @@ import { Observable, of } from "rxjs";
 export class UserService {
 
   public url = 'http://localhost:3000/users';
-  private header: HttpHeaders;
 
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
   ) {
-    this.header = new HttpHeaders({
+  }
+
+  get header() {
+    return new HttpHeaders({
       "Authorization": "Bearer " + this.tokenService.getToken(),
     });
   }

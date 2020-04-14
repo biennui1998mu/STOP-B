@@ -1,12 +1,12 @@
 <form class="plan-board">
-  <input [ngModel]="formPlan.projectTitle" [value]="formPlan?.projectTitle"
+  <input [ngModel]="project.projectTitle" [value]="project?.projectTitle"
          class="title"
          maxlength="100" name="noteTitle">
   <mat-form-field class="dob">
     <mat-label>Choose a date</mat-label>
     <input [matDatepicker]="picker"
-           [ngModel]="formPlan.projectEndDate"
-           [value]="formPlan?.projectEndDate"
+           [ngModel]="project.projectEndDate"
+           [value]="project?.projectEndDate"
            matInput
            name="noteDate">
     <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>

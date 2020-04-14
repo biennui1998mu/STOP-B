@@ -4,8 +4,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './core/login/login.component';
 import { HomepageComponent } from './core/homepage/homepage.component';
-import { QnoteComponent } from './note/qnote/qnote.component';
-import { ReadnoteComponent } from './note/readNote/readnote.component';
 import { SharedComponentModule } from "./shared/components/shared-component.module";
 import { CoreImportsModule } from './shared/modules/core-imports.module';
 import { SharedServicesModule } from './shared/services/shared-services.module';
@@ -20,8 +18,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppComponent,
     LoginComponent,
     HomepageComponent,
-    QnoteComponent,
-    ReadnoteComponent,
   ],
   imports: [
     BrowserModule,

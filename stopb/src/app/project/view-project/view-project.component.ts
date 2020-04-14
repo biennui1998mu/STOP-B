@@ -3,6 +3,8 @@ import { Project } from "../../shared/interface/Project";
 import { ProjectService } from "../../shared/services/project.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Task } from '../../shared/interface/Task';
+import { UiStateService } from '../../shared/services/state/ui-state.service';
+import { filter, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-readProject',
@@ -11,7 +13,7 @@ import { Task } from '../../shared/interface/Task';
 })
 export class ViewProjectComponent implements OnInit {
 
-  formPlan: Project = null;
+  project: Project = null;
   formTask: Task = null;
 
   inputTaskField: boolean;
@@ -22,17 +24,25 @@ export class ViewProjectComponent implements OnInit {
     private planService: ProjectService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private uiStateService: UiStateService,
   ) {
-    console.log(this.activatedRoute);
-    this.activatedRoute.paramMap.subscribe(param => {
-      const id = param.get('id');
-      if (!id) {
-        // trong truong hop k co id tren url thi tu ve dashboard
-        this.router.navigateByUrl('/dashboard');
-      } else {
-        this.readProject(id);
-      }
-    });
+    this.activatedRoute.paramMap
+      .pipe(
+        switchMap(params => {
+          const id = params.get('id');
+          return this.readProject(id);
+        }),
+        filter(s => !!s),
+      )
+      .subscribe((project: Project) => {
+        this.project = project;
+        this.uiStateService.setPageTitle({
+          current: {
+            title: 'Projects - ' + this.project.projectTitle,
+            path: '/project/view/' + this.project._id,
+          },
+        });
+      });
     this.inputTaskField = true;
   }
 
@@ -48,9 +58,6 @@ export class ViewProjectComponent implements OnInit {
   }
 
   readProject(id: string) {
-    return this.planService.readProject(id).subscribe((data: Project) => {
-      this.formPlan = data;
-      console.log(data);
-    });
+    return this.planService.readProject(id);
   }
 }

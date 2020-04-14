@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomepageComponent } from './core/homepage/homepage.component';
-import { QnoteComponent } from "./note/qnote/qnote.component";
-import { ReadnoteComponent } from "./note/readNote/readnote.component";
 import { LayoutsComponent } from './shared/layouts/layouts.component';
 import { LoginComponent } from './core/login/login.component';
 import { AuthenticateGuard } from "./shared/guard/authenticate.guard";
@@ -17,10 +15,8 @@ const routes: Routes = [
         loadChildren: () => import('./project/project.module').then(m => m.ProjectModule),
       },
       {
-        path: 'note', children: [
-          { path: 'create', component: QnoteComponent },
-          { path: 'view/:id', component: ReadnoteComponent },
-        ],
+        path: 'note',
+        loadChildren: () => import('./note/note.module').then(m => m.NoteModule),
       },
     ],
   },
