@@ -74,7 +74,8 @@
 
   <div class="of-auto relative flex flex-d-col pb1 user-list">
     <div class="grid relative cursor-pointer user-select-none user-pill"
-         (click)="openChatDialogs()" *ngFor="let friend of listFriend">
+         *ngFor="let friend of listFriend"
+         (click)="openChatDialogs(friend.username, friend._id)">
       <div class="grid place-item-center of-hidden br50 avatar">
         <img alt=""
              class="obj-fit-cover obj-pos-center w100pct h100pct mat-elevation-z1"
@@ -129,4 +130,5 @@
   <div class="user-search">
 
   </div>
+</div>
 </div>

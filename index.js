@@ -83,12 +83,13 @@ const io = require('socket.io')(http);
 io.on('connection', (socket) => {
     const User = require('./database/models/user');
     // const Message = require('./database/models/message');
-    // const Room = require('./database/models/room');
+    const Room = require('./database/models/room');
 
     const token = socket.handshake.query.token;
     try {
         const decoded = jwtDecode(token);
         const username = decoded.username;
+        const userId = decoded.userId;
 
         // show token connect
         console.log('Đăng nhập mới: ' + username);
@@ -128,19 +129,17 @@ io.on('connection', (socket) => {
         });
 
         // lắng nghe sự kiện tạo room
-        socket.on("createRoom", function (room) {
-            socket.join(room);
-            // tạo getRoom để lấy room
-            socket.getRoom = room;
-            // đẩy room vào listRoom
-            const listRoom = [];
-            for (aRoom in socket.adapter.rooms) {
-                listRoom.push(aRoom)
-            }
-            // server gửi listRoom về client
-            io.sockets.emit("getListRoom", listRoom);
-            // user sẽ tự join vào room mới tạo
-            socket.emit("joinMyRoom", room);
+        socket.on("userJoinRoom", function (roomName) {
+            Room.find({
+                roomName: roomName,
+                listUser: [userId]
+            })
+                .exec()
+                .then( room => {
+                    socket.join(room);
+                    // user sẽ tự join vào room mới tạo
+                    socket.emit("Joined", room);
+                })
         });
 
         socket.on("userChat", function (message) {

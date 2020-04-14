@@ -70,7 +70,7 @@ export class ListFriendComponent implements OnInit {
     );
 
     // this.getUserData();
-    this.openChatDialogs();
+    // this.openChatDialogs();
 
     // lấy friends của user
     this.getFriends();
@@ -89,11 +89,11 @@ export class ListFriendComponent implements OnInit {
   // }
 
   sendMessage() {
-    this.socketService.userSendMessage(this.message);
+    // this.socketService.userSendMessage(this.message, messageForm);
     this.message = '';
   }
 
-  openChatDialogs() {
+  openChatDialogs(roomName, friendId) {
     const dialogCounted = 1;
     this.matDialog.open(ChatLayoutComponent, {
       width: '280px',
@@ -105,6 +105,11 @@ export class ListFriendComponent implements OnInit {
       hasBackdrop: false,
       panelClass: `setting-modal-box`,
     });
+    this.socketService.userJoinRoom(roomName, friendId).subscribe( result => {
+      console.log(result);
+      if(result){
+      }
+    })
   }
 
   getFriends(){
@@ -115,4 +120,12 @@ export class ListFriendComponent implements OnInit {
       }
     })
   }
+
+  // joinRoom(roomName, friendId){
+  //   this.socketService.userJoinRoom(roomName, friendId).subscribe( result => {
+  //     console.log(result);
+  //     if(result){
+  //     }
+  //   })
+  // }
 }

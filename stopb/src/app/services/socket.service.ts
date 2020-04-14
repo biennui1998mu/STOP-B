@@ -1,14 +1,19 @@
 import {Injectable} from '@angular/core';
 import * as io from 'socket.io-client';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, of} from 'rxjs';
 import {TokenService} from "./token.service";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import { Message } from '../shared/interface/Message';
+import {catchError, map} from 'rxjs/operators';
+import {Room} from "../shared/interface/Room";
 
 @Injectable({
   providedIn: 'root',
 })
 export class SocketService {
 
-  private url = 'http://localhost:3000';
+  private url = 'http://localhost:3000/messages';
+  private header: HttpHeaders;
   private socket;
 
   private _friendOnline: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
@@ -18,8 +23,12 @@ export class SocketService {
   public getUserMessage = this._getUserMessage.asObservable();
 
   constructor(
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private http: HttpClient
   ) {
+    this.header = new HttpHeaders({
+      "Authorization": "Bearer " + this.tokenService.getToken(),
+    });
   }
 
   setupSocketConnection() {
@@ -45,8 +54,53 @@ export class SocketService {
     this.socket.emit("logout");
   }
 
-  public userSendMessage(message) {
-    this.socket.emit("sendMessage", message)
+  public userSendMessage(message, credentials: {
+    roomId: string,
+    message: string,
+    from: string,
+  }) {
+    this.socket.emit("sendMessage", message);
+    return this.http.post<Message>(`${this.url}/save`, credentials, { headers: this.header }).pipe(
+      map( result => {
+        return result;
+      }),
+      catchError( error => {
+        console.log(error);
+        return of (false);
+      })
+    )
+  }
+
+  public userJoinRoom(roomName, friendId){
+    this.socket.emit("userJoinRoom", roomName);
+    const decoded = this.tokenService.decodeJwt();
+    const userId = decoded.userId;
+    return this.http.post<Room>(`${this.url}/findRoom`, {roomName: roomName, listUser: [userId, friendId]}, { headers: this.header }).pipe(
+      map( room => {
+        if(room){
+          this.socket.on("Joined", room);
+          return room;
+        }else{
+          return this.http.post<Room>(`${this.url}/createRoom`, {roomName: roomName, listUser: [userId, friendId]} , {headers: this.header}).pipe(
+            map( result => {
+              if(result){
+                return result
+              }else{
+                return false;
+              }
+            }),
+            catchError(error => {
+              console.log(error);
+              return of(false);
+            })
+          )
+        }
+      }),
+      catchError( error => {
+        console.log(error);
+        return of(false);
+      })
+    )
   }
 
   public getMessage() {

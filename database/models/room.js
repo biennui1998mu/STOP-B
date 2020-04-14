@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const roomSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    roomName: String
+    roomName: {type: String},
+    listUser: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'}
 });
 
 module.exports = mongoose.model('Room', roomSchema);
