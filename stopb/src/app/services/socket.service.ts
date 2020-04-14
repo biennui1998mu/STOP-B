@@ -33,7 +33,7 @@ export class SocketService {
       "Authorization": "Bearer " + this.tokenService.getToken(),
     });
 
-    this.socket = io(this.url, {
+    this.socket = io('http://localhost:3000', {
       query: {
         token: this.tokenService.getToken()
       }
@@ -64,7 +64,6 @@ export class SocketService {
    * @param friendsId
    */
   public userJoinRoom(roomName, ...friendsId: string[]) {
-    this.socket.emit("userJoinRoom", '1');
     return this.http.post<{ room: Room, message: string }>(
       `${this.url}/room/get`,
       {roomName: roomName, listUser: friendsId},
@@ -72,6 +71,7 @@ export class SocketService {
     ).pipe(
       map(result => {
         if (result.room) {
+          this.socket.emit("userJoinRoom", result.room);
           return result.room;
         }
         return false;

@@ -130,14 +130,15 @@ io.on('connection', (socket) => {
 
         // lắng nghe sự kiện tạo room
         socket.on("userJoinRoom", function (room) {
-            socket.join(room._id);
+            console.log(room);
+            socket.join(room.roomName);
             console.log(socket.adapter.rooms);
-            // Room.find({_id: room._id})
-            //     .exec()
-            //     .then( room => {
-            //         // user sẽ tự join vào room mới tạo
-            //         socket.emit("Joined", room);
-            //     })
+            Room.find({_id: room._id})
+                .exec()
+                .then( room => {
+                    // user sẽ tự join vào room mới tạo
+                    socket.broadcast.emit("Join", room);
+                })
         });
 
         socket.on("userChat", function (message) {
