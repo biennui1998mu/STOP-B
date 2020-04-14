@@ -4,6 +4,9 @@ import { distinctUntilChanged } from "rxjs/operators";
 import { UserService } from "../../../services/user.service";
 import { MatDialog } from '@angular/material/dialog';
 import { ChatLayoutComponent } from '../chat-layout/chat-layout.component';
+import {FriendRequest} from "../../interface/FriendRequest";
+import {FriendService} from "../../../services/friend.service";
+import { User } from '../../interface/User';
 
 @Component({
   selector: 'app-list-friend',
@@ -14,7 +17,7 @@ export class ListFriendComponent implements OnInit {
 
   message: string;
   messages: string[] = [];
-  listUser: string[] = [];
+  listFriend: User[] = [];
 
   socket;
 
@@ -26,6 +29,7 @@ export class ListFriendComponent implements OnInit {
     private socketService: SocketService,
     private userService: UserService,
     private matDialog: MatDialog,
+    private friendService: FriendService
   ) {
   }
 
@@ -46,14 +50,14 @@ export class ListFriendComponent implements OnInit {
     this.socketService.getUserOnline();
 
     // subscribe danh sach ma ben socket emit qua `friendOnline`
-    this.socketService.friendOnline
-      .pipe(
-        distinctUntilChanged(),
-      ).subscribe(
-      listFriend => {
-        this.listUser = listFriend;
-      },
-    );
+    // this.socketService.friendOnline
+    //   .pipe(
+    //     distinctUntilChanged(),
+    //   ).subscribe(
+    //   listFriend => {
+    //     this.listFriend = listFriend;
+    //   },
+    // );
 
     // subscribe danh sach ma ben socket emit qua `getUserMessage`
     this.socketService.getUserMessage
@@ -67,6 +71,9 @@ export class ListFriendComponent implements OnInit {
 
     // this.getUserData();
     this.openChatDialogs();
+
+    // lấy friends của user
+    this.getFriends();
   }
 
   //
@@ -98,5 +105,14 @@ export class ListFriendComponent implements OnInit {
       hasBackdrop: false,
       panelClass: `setting-modal-box`,
     });
+  }
+
+  getFriends(){
+    this.friendService.getFriends().subscribe( result => {
+      console.log(result);
+      if(result){
+        this.listFriend = result
+      }
+    })
   }
 }

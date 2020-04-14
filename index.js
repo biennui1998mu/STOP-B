@@ -82,8 +82,8 @@ const io = require('socket.io')(http);
 
 io.on('connection', (socket) => {
     const User = require('./database/models/user');
-    const Message = require('./database/models/message');
-    const Room = require('./database/models/room');
+    // const Message = require('./database/models/message');
+    // const Room = require('./database/models/room');
 
     const token = socket.handshake.query.token;
     try {
