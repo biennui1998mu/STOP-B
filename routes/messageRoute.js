@@ -26,7 +26,7 @@ router.post('', (req, res) => {
                     }
                 })
             };
-            console.log(response);
+            // console.log(response);
             res.status(200).json(response)
         })
         .catch(err => {
@@ -48,7 +48,7 @@ router.post('/save', checkAuth, (req, res) => {
     });
     message.save()
         .then(result => {
-            console.log(result);
+            // console.log(result);
             return res.status(200).json({
                 _id: result._id,
                 roomId: result.roomId,

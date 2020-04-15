@@ -18,6 +18,9 @@ export class SocketService {
   private _friendOnline: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   public friendOnline = this._friendOnline.asObservable();
 
+  private _friendOffline: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  public friendOffline = this._friendOffline.asObservable();
+
   private _getUserMessage: Subject<Message> = new Subject();
   public getUserMessage = this._getUserMessage.asObservable();
 
@@ -51,13 +54,13 @@ export class SocketService {
     this.userJoinedRoom();
 
     // NoTi typing
-    this.noTiTyping();
+    // this.noTiTyping();
 
     // NoTi not typing
-    this.noTiNotTyping();
+    // this.noTiNotTyping();
 
     // Lấy user có trong mảng User/ = online
-    this.getUserOnline();
+    this.getUserLogOut();
   }
 
   /**
@@ -85,31 +88,27 @@ export class SocketService {
     )
   }
 
-  public onFocus() {
-    this.socket.emit("input-inFocus")
-  }
-
-  public outFocus() {
-    this.socket.emit("input-outFocus")
-  }
-
-  public noTiTyping() {
-    this.socket.on("isTyping", (noTi) => {
-      document.getElementById('noTi-typing').innerHTML +=
-        "<p>" + noTi + "</p>"
-    });
-  }
-
-  public noTiNotTyping() {
-    this.socket.on("isNotTyping", () => {
-      document.getElementById('noTi-typing').innerHTML +=
-        "<p></p>"
-    });
-  }
-
-  public getUserLogOut() {
-    this.socket.emit("logout");
-  }
+  // public onFocus() {
+  //   this.socket.emit("input-inFocus")
+  // }
+  //
+  // public outFocus() {
+  //   this.socket.emit("input-outFocus")
+  // }
+  //
+  // public noTiTyping() {
+  //   this.socket.on("isTyping", (noTi) => {
+  //     document.getElementById('noTi-typing').innerHTML +=
+  //       "<p>" + noTi + "</p>"
+  //   });
+  // }
+  //
+  // public noTiNotTyping() {
+  //   this.socket.on("isNotTyping", () => {
+  //     document.getElementById('noTi-typing').innerHTML +=
+  //       "<p></p>"
+  //   });
+  // }
 
   userSendMessage(message: string, roomId: string) {
     return this.http.post<Message>(`${this.url}/save`, {message: message, roomId: roomId}, {headers: this.header}).pipe(
@@ -168,6 +167,14 @@ export class SocketService {
         }
       }
     )
+  }
+
+  public getUserLogOut() {
+    const _this = this;
+    this.socket.on("Offline", result => {
+      _this._friendOffline.next(result);
+      return result;
+    });
   }
 
   private listenNewMessage() {

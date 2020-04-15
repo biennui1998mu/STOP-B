@@ -9,7 +9,6 @@ const friendRequest = require('../database/models/friendRequest');
 // Get all friend from list
 router.post('/list', checkAuth, async (req, res) => {
     const userId = req.userData.userId;
-    // const userId = req.body.userId;
 
     if (!userId) {
         // ... xu ly validate

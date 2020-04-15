@@ -96,12 +96,4 @@ export class ListFriendComponent implements OnInit {
       }
     });
   }
-
-  // joinRoom(roomName, friendId){
-  //   this.socketService.userJoinRoom(roomName, friendId).subscribe( result => {
-  //     console.log(result);
-  //     if(result){
-  //     }
-  //   })
-  // }
 }

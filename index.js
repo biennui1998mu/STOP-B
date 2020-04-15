@@ -84,6 +84,7 @@ io.on('connection', (socket) => {
     const User = require('./database/models/user');
     const Message = require('./database/models/message');
     const Room = require('./database/models/room');
+    const friendRequestSchema = require('./database/models/friendRequest')
 
     const token = socket.handshake.query.token;
     try {
@@ -94,31 +95,43 @@ io.on('connection', (socket) => {
         // show token connect
         console.log('Đăng nhập mới: ' + username);
         User.updateOne({username: username}, {$set: {userStatus: 1}})
-            .exec()
-            .then(result => {
-                console.log(result);
-            });
+            .exec();
+            // .then(result => {
+            //     console.log(result);
+            // });
 
         // show token disconnect
         socket.on('disconnect', function () {
             console.log('User: ' + username + ' đã out');
             User.updateOne({username: username}, {$set: {userStatus: 2}})
+                .exec();
+                // .then(result => {
+                //     console.log(result);
+                // })
+            friendRequestSchema.find({
+                $or: [
+                    {requester: userId},
+                    {recipient: userId},
+                ],
+                status: 1
+            })
                 .exec()
                 .then(result => {
-                    console.log(result);
+                    // console.log(result);
+                    socket.broadcast.emit("Offline", result);
                 })
         });
 
-        // lắng nghe có người gõ chữ
-        socket.on("input-inFocus", function () {
-            const noti = username + " is typing";
-            socket.broadcast.emit("isTyping", noti);
-        });
-
-        // lắng nghe có người gõ chữ xong rồi
-        socket.on("input-outFocus", function () {
-            socket.broadcast.emit("isNotTyping");
-        });
+        // // lắng nghe có người gõ chữ
+        // socket.on("input-inFocus", function () {
+        //     const noti = username + " is typing";
+        //     socket.broadcast.emit("isTyping", noti);
+        // });
+        //
+        // // lắng nghe có người gõ chữ xong rồi
+        // socket.on("input-outFocus", function () {
+        //     socket.broadcast.emit("isNotTyping");
+        // });
 
         // lắng nghe sự kiện join room
         socket.on("userJoinRoom", function (room) {

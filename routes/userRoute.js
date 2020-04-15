@@ -75,6 +75,7 @@ router.post('/', (req, res, next) => {
 // take user by ID
 router.post('/view', checkAuth, (req, res, next) => {
     const id = req.userData.userId;
+
     if (!id) {
         // ... xu ly validate
     }
@@ -86,6 +87,32 @@ router.post('/view', checkAuth, (req, res, next) => {
             } else {
                 return res.status(404).json({
                     message: 'No user found by id'
+                })
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            return res.status(500).json({
+                error: err
+            })
+        })
+});
+
+// take user by ID
+router.post('/friend', checkAuth, (req, res) => {
+    const friendId = req.body.friendId;
+
+    if (!friendId) {
+        // ... xu ly validate
+    }
+    User.findById(friendId)
+        .exec()
+        .then(user => {
+            if (user) {
+                return res.status(200).json(user)
+            } else {
+                return res.status(404).json({
+                    message: 'No friend found by id'
                 })
             }
         })

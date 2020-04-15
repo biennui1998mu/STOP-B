@@ -3,14 +3,14 @@
     <div class="relative grid place-item-center user-avatar">
       <img alt=""
            class="w100pct h100pct br50 obj-fit-cover obj-pos-center"
-           src="https://www.bigstockphoto.com/images/homepage/module-6.jpg">
+           src="{{friend?.avatar}}">
       <div [class.bg-danger]="friend?.userStatus === 3"
            [class.bg-grayer]="friend?.userStatus === 2"
            [class.bg-success]="friend?.userStatus === 1"
            class="absolute br50 status-public"></div>
     </div>
     <div class="whitespace-nowrap of-hidden text-overflow-ellipsis fw-bold user-name">
-      Do Hoang Nam
+      {{friend?.name}}
     </div>
     <div (click)="closeChat()"
          class="user-select-none grid place-item-center close-action">

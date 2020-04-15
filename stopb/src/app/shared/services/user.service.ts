@@ -40,6 +40,22 @@ export class UserService {
     );
   }
 
+  getFriendData(friendId: string){
+    return this.http.post<User>(`${this.url}/friend`, {friendId: friendId}, { headers: this.header }).pipe(
+      map(result => {
+        if (result) {
+          return result;
+        } else {
+          return {};
+        }
+      }),
+      catchError(error => {
+        console.log(error);
+        return error;
+      }),
+    );
+  }
+
   searchUser(input: string): Observable<User[]> {
     return this.http.post<User[]>(
       `${this.url}/search`,

@@ -4,6 +4,7 @@ import {SocketService} from "../../services/socket.service";
 import {Message} from '../../interface/Message';
 import {TokenService} from "../../services/token.service";
 import {User} from "../../interface/User";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-chat-layout',
@@ -16,14 +17,18 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
   roomId: string;
 
   friend: User;
+  listId: string[];
+
   messages: Message[] = [];
+
   @ViewChild('chatContext')
   chatContext: ElementRef<HTMLDivElement>;
 
   constructor(
     public dialogRef: MatDialogRef<ChatLayoutComponent>,
     private socketService: SocketService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private userService: UserService
   ) {
   }
 
@@ -33,12 +38,22 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.socketService.getRoomChat.subscribe(room => {
-      console.log(room);
+      this.listId = room.listUser;
       this.roomId = room._id;
     });
 
     this.userListenMessage();
     this.getAllMessage();
+    this.getFriend();
+  }
+
+  getFriend() {
+    this.listId.splice(this.listId.indexOf(this.tokenService.user.userId), 1);
+    this.listId.forEach(data => {
+      this.userService.getFriendData(data).subscribe( (friendData : User) => {
+        this.friend = friendData
+      })
+    })
   }
 
   closeChat() {
@@ -58,7 +73,7 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
 
   userSendMessage() {
     this.socketService.userSendMessage(this.message, this.roomId).subscribe(result => {
-      console.log(result);
+      // console.log(result);
       this.message = '';
     })
   }
