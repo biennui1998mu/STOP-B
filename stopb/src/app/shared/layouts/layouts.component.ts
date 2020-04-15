@@ -18,7 +18,7 @@ export class LayoutsComponent implements OnInit, OnDestroy {
   constructor(
     private uiStateService: UiStateService,
     private changeDetectorRef: ChangeDetectorRef,
-    private media: MediaMatcher
+    private media: MediaMatcher,
   ) {
     this.breadcrumbState = this.uiStateService.pageTitle;
     this.mobileQuery = media.matchMedia('(max-width: 600px)');

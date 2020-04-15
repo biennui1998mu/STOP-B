@@ -8,9 +8,9 @@ describe('RouterBreadcrumbComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RouterBreadcrumbComponent ]
+      declarations: [RouterBreadcrumbComponent],
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -7,7 +7,6 @@ import { FriendRequest } from "../interface/FriendRequest";
 import { User } from "../interface/User";
 
 @Injectable({
-  providedIn: 'root'
   providedIn: 'root',
 })
 export class FriendService {

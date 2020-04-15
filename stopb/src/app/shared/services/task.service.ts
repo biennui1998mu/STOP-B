@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import {Task} from "../interface/Task";
-import {catchError, map} from "rxjs/operators";
-import {of} from "rxjs";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Router} from "@angular/router";
-import {TokenService} from "./token.service";
+import { Task } from "../interface/Task";
+import { catchError, map } from "rxjs/operators";
+import { of } from "rxjs";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Router } from "@angular/router";
+import { TokenService } from "./token.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TaskService {
 
@@ -34,14 +34,14 @@ export class TaskService {
     taskEndDate: string,
     taskStatus: boolean,
     taskManager: string,
-    projectId : string
+    projectId: string
   }) {
     return this.http.post<{
       // token: string;
       message: string,
       createdTask?: Task,
       error: any
-    }>(`${this.url}/create`, credentials, { headers: this.header}).pipe(
+    }>(`${this.url}/create`, credentials, { headers: this.header }).pipe(
       map(result => {
         return !!result.createdTask;
       }),
@@ -125,7 +125,7 @@ export class TaskService {
   DeleteTask(taskId: string) {
     return this.http.post<{
       message: string
-    }>(`${this.url}/delete`, {taskId: taskId}).pipe(
+    }>(`${this.url}/delete`, { taskId: taskId }).pipe(
       map(result => {
         return !!result.message;
       }),

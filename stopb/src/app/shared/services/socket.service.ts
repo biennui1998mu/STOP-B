@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {TokenService} from "./token.service";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Message} from '../interface/Message';
-import {catchError, map} from 'rxjs/operators';
-import {Room} from "../interface/Room";
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { TokenService } from "./token.service";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Message } from '../interface/Message';
+import { catchError, map } from 'rxjs/operators';
+import { Room } from "../interface/Room";
 
 @Injectable({
   providedIn: 'root',
@@ -29,13 +29,13 @@ export class SocketService {
 
   constructor(
     private tokenService: TokenService,
-    private http: HttpClient
+    private http: HttpClient,
   ) {
 
     this.socket = io('http://localhost:3000', {
       query: {
-        token: this.tokenService.getToken()
-      }
+        token: this.tokenService.getToken(),
+      },
     });
   }
 
@@ -71,8 +71,8 @@ export class SocketService {
   public userJoinRoom(...friendsId: string[]) {
     return this.http.post<{ room: Room, message: string }>(
       `${this.url}/room/get`,
-      {listUser: [friendsId, this.tokenService.user.userId]},
-      {headers: this.header}
+      { listUser: [friendsId, this.tokenService.user.userId] },
+      { headers: this.header },
     ).pipe(
       map(result => {
         if (result.room) {
@@ -84,8 +84,8 @@ export class SocketService {
       catchError(error => {
         console.log(error);
         return of(false);
-      })
-    )
+      }),
+    );
   }
 
   // public onFocus() {
@@ -111,7 +111,10 @@ export class SocketService {
   // }
 
   userSendMessage(message: string, roomId: string) {
-    return this.http.post<Message>(`${this.url}/save`, {message: message, roomId: roomId}, {headers: this.header}).pipe(
+    return this.http.post<Message>(`${this.url}/save`, {
+      message: message,
+      roomId: roomId,
+    }, { headers: this.header }).pipe(
       map(result => {
         this.socket.emit("send-Message-toServer", result);
         return result;
@@ -119,8 +122,8 @@ export class SocketService {
       catchError(error => {
         console.log(error);
         return of(false);
-      })
-    )
+      }),
+    );
   }
 
   getAllMessage(roomId): Observable<{
@@ -130,32 +133,40 @@ export class SocketService {
     return this.http.post<{
       count: number,
       messages: Message[]
-    }>(`${this.url}`, {roomId: roomId}, {headers: this.header}).pipe(
+    }>(`${this.url}`, { roomId: roomId }, { headers: this.header }).pipe(
       map(result => {
         if (result) {
           return result;
         } else {
           return {
             count: 0,
-            messages: [] as Message[]
-          }
+            messages: [] as Message[],
+          };
         }
       }),
       catchError(error => {
         console.log(error);
         return of({
           count: 0,
-          messages: [] as Message[]
+          messages: [] as Message[],
         });
-      })
-    )
+      }),
+    );
+  }
+
+  public getUserLogOut() {
+    const _this = this;
+    this.socket.on("Offline", result => {
+      _this._friendOffline.next(result);
+      return result;
+    });
   }
 
   private userJoinedRoom() {
     const _ = this;
     this.socket.on("Joined", function (room: Room) {
       _._getRoomChat.next(room);
-    })
+    });
   }
 
   private getUserOnline() {
@@ -165,16 +176,8 @@ export class SocketService {
         if (Users) {
           _this._friendOnline.next(Users);
         }
-      }
-    )
-  }
-
-  public getUserLogOut() {
-    const _this = this;
-    this.socket.on("Offline", result => {
-      _this._friendOffline.next(result);
-      return result;
-    });
+      },
+    );
   }
 
   private listenNewMessage() {

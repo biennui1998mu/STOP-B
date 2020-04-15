@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthorizeService } from "../../services/authorize.service";
 import { MatDialogRef } from "@angular/material/dialog";
-import {SocketService} from "../../services/socket.service";
-import {UserService} from "../../services/user.service";
-import {Token} from "@angular/compiler";
-import {TokenService} from "../../services/token.service";
+import { SocketService } from "../../services/socket.service";
+import { UserService } from "../../services/user.service";
+import { TokenService } from "../../services/token.service";
 
 @Component({
   selector: 'app-account',
@@ -20,7 +19,7 @@ export class AccountComponent implements OnInit {
     public dialog: MatDialogRef<AccountComponent>,
     private socketService: SocketService,
     private userService: UserService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {
   }
 
@@ -28,14 +27,14 @@ export class AccountComponent implements OnInit {
     this.getUserId();
   }
 
-  getUserId(){
+  getUserId() {
     const decoded = this.tokenService.decodeJwt();
     this.userId = decoded.userId;
   }
 
   logout(event: MouseEvent) {
-    return this.userService.updateUser(this.userId, 2).subscribe( result =>{
-      if(result){
+    return this.userService.updateUser(this.userId, 2).subscribe(result => {
+      if (result) {
         event.preventDefault();
         this.authorizeService.logout();
         this.dialog.close();

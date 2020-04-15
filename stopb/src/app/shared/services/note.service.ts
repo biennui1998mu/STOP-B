@@ -106,7 +106,7 @@ export class NoteService {
       message: string,
       updatedNote?: Note,
       error: any
-    }>(`${this.url}/update/${noteId}`,  credentials).pipe(
+    }>(`${this.url}/update/${noteId}`, credentials).pipe(
       map(result => {
         if (result.updatedNote) {
           return true;
@@ -124,7 +124,7 @@ export class NoteService {
   deleteNote(noteId: string) {
     return this.http.post<{
       message: string
-    }>(`${this.url}/delete/${noteId}`, {noteId: noteId}).pipe(
+    }>(`${this.url}/delete/${noteId}`, { noteId: noteId }).pipe(
       map(result => {
         return !!result.message;
       }),

@@ -1,10 +1,10 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
-import {SocketService} from "../../services/socket.service";
-import {Message} from '../../interface/Message';
-import {TokenService} from "../../services/token.service";
-import {User} from "../../interface/User";
-import {UserService} from "../../services/user.service";
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { SocketService } from "../../services/socket.service";
+import { Message } from '../../interface/Message';
+import { TokenService } from "../../services/token.service";
+import { User } from "../../interface/User";
+import { UserService } from "../../services/user.service";
 
 @Component({
   selector: 'app-chat-layout',
@@ -28,7 +28,7 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
     public dialogRef: MatDialogRef<ChatLayoutComponent>,
     private socketService: SocketService,
     private tokenService: TokenService,
-    private userService: UserService
+    private userService: UserService,
   ) {
   }
 
@@ -50,10 +50,10 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
   getFriend() {
     this.listId.splice(this.listId.indexOf(this.tokenService.user.userId), 1);
     this.listId.forEach(data => {
-      this.userService.getFriendData(data).subscribe( (friendData : User) => {
-        this.friend = friendData
-      })
-    })
+      this.userService.getFriendData(data).subscribe((friendData: User) => {
+        this.friend = friendData;
+      });
+    });
   }
 
   closeChat() {
@@ -75,7 +75,7 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
     this.socketService.userSendMessage(this.message, this.roomId).subscribe(result => {
       // console.log(result);
       this.message = '';
-    })
+    });
   }
 
   userListenMessage() {
@@ -92,6 +92,6 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
     this.socketService.getAllMessage(this.roomId).subscribe(result => {
       this.messages = result.messages;
       setTimeout(() => this.scrollToBottom(), 10);
-    })
+    });
   }
 }

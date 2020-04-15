@@ -46,7 +46,7 @@ export class HomepageComponent implements OnInit {
   }
 
   getProjectHighPriority() {
-    this.projectService.getProjectHighPriority().subscribe( result => {
+    this.projectService.getProjectHighPriority().subscribe(result => {
       this.projects = result;
     });
   }
