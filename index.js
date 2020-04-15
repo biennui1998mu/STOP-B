@@ -95,7 +95,7 @@ io.on('connection', (socket) => {
         console.log('Đăng nhập mới: ' + username);
         User.updateOne({username: username}, {$set: {userStatus: 1}})
             .exec()
-            .then( result => {
+            .then(result => {
                 console.log(result);
             });
 
@@ -104,7 +104,7 @@ io.on('connection', (socket) => {
             console.log('User: ' + username + ' đã out');
             User.updateOne({username: username}, {$set: {userStatus: 2}})
                 .exec()
-                .then( result => {
+                .then(result => {
                     console.log(result);
                 })
         });
@@ -125,7 +125,7 @@ io.on('connection', (socket) => {
             console.log(socket.adapter.rooms);
             Room.findOne({_id: room._id})
                 .exec()
-                .then( data => {
+                .then(data => {
                     socket.join(data._id);
                     // user sẽ tự join vào room mới tạo
                     socket.emit("Joined", data);
@@ -133,11 +133,8 @@ io.on('connection', (socket) => {
         });
 
         // lắng nghe user send message
-        socket.on("send-Message-toServer", function (message) {
-            io.sockets.emit("Server-send-message", {
-                username: username,
-                message: message
-            });
+        socket.on("send-Message-toServer", function (messageData) {
+            io.sockets.emit("Server-send-message", messageData);
         });
     } catch (error) {
 

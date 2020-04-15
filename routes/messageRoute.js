@@ -50,16 +50,12 @@ router.post('/save', checkAuth, (req, res) => {
         .then(result => {
             console.log(result);
             return res.status(200).json({
-                message: "Created message successfully",
-                createMessage: {
-                    _id: result._id,
-                    roomId: result.roomId,
-                    message: result.message,
-                    from: result.from,
-                    createdAt: result.createdAt
-                }
+                _id: result._id,
+                roomId: result.roomId,
+                message: result.message,
+                from: result.from,
+                createdAt: result.createdAt
             });
-
         })
         .catch(err => {
             console.log(err);
@@ -110,7 +106,7 @@ router.post('/room/get', checkAuth, async (req, res) => {
 
     if (!room) {
         // query tim k thay ket qua
-        room = new Room ({
+        room = new Room({
             _id: mongoose.Types.ObjectId(),
             listUser: req.body.listUser
         });

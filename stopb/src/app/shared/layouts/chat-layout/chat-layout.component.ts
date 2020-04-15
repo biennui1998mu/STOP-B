@@ -3,6 +3,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {SocketService} from "../../services/socket.service";
 import {Message} from '../../interface/Message';
 import {TokenService} from "../../services/token.service";
+import {User} from "../../interface/User";
 
 @Component({
   selector: 'app-chat-layout',
@@ -11,12 +12,11 @@ import {TokenService} from "../../services/token.service";
 })
 export class ChatLayoutComponent implements OnInit, AfterViewInit {
 
-  message : string;
-  roomId : string;
+  message: string;
+  roomId: string;
 
-  userMessage: Message[];
-  friendMessage: Message[];
-
+  friend: User;
+  messages: Message[] = [];
   @ViewChild('chatContext')
   chatContext: ElementRef<HTMLDivElement>;
 
@@ -25,6 +25,10 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
     private socketService: SocketService,
     private tokenService: TokenService
   ) {
+  }
+
+  get userId() {
+    return this.tokenService.user.userId;
   }
 
   ngOnInit(): void {
@@ -52,28 +56,27 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
     this.chatContext.nativeElement.scrollTop = this.chatContext.nativeElement.scrollHeight;
   }
 
-  userSendMessage(){
-    this.socketService.userSendMessage(this.message, this.roomId).subscribe( result => {
+  userSendMessage() {
+    this.socketService.userSendMessage(this.message, this.roomId).subscribe(result => {
       console.log(result);
       this.message = '';
     })
   }
 
-  userListenMessage(){
-    this.socketService.getUserMessage.subscribe( result => {
-      if(result){
-        // TODO: xử lý object objects
-        console.log(result);
-      }
-    })
+  userListenMessage() {
+    this.socketService.getUserMessage
+      .subscribe(result => {
+        if (result) {
+          this.messages.push(result);
+          setTimeout(() => this.scrollToBottom(), 10);
+        }
+      });
   }
 
-  getAllMessage(){
-    this.socketService.getAllMessage(this.roomId).subscribe( result => {
-      console.log(result);
-      // TODO: so sánh cứ mỗi userId có trong message mà trùng với
-      //  this.tokenService.user.userId thì nhét nó vào userMessage và ngược lại
-      this.userMessage = result.messages;
+  getAllMessage() {
+    this.socketService.getAllMessage(this.roomId).subscribe(result => {
+      this.messages = result.messages;
+      setTimeout(() => this.scrollToBottom(), 10);
     })
   }
 }

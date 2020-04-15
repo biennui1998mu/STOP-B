@@ -4,7 +4,10 @@
       <img alt=""
            class="w100pct h100pct br50 obj-fit-cover obj-pos-center"
            src="https://www.bigstockphoto.com/images/homepage/module-6.jpg">
-      <div class="absolute br50 status-public bg-success"></div>
+      <div [class.bg-danger]="friend?.userStatus === 3"
+           [class.bg-grayer]="friend?.userStatus === 2"
+           [class.bg-success]="friend?.userStatus === 1"
+           class="absolute br50 status-public"></div>
     </div>
     <div class="whitespace-nowrap of-hidden text-overflow-ellipsis fw-bold user-name">
       Do Hoang Nam
@@ -16,14 +19,9 @@
   </div>
 
   <div #chatContext
-      class="flex-d-col flex of-auto relative pt1 pb05 chat-context">
-    <div class="flex chat-row friend">
-      <div class="flex chat-bubble">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam consectetur dolorem magnam. Architecto
-        cupiditate deleniti enim eos necessitatibus reiciendis temporibus?
-      </div>
-    </div>
-    <div class="flex chat-row" *ngFor="let message of userMessage">
+       class="flex-d-col flex of-auto relative pt1 pb05 chat-context">
+    <div *ngFor="let message of messages"
+         [class.friend]="message.from !== userId" class="flex chat-row">
       <div class="chat-bubble">
         {{message.message}}
       </div>
@@ -31,11 +29,11 @@
   </div>
 
   <div class="grid relative bottom">
-    <input class="br0 p05 bg-transparent chat-input"
-           placeholder="start a conversation here..."
-           type="text" [(ngModel)]="message">
-    <button class="grid place-item-center br50 p05 cursor-pointer user-select-none send-btn"
-         matRipple (click)="userSendMessage()">
+    <input [(ngModel)]="message"
+           class="br0 p05 bg-transparent chat-input"
+           placeholder="start a conversation here..." type="text">
+    <button (click)="userSendMessage()"
+            class="grid place-item-center br50 p05 cursor-pointer user-select-none send-btn" matRipple>
       <mat-icon>send</mat-icon>
     </button>
   </div>
