@@ -19,14 +19,14 @@
     </div>
     <a [routerLinkActiveOptions]="{exact: true}"
        [routerLinkActive]="['active']"
-       [routerLink]="['/note']"
+       [routerLink]="['/notes']"
        class="td-none bg-darkest relative user-select-none text-muted p05 pl3 tt-capitalize url-item">
       <mat-icon>note</mat-icon>
       All notes
     </a>
     <a [routerLinkActiveOptions]="{exact: true}"
        [routerLinkActive]="['active']"
-       [routerLink]="['/note', 'create']"
+       [routerLink]="['/notes', 'create']"
        class="td-none bg-darkest relative user-select-none text-muted p05 pl3 tt-capitalize url-item">
       <mat-icon>add_circle</mat-icon>
       Create note
@@ -42,14 +42,14 @@
     </div>
     <a [routerLinkActiveOptions]="{exact: true}"
        [routerLinkActive]="['active']"
-       [routerLink]="['/project']"
+       [routerLink]="['/projects']"
        class="td-none bg-darkest relative user-select-none text-muted p05 pl3 tt-capitalize url-item">
       <mat-icon>assignment</mat-icon>
       Projects
     </a>
     <a [routerLinkActiveOptions]="{exact: true}"
        [routerLinkActive]="['active']"
-       [routerLink]="['/project', 'create']"
+       [routerLink]="['/projects', 'create']"
        class="td-none bg-darkest relative user-select-none text-muted p05 pl3 tt-capitalize url-item">
       <mat-icon>add_circle</mat-icon>
       Create Project

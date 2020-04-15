@@ -11,12 +11,16 @@ const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
       { path: 'dashboard', component: HomepageComponent },
       {
-        path: 'project', // lazy load
-        loadChildren: () => import('./project/project.module').then(m => m.ProjectModule),
+        path: 'projects', // lazy load
+        loadChildren: () => import('./features/project/project.module').then(m => m.ProjectModule),
       },
       {
-        path: 'note',
-        loadChildren: () => import('./note/note.module').then(m => m.NoteModule),
+        path: 'notes',
+        loadChildren: () => import('./features/note/note.module').then(m => m.NoteModule),
+      },
+      {
+        path: 'friends',
+        loadChildren: () => import('./features/friends/friends.module').then(m => m.FriendsModule),
       },
     ],
   },

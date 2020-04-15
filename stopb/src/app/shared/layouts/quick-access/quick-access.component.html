@@ -14,7 +14,8 @@
     <div mat-line>My Account</div>
   </mat-list-item>
 
-  <mat-list-item class="cursor-pointer user-select-none list-item-access"
+  <mat-list-item [routerLink]="['/friends']"
+                 class="outline-none cursor-pointer user-select-none list-item-access"
                  mat-ripple
                  role="button">
     <mat-icon mat-list-icon>

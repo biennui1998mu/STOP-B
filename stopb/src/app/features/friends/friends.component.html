@@ -1,0 +1,118 @@
+<!--<mat-tab-group>-->
+<!--  <mat-tab label="List Friend">-->
+<!--    <mat-card class="box-friend" *ngFor="let friend of friends">-->
+<!--&lt;!&ndash;      <img class="img" src="https://www.bigstockphoto.com/images/homepage/module-6.jpg" alt="">&ndash;&gt;-->
+<!--      <div class="info-friend">-->
+<!--        <h5>{{friend.username}}</h5>-->
+<!--        <small>{{friend.userStatus}}</small>-->
+<!--      </div>-->
+<!--    </mat-card>-->
+<!--  </mat-tab>-->
+
+<!--  <mat-tab label="Add Friend">-->
+<!--    <div class="add-friend">-->
+<!--      <mat-form-field class="input">-->
+<!--        <mat-label>Friend's username/nam</mat-label>-->
+<!--        <input matInput placeholder="Friend's username/name" [(ngModel)]="username">-->
+<!--      </mat-form-field>-->
+<!--      <button class="button" (click)="searchFriend()" mat-raised-button>Search</button>-->
+<!--      <mat-card class="box-friend" *ngFor="let user of users">-->
+<!--        <img class="img" src="https://www.bigstockphoto.com/images/homepage/module-6.jpg" alt="">-->
+<!--        <div class="info-friend">-->
+<!--          <h5>{{user.username}}</h5>-->
+<!--          <small>{{user.name}}</small>-->
+<!--        </div>-->
+<!--        <button mat-raised-button-->
+<!--                (click)="sendRequest(user._id)">-->
+<!--          Add friend-->
+<!--        </button>-->
+<!--      </mat-card>-->
+<!--    </div>-->
+<!--  </mat-tab>-->
+
+<!--  <mat-tab label="Notification">-->
+<!--    <div class="friend-request" *ngFor="let request of requests">-->
+<!--      <img class="friend-img" src="" alt="">-->
+<!--      <div class="friend-info">-->
+<!--        <h5>{{request.requester}}</h5>-->
+<!--        <small>{{request.recipient}}</small>-->
+<!--      </div>-->
+<!--      <button class="btn-ignore" mat-raised-button (click)="setRequestStatus(2, request.requester, request.recipient, request._id)">-->
+<!--        <span class="material-icons">-->
+<!--          cancel-->
+<!--        </span>-->
+<!--        Ignore-->
+<!--      </button>-->
+<!--      <button class="btn-accept" mat-raised-button (click)="setRequestStatus(1, request.requester, request.recipient, request._id)">-->
+<!--        <span class="material-icons">-->
+<!--          check_circle-->
+<!--        </span>-->
+<!--        Accept-->
+<!--      </button>-->
+<!--    </div>-->
+<!--  </mat-tab>-->
+<!--</mat-tab-group>-->
+
+<div class="grid container">
+  <label class="relative flex justify-flex-end input">
+    <input [formControl]="friendSearchForm"
+           class="input-custom"
+           placeholder="Find friends by name, etc."
+           type="text">
+    <mat-icon>search</mat-icon>
+  </label>
+  <hr class="divider">
+  <div class="grid list-friends">
+
+    <div *ngIf="strangers?.length > 0"
+         class="grid grid-friend search-friend">
+      <small class="text-muted span-all">Find strangers</small>
+
+      <div *ngFor="let user of strangers" class="grid friend-pill relative cursor-pointer user-select-none">
+        <div class="grid place-item-center avatar">
+          <img [src]="user.avatar"
+               alt="User avatar"
+               class="w100pct h100pct obj-pos-center obj-fit-cover br50">
+        </div>
+        <div class="flex flex-d-col justify-center user-info">
+          <div class="fw-bold whitespace-nowrap of-hidden text-overflow-ellipsis name">
+            {{user.name}}
+          </div>
+          <small class="whitespace-nowrap of-hidden text-overflow-ellipsis text-muted mt02em user-name">
+            {{user.username}}
+          </small>
+        </div>
+      </div>
+
+      <div class="ta-center text-muted cursor-pointer user-select-none p1em span-all">
+        More result
+      </div>
+    </div>
+
+    <div class="grid grid-friend">
+      <small class="text-muted span-all">From friend list</small>
+
+      <div *ngFor="let user of friends"
+           class="grid relative friend-pill cursor-pointer user-select-none">
+        <div class="grid place-item-center avatar">
+          <img [src]="user.avatar"
+               alt="User avatar"
+               class="w100pct h100pct obj-pos-center obj-fit-cover br50">
+        </div>
+        <div class="flex flex-d-col justify-center user-info">
+          <div class="fw-bold whitespace-nowrap of-hidden text-overflow-ellipsis name">
+            {{user.name}}
+          </div>
+          <small class="whitespace-nowrap of-hidden text-overflow-ellipsis text-muted mt02em user-name">
+            {{user.username}}
+          </small>
+        </div>
+      </div>
+
+      <div class="ta-center text-muted cursor-pointer user-select-none p1em span-all">
+        More result
+      </div>
+
+    </div>
+  </div>
+</div>

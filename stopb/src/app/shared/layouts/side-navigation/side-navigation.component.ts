@@ -1,7 +1,6 @@
 import { AfterContentInit, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AccountComponent } from "../../components/account/account.component";
-import { FriendsComponent } from "../../components/friends/friends.component";
 import { Router } from '@angular/router';
 
 @Component({
@@ -22,13 +21,6 @@ export class SideNavigationComponent implements AfterContentInit {
 
   ngAfterContentInit(): void {
     this.extractCurrentURL(this.router.url);
-  }
-
-  openDialogFriends(): void {
-    const dialogOpen = this.dialog.open(FriendsComponent, {
-      width: '500px',
-      height: '500px',
-    });
   }
 
   openDialogAccount(): void {

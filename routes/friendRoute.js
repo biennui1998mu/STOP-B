@@ -73,17 +73,19 @@ router.post('/add', checkAuth, (req, res) => {
 });
 
 // Get friend request
-router.post('/request', checkAuth, (req, res) => {
-    friendRequest.find({
-        recipient: req.userData.userId,
-        status: 0
-    }, function (err, requests) {
-        if (requests) {
-            return res.json(requests);
-        } else {
-            return err;
-        }
-    })
+router.post('/request', checkAuth, async (req, res) => {
+    try {
+        const requests = await friendRequest.find({
+            recipient: req.userData.userId,
+            status: 0
+        }).populate([`requester`, `recipient`])
+            .exec();
+
+        return res.json(requests);
+    } catch (e) {
+        console.log(e);
+        return res.status(500);
+    }
 });
 
 // add friend request - change status of request to 1 or 2
@@ -110,7 +112,7 @@ router.post('/request/update/:requestId', (req, res) => {
 });
 
 // Check friend online
-router.post('/online', (req,res) => {
+router.post('/online', (req, res) => {
     User.find({
         userStatus: 1
     }, function (err, requests) {

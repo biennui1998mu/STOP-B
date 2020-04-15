@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {SocketService} from "../../services/socket.service";
-import {UserService} from "../../services/user.service";
-import {MatDialog} from '@angular/material/dialog';
-import {ChatLayoutComponent} from '../chat-layout/chat-layout.component';
-import {FriendService} from "../../services/friend.service";
-import {User} from '../../interface/User';
+import { Component, OnInit } from '@angular/core';
+import { SocketService } from "../../services/socket.service";
+import { UserService } from "../../services/user.service";
+import { MatDialog } from '@angular/material/dialog';
+import { ChatLayoutComponent } from '../chat-layout/chat-layout.component';
+import { FriendService } from "../../services/friend.service";
+import { User } from '../../interface/User';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-friend',
@@ -31,11 +32,16 @@ export class ListFriendComponent implements OnInit {
     private matDialog: MatDialog,
     private friendService: FriendService,
   ) {
+    this.friendService.friends
+      .pipe(
+        distinctUntilChanged(),
+      )
+      .subscribe(friends => this.listFriend = friends);
   }
 
   ngOnInit() {
     // lấy friends của user
-    this.getFriends();
+    this.friendService.getFriends();
 
     this.socketService.getRoomChat
       .subscribe(roomChat => {
@@ -44,7 +50,7 @@ export class ListFriendComponent implements OnInit {
             this.openChatDialogs();
           }
         }
-      })
+      });
   }
 
   //
@@ -68,7 +74,7 @@ export class ListFriendComponent implements OnInit {
     this.socketService.userJoinRoom(friendId)
       .subscribe(result => {
         console.log(result);
-      })
+      });
   }
 
   openChatDialogs() {
@@ -84,16 +90,7 @@ export class ListFriendComponent implements OnInit {
       hasBackdrop: false,
       panelClass: `setting-modal-box`,
     }).afterClosed().subscribe(
-      () => this.chatDialogOn = false
+      () => this.chatDialogOn = false,
     );
-  }
-
-  getFriends() {
-    this.friendService.getFriends().subscribe(result => {
-      console.log(result);
-      if (result) {
-        this.listFriend = result;
-      }
-    });
   }
 }
