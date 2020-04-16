@@ -37,7 +37,7 @@ export class CreateNoteComponent implements OnInit {
       noteUserId: [this.userId],
       noteTitle: ['', [Validators.required, Validators.minLength(2)]],
       noteDescription: [''],
-      notePriority: [''],
+      notePriority: ['',],
       noteProjectId: [''],
     });
 

@@ -9,7 +9,7 @@ const Task = require('../database/models/task');
 
 // Take all projects from list
 router.post('/', checkAuth, (req, res) => {
-    Project.find({projectUserId: req.userData.userId})
+    Project.find({projectManager: req.userData.userId})
         .exec()
         .then(docs => {
             const response = {
@@ -18,7 +18,6 @@ router.post('/', checkAuth, (req, res) => {
                     return {
                         _id: doc._id,
                         projectTitle: doc.projectTitle,
-                        projectUserId: doc.projectUserId,
                         projectDescription: doc.projectDescription,
                         projectPriority: doc.projectPriority,
                         projectStartDate: doc.projectStartDate,

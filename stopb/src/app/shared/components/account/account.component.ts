@@ -24,16 +24,10 @@ export class AccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getUserId();
-  }
-
-  getUserId() {
-    const decoded = this.tokenService.decodeJwt();
-    this.userId = decoded.userId;
   }
 
   logout(event: MouseEvent) {
-    return this.userService.updateUser(this.userId, 2).subscribe(result => {
+    return this.userService.updateUser(this.tokenService.user.userId, 2).subscribe(result => {
       if (result) {
         event.preventDefault();
         this.authorizeService.logout();

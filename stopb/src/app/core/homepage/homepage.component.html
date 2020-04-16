@@ -47,7 +47,7 @@
        [class.finished]="note.noteStatus"
        [class.high]="note.notePriority === 1"
        [class.medium]="note.notePriority === 2"
-       [routerLink]="['/note', 'view', note._id]"
+       [routerLink]="['/notes', 'view', note._id]"
        class="item mat-elevation-z1 note-card">
       <div class="header">
         {{note.noteTitle}}

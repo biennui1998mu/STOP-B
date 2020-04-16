@@ -52,7 +52,6 @@ router.post('/add', checkAuth, (req, res) => {
     const sendRequest = new friendRequest({
         _id: new mongoose.Types.ObjectId(),
         requester: req.userData.userId,
-        // requester: req.body.requester,
         recipient: req.body.recipient,
         status: 0
     });

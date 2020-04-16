@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { UiStateService } from '../../shared/services/state/ui-state.service';
-import { Router } from "@angular/router";
-import { AuthorizeService } from "../../shared/services/authorize.service";
-import { UserService } from "../../shared/services/user.service";
-import { TokenService } from "../../shared/services/token.service";
+import {Component, OnInit} from '@angular/core';
+import {UiStateService} from '../../shared/services/state/ui-state.service';
+import {Router} from "@angular/router";
+import {AuthorizeService} from "../../shared/services/authorize.service";
+import {UserService} from "../../shared/services/user.service";
+import {TokenService} from "../../shared/services/token.service";
 
 @Component({
   selector: 'app-login',
@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSignIn() {
-    return this.authorizeService.login(this.formSignIn)
+    this.authorizeService.login(this.formSignIn)
       .subscribe(status => {
         if (status) {
           this.router.navigateByUrl('/dashboard');
@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSignUp() {
-    return this.authorizeService.signUp(this.formSignUp).subscribe(
+    this.authorizeService.signUp(this.formSignUp).subscribe(
       success => {
         if (success) {
           this.tab = 0; // ve panel sign in

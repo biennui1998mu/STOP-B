@@ -84,7 +84,7 @@ io.on('connection', (socket) => {
     const User = require('./database/models/user');
     const Message = require('./database/models/message');
     const Room = require('./database/models/room');
-    const friendRequestSchema = require('./database/models/friendRequest')
+    const friendRequestSchema = require('./database/models/friendRequest');
 
     const token = socket.handshake.query.token;
     try {
@@ -96,9 +96,9 @@ io.on('connection', (socket) => {
         console.log('Đăng nhập mới: ' + username);
         User.updateOne({username: username}, {$set: {userStatus: 1}})
             .exec();
-            // .then(result => {
-            //     console.log(result);
-            // });
+        // .then(result => {
+        //     console.log(result);
+        // });
 
         // show token disconnect
         socket.on('disconnect', function () {

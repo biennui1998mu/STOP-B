@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthorizeService } from '../../services/authorize.service';
 import { MatDialogRef } from '@angular/material/dialog';
+import {UserService} from "../../services/user.service";
+import {TokenService} from "../../services/token.service";
 
 @Component({
   selector: 'app-setting',
@@ -12,6 +14,8 @@ export class QuickAccessComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<QuickAccessComponent>,
     private authorizeService: AuthorizeService,
+    private userService: UserService,
+    private tokenService: TokenService,
   ) {
   }
 
@@ -19,8 +23,12 @@ export class QuickAccessComponent implements OnInit {
   }
 
   logout() {
-    console.log('logout');
-    this.authorizeService.logout();
-    this.dialogRef.close();
+    return this.userService.updateUser(this.tokenService.user.userId, 2).subscribe(result => {
+      if (result) {
+        // event.preventDefault();
+        this.authorizeService.logout();
+        this.dialogRef.close();
+      }
+    });
   }
 }

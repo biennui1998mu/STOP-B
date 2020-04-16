@@ -76,7 +76,7 @@ export class UserService {
   }
 
   updateUser(userId: string, userStatus: number) {
-    return this.http.post<User>(`${this.url}/update/${userId}`, { userStatus: userStatus }).pipe(
+    return this.http.post<User>(`${this.url}/update/${userId}`, { userStatus: userStatus}).pipe(
       map(result => {
         return !!result;
       }),

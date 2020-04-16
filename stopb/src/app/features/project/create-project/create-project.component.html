@@ -13,11 +13,25 @@
                placeholder="Project Valorant"
                required>
       </mat-form-field>
-
+      <div *ngIf="projectTitle.invalid && (projectTitle.dirty || projectTitle.touched)"
+           class="alert alert-danger">
+        <div *ngIf="projectTitle.errors.required">
+          Title is required.
+        </div>
+        <div *ngIf="projectTitle.errors.minlength">
+          Title must be at least 2 characters.
+        </div>
+      </div>
       <div class="grid project-meta">
 
         <mat-form-field appearance="outline" class="description">
           <mat-label>Project Description</mat-label>
+          <div *ngIf="projectDescription.invalid && (projectDescription.dirty || projectDescription.touched)"
+               class="alert alert-danger">
+            <div *ngIf="projectDescription.errors.required">
+              Description is required.
+            </div>
+          </div>
           <textarea [matTextareaAutosize]="false"
                     formControlName="projectDescription"
                     matInput
@@ -32,6 +46,12 @@
             <mat-option style="color: red" value="1">Important</mat-option>
             <mat-option value="2">Normal</mat-option>
           </mat-select>
+          <div *ngIf="projectPriority.invalid && (projectPriority.dirty || projectPriority.touched)"
+               class="alert alert-danger">
+            <div *ngIf="projectPriority.errors.required">
+              Priority is required.
+            </div>
+          </div>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="end-date">
@@ -42,15 +62,24 @@
           <mat-datepicker-toggle [for]="picker"
                                  matSuffix></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
+          <div *ngIf="projectEndDate.invalid && (projectEndDate.dirty || projectEndDate.touched)"
+               class="alert alert-danger">
+            <div *ngIf="projectEndDate.errors.required">
+              End date is required.
+            </div>
+          </div>
         </mat-form-field>
 
       </div>
       <h1 class="text-muted fw-lighter">Member</h1>
       <hr class="mb-1rem">
+
+      // Moderator
       <app-moderator-input [projectModerator]="projectModerator"
                            class="grid">
       </app-moderator-input>
 
+      // member
       <app-member-input [projectMember]="projectMember"
                         [projectModerator]="projectModerator"
                         class="grid">
