@@ -27,15 +27,15 @@ export class ProjectService {
   }
 
   projectCreate(credentials: {
-    projectTitle: string,
-    projectDescription: string,
-    projectPriority: number,
-    projectStartDate: string,
-    projectEndDate: string,
-    projectStatus: boolean,
-    projectManager: string,
-    projectModerator: string,
-    projectMember: string
+    Title: string,
+    Description: string,
+    Priority: number,
+    StartDate: string,
+    EndDate: string,
+    Status: boolean,
+    Manager: string,
+    Moderator: string,
+    Member: string
   }) {
     return this.http.post<{
       // token: string;
@@ -107,16 +107,15 @@ export class ProjectService {
 
   updateProject(projectId: string, credentials: {
     projectId: string,
-    projectUserId: string,
-    projectTitle: string,
-    projectDescription: string,
-    projectPriority: number,
-    projectStartDate: string,
-    projectEndDate: string,
-    projectStatus: boolean,
-    projectManager: string,
-    projectModerator: string,
-    projectMember: string
+    Title: string,
+    Description: string,
+    Priority: number,
+    StartDate: string,
+    EndDate: string,
+    Status: boolean,
+    Manager: string,
+    Moderator: string,
+    Member: string
   }) {
     return this.http.post<{
       message: string,

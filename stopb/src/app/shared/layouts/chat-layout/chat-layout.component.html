@@ -4,9 +4,9 @@
       <img alt=""
            class="w100pct h100pct br50 obj-fit-cover obj-pos-center"
            src="{{friend?.avatar}}">
-      <div [class.bg-danger]="friend?.userStatus === 3"
-           [class.bg-grayer]="friend?.userStatus === 2"
-           [class.bg-success]="friend?.userStatus === 1"
+      <div [class.bg-danger]="friend?.status === 3"
+           [class.bg-grayer]="friend?.status === 2"
+           [class.bg-success]="friend?.status === 1"
            class="absolute br50 status-public"></div>
     </div>
     <div class="whitespace-nowrap of-hidden text-overflow-ellipsis fw-bold user-name">

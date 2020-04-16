@@ -4,15 +4,15 @@ const Schema = mongoose.Schema;
 
 const projectSchema = new Schema({
     _id : mongoose.Schema.Types.ObjectId,
-    projectTitle: {type: String, required: true},
-    projectDescription: String,
-    projectPriority: {type: Number, required: true},
-    projectStartDate: Date,
-    projectEndDate: Date,
-    projectStatus: {type: Boolean, required: true},
-    projectManager: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    projectModerator: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'},
-    projectMember: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'}
+    Title: {type: String, required: true},
+    Description: String,
+    Priority: {type: Number, required: true},
+    StartDate: Date,
+    EndDate: Date,
+    Status: {type: Boolean, required: true},
+    Manager: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    Moderator: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'},
+    Member: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'}
 });
 
 module.exports = mongoose.model('Project', projectSchema);

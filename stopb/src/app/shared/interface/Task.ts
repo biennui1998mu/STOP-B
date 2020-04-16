@@ -1,10 +1,10 @@
 export interface Task {
   _id: string,
-  taskTitle: string,
-  taskDescription: string,
-  taskPriority: number,
-  taskStartDate: string,
-  taskEndDate: string,
-  taskStatus: boolean,
-  taskManager: string
+  Title: string,
+  Description: string,
+  Priority: number,
+  StartDate: string,
+  EndDate: string,
+  Status: boolean,
+  Manager: string
 }

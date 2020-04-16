@@ -23,9 +23,9 @@ export class ViewNoteComponent implements OnInit {
   ) {
     this.readNoteForm = this.formBuilder.group({
       _id: [''],
-      noteTitle: ['', [Validators.required, Validators.minLength(2)]],
-      noteDate: [''],
-      noteDescription: [''],
+      Title: ['', [Validators.required, Validators.minLength(2)]],
+      Date: [''],
+      Description: [''],
     });
 
     console.log(this.activatedRoute);
@@ -41,16 +41,16 @@ export class ViewNoteComponent implements OnInit {
     });
   }
 
-  get noteTitle() {
-    return this.readNoteForm.get('noteTitle');
+  get Title() {
+    return this.readNoteForm.get('Title');
   }
 
-  get noteDate() {
-    return this.readNoteForm.get('noteDate');
+  get Date() {
+    return this.readNoteForm.get('Date');
   }
 
-  get noteDescription() {
-    return this.readNoteForm.get('noteDescription');
+  get Description() {
+    return this.readNoteForm.get('Description');
   }
 
   get noteId() {
@@ -66,9 +66,9 @@ export class ViewNoteComponent implements OnInit {
 
   readNote(id: string) {
     return this.noteService.readNote(id).subscribe((data: Note) => {
-      this.noteTitle.setValue(data.noteTitle);
-      this.noteDescription.setValue(data.noteDescription);
-      this.noteDate.setValue(data.noteStartDate);
+      this.Title.setValue(data.Title);
+      this.Description.setValue(data.Description);
+      this.Date.setValue(data.StartDate);
     });
   }
 

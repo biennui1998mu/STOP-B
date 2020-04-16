@@ -123,7 +123,6 @@ router.post('/room/get', checkAuth, async (req, res) => {
 // find room
 router.post('/findRoom', (req, res) => {
     Room.findOne({
-        roomName: req.body.roomName,
         listUser: [req.body.userId, req.body.friendId]
     }, function (err, room) {
         if (room) {

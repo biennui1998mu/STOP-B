@@ -1,21 +1,21 @@
 <form [formGroup]="readNoteForm"
       class="note-board">
   <input class="title"
-         formControlName="noteTitle"
+         formControlName="Title"
          maxlength="100"
-         name="noteTitle">
+         name="Title">
   <mat-form-field class="dob">
     <mat-label>Date Created</mat-label>
     <input [matDatepicker]="picker"
-           formControlName="noteDate"
+           formControlName="Date"
            matInput
-           name="noteDate">
+           name="Date">
     <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
   <textarea class="paragraph hand-writing" cols="30"
-            formControlName="noteDescription"
-            name="notePara"
+            formControlName="Description"
+            name="Description"
             rows="10">
   </textarea>
   <mat-form-field class="project-link">

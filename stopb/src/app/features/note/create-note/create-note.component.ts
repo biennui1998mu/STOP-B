@@ -17,8 +17,6 @@ export class CreateNoteComponent implements OnInit {
   createNoteFrom: FormGroup;
   projects: Project[];
 
-  userId: string;
-
   constructor(
     private uiStateService: UiStateService,
     private noteService: NoteService,
@@ -34,39 +32,32 @@ export class CreateNoteComponent implements OnInit {
       },
     });
     this.createNoteFrom = this.formBuilder.group({
-      noteUserId: [this.userId],
-      noteTitle: ['', [Validators.required, Validators.minLength(2)]],
-      noteDescription: [''],
-      notePriority: ['',],
-      noteProjectId: [''],
+      Title: ['', [Validators.required, Validators.minLength(2)]],
+      Description: [''],
+      Priority: ['',],
+      ProjectId: [''],
     });
 
   }
 
-  get noteTitle() {
-    return this.createNoteFrom.get('noteTitle');
+  get Title() {
+    return this.createNoteFrom.get('Title');
   }
 
-  get noteDescription() {
-    return this.createNoteFrom.get('noteDescription');
+  get Description() {
+    return this.createNoteFrom.get('Description');
   }
 
-  get notePriority() {
-    return this.createNoteFrom.get('notePriority');
+  get Priority() {
+    return this.createNoteFrom.get('Priority');
   }
 
-  get noteProjectId() {
-    return this.createNoteFrom.get('noteProjectId');
+  get ProjectId() {
+    return this.createNoteFrom.get('ProjectId');
   }
 
   ngOnInit(): void {
     this.getAllProject();
-    this.getUserId();
-  }
-
-  getUserId() {
-    const tokenDecoded = this.tokenService.decodeJwt();
-    this.userId = tokenDecoded.userId;
   }
 
   createNote() {

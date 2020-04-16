@@ -44,19 +44,19 @@
 
   <div class="list-available">
     <a *ngFor="let note of notes"
-       [class.finished]="note.noteStatus"
-       [class.high]="note.notePriority === 1"
-       [class.medium]="note.notePriority === 2"
+       [class.finished]="note.Status"
+       [class.high]="note.Priority === 1"
+       [class.medium]="note.Priority === 2"
        [routerLink]="['/notes', 'view', note._id]"
        class="item mat-elevation-z1 note-card">
       <div class="header">
-        {{note.noteTitle}}
+        {{note.Title}}
         <mat-icon class="icon-header">zoom_out_map</mat-icon>
       </div>
       <small class="time">
-        {{note.noteStartDate | date:"dd-MM-yyyy hh:mm:ss"}}
+        {{note.StartDate | date:"dd-MM-yyyy hh:mm:ss"}}
       </small>
-      <textarea class="textarea-custom" disabled>{{note.noteDescription}}</textarea>
+      <textarea class="textarea-custom" disabled>{{note.Description}}</textarea>
     </a>
 
     <a class="see-more" href="">See more</a>
@@ -79,19 +79,19 @@
   </div>
   <div class="list-available">
     <a *ngFor="let project of projects"
-       [class.finished]="project.projectStatus"
-       [class.high]="project.projectPriority === 1"
-       [class.medium]="project.projectPriority === 2"
+       [class.finished]="project.Status"
+       [class.high]="project.Priority === 1"
+       [class.medium]="project.Priority === 2"
        [routerLink]="['/projects', 'view', project._id]"
        class="item mat-elevation-z1 note-card">
       <div class="header">
-        {{project.projectTitle}}
+        {{project.Title}}
         <mat-icon class="icon-header">zoom_out_map</mat-icon>
       </div>
       <small class="time">
-        {{project.projectStartDate | date:"dd-MM-yyyy hh:mm:ss"}}
+        {{project.StartDate | date:"dd-MM-yyyy hh:mm:ss"}}
       </small>
-      <textarea class="textarea-custom" disabled>{{project.projectDescription}}</textarea>
+      <textarea class="textarea-custom" disabled>{{project.Description}}</textarea>
     </a>
     <a class="see-more" href="">See more</a>
   </div>

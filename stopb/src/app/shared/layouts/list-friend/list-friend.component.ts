@@ -18,11 +18,9 @@ export class ListFriendComponent implements OnInit {
   messages: string[] = [];
   listFriend: User[] = [];
 
-  socket;
-
   username: string;
   avatar: string;
-  userStatus: number;
+  status: number;
 
   chatDialogOn = false;
 

@@ -1,10 +1,10 @@
 export interface Note<T = any> {
   _id: string,
-  noteUserId: string,
-  noteTitle: string,
-  noteDescription: string,
-  notePriority: number,
-  noteStartDate: string,
-  noteStatus: boolean,
+  UserId: string,
+  Title: string,
+  Description: string,
+  Priority: number,
+  StartDate: string,
+  Status: boolean,
   noteProjectId?: T,
 }

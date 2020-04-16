@@ -13,9 +13,9 @@
       <img [src]="user?.avatar"
            alt=""
            class="w100pct h100pct br50 obj-pos-center obj-fit-cover">
-      <div [class.bg-danger]="user?.userStatus === 3"
-           [class.bg-grayer]="user?.userStatus === 2"
-           [class.bg-success]="user?.userStatus === 1"
+      <div [class.bg-danger]="user?.status === 3"
+           [class.bg-grayer]="user?.status === 2"
+           [class.bg-success]="user?.status === 1"
            class="absolute br50 status-public"></div>
     </div>
     <div class="flex flex-d-col justify-center user-name">
@@ -24,11 +24,11 @@
       </span>
       <small class="whitespace-nowrap of-hidden text-overflow-ellipsis text-muted">
         -
-        <ng-container *ngIf="user?.userStatus === 1">
+        <ng-container *ngIf="user?.status === 1">
           {{user?.customMode ? user.customMode : 'Online'}}
         </ng-container>
-        <ng-container *ngIf="user?.userStatus === 2">Offline</ng-container>
-        <ng-container *ngIf="user?.userStatus === 3">
+        <ng-container *ngIf="user?.status === 2">Offline</ng-container>
+        <ng-container *ngIf="user?.status === 3">
           {{user?.customMode ? user.customMode : 'Busy'}}
         </ng-container>
       </small>

@@ -38,7 +38,7 @@ export class ViewProjectComponent implements OnInit {
         this.project = project;
         this.uiStateService.setPageTitle({
           current: {
-            title: 'Projects - ' + this.project.projectTitle,
+            title: 'Projects - ' + this.project.Title,
             path: '/project/view/' + this.project._id,
           },
         });

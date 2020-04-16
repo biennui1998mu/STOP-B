@@ -20,10 +20,10 @@ export class MemberInputComponent implements OnInit {
   memberAutocompleteInput: MatAutocomplete;
 
   @Input()
-  projectMember: AbstractControl;
+  Member: AbstractControl;
 
   @Input()
-  projectModerator: AbstractControl;
+  Moderator: AbstractControl;
 
   memberNotFound: string = '';
 
@@ -38,11 +38,11 @@ export class MemberInputComponent implements OnInit {
   }
 
   get listMember() {
-    return this.projectMember.value as User[] || [];
+    return this.Member.value as User[] || [];
   }
 
   get listManager() {
-    return this.projectModerator.value as User[] || [];
+    return this.Moderator.value as User[] || [];
   }
 
   get currentUser() {
@@ -57,7 +57,7 @@ export class MemberInputComponent implements OnInit {
   removeMember(manager: User) {
     const currentList = this.listMember;
     const newList = currentList.filter(user => user._id !== manager._id);
-    this.projectMember.setValue(newList);
+    this.Member.setValue(newList);
   }
 
   addMember($event: MatChipInputEvent) {
@@ -88,7 +88,7 @@ export class MemberInputComponent implements OnInit {
     this.filteredMember = this.filteredMember.filter(
       user => user._id !== newUser._id,
     );
-    this.projectMember.setValue(currentMember);
+    this.Member.setValue(currentMember);
   }
 
   private searchMemberFormSub() {
@@ -122,13 +122,13 @@ export class MemberInputComponent implements OnInit {
   }
 
   private observeManager() {
-    this.projectModerator.valueChanges.subscribe((value: User[]) => {
+    this.Moderator.valueChanges.subscribe((value: User[]) => {
         const currentMembers = this.listMember.filter(member => {
           return !value.find(
             manager => manager._id == member._id,
           );
         });
-        this.projectMember.setValue(currentMembers);
+        this.Member.setValue(currentMembers);
       },
     );
   }

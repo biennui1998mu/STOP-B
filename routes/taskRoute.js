@@ -15,14 +15,14 @@ router.post('/', (req, res) => {
                 tasks : docs.map(doc => {
                     return {
                         _id: doc._id,
-                        taskManager: doc.taskManager,
+                        Manager: doc.Manager,
                         projectId: doc.projectId,
-                        taskTitle: doc.taskTitle,
-                        taskDescription: doc.taskDescription,
-                        taskPriority: doc.taskPriority,
-                        taskStartDate: doc.taskStartDate,
-                        taskEndDate: doc.taskEndDate,
-                        taskStatus: doc.taskStatus
+                        Title: doc.Title,
+                        Description: doc.Description,
+                        Priority: doc.Priority,
+                        StartDate: doc.StartDate,
+                        EndDate: doc.EndDate,
+                        Status: doc.Status
                     }
                 })
             };
@@ -65,14 +65,14 @@ router.post('/view', (req, res, next) => {
 router.post('/create', (req, res, next) => {
     const task = new Task({
         _id : new mongoose.Types.ObjectId,
-        taskManager : req.body.taskManager,
+        Manager : req.body.Manager,
         projectId : req.body.projectId,
-        taskTitle : req.body.taskTitle,
-        taskDescription : req.body.taskDescription,
-        taskPriority : req.body.taskPriority,
-        taskStartDate: Date.now(),
-        taskEndDate: req.body.taskEndDate,
-        taskStatus : req.body.taskStatus
+        Title : req.body.Title,
+        Description : req.body.Description,
+        Priority : req.body.Priority,
+        StartDate: Date.now(),
+        EndDate: req.body.EndDate,
+        Status : req.body.Status
     });
     task.save()
         .then(result => {
@@ -80,14 +80,14 @@ router.post('/create', (req, res, next) => {
                 message: 'created task successfully',
                 createdTask: {
                     _id: result._id,
-                    taskManager : result.taskManager,
+                    Manager : result.Manager,
                     projectId : result.projectId,
-                    taskTitle : result.taskTitle,
-                    taskDescription : result.taskDescription,
-                    taskPriority : result.taskPriority,
-                    taskStartDate: result.taskStartDate,
-                    taskEndDate: result.taskEndDate,
-                    taskStatus : result.taskStatus
+                    Title : result.Title,
+                    Description : result.Description,
+                    Priority : result.Priority,
+                    StartDate: result.StartDate,
+                    EndDate: result.EndDate,
+                    Status : result.Status
                 }
             })
         })
@@ -143,10 +143,10 @@ router.post('/delete/:taskId', (req, res) => {
 // query 2 tasks, high priority
 router.post('/important', (req, res) => {
     Task.find({
-        taskPriority: {
+        Priority: {
             $lte : 2
         },
-        taskStatus: true,
+        Status: true,
 
     }, function (err, tasks) {
         if(tasks){

@@ -8,17 +8,17 @@
       <hr class="mb-1rem">
       <mat-form-field appearance="outline">
         <mat-label>Project Title</mat-label>
-        <input formControlName="projectTitle"
+        <input formControlName="Title"
                matInput
                placeholder="Project Valorant"
                required>
       </mat-form-field>
-      <div *ngIf="projectTitle.invalid && (projectTitle.dirty || projectTitle.touched)"
+      <div *ngIf="Title.invalid && (Title.dirty || Title.touched)"
            class="alert alert-danger">
-        <div *ngIf="projectTitle.errors.required">
+        <div *ngIf="Title.errors.required">
           Title is required.
         </div>
-        <div *ngIf="projectTitle.errors.minlength">
+        <div *ngIf="Title.errors.minlength">
           Title must be at least 2 characters.
         </div>
       </div>
@@ -26,14 +26,14 @@
 
         <mat-form-field appearance="outline" class="description">
           <mat-label>Project Description</mat-label>
-          <div *ngIf="projectDescription.invalid && (projectDescription.dirty || projectDescription.touched)"
+          <div *ngIf="Description.invalid && (Description.dirty || Description.touched)"
                class="alert alert-danger">
-            <div *ngIf="projectDescription.errors.required">
+            <div *ngIf="Description.errors.required">
               Description is required.
             </div>
           </div>
           <textarea [matTextareaAutosize]="false"
-                    formControlName="projectDescription"
+                    formControlName="Description"
                     matInput
                     placeholder="Project FPS shooter"
                     required
@@ -42,13 +42,13 @@
 
         <mat-form-field appearance="outline" class="priority">
           <mat-label>Priority</mat-label>
-          <mat-select formControlName="projectPriority" required>
+          <mat-select formControlName="Priority" required>
             <mat-option style="color: red" value="1">Important</mat-option>
             <mat-option value="2">Normal</mat-option>
           </mat-select>
-          <div *ngIf="projectPriority.invalid && (projectPriority.dirty || projectPriority.touched)"
+          <div *ngIf="Priority.invalid && (Priority.dirty || Priority.touched)"
                class="alert alert-danger">
-            <div *ngIf="projectPriority.errors.required">
+            <div *ngIf="Priority.errors.required">
               Priority is required.
             </div>
           </div>
@@ -57,14 +57,14 @@
         <mat-form-field appearance="outline" class="end-date">
           <mat-label>End Date</mat-label>
           <input [matDatepicker]="picker"
-                 formControlName="projectEndDate"
+                 formControlName="EndDate"
                  matInput>
           <mat-datepicker-toggle [for]="picker"
                                  matSuffix></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          <div *ngIf="projectEndDate.invalid && (projectEndDate.dirty || projectEndDate.touched)"
+          <div *ngIf="EndDate.invalid && (EndDate.dirty || EndDate.touched)"
                class="alert alert-danger">
-            <div *ngIf="projectEndDate.errors.required">
+            <div *ngIf="EndDate.errors.required">
               End date is required.
             </div>
           </div>
@@ -75,13 +75,13 @@
       <hr class="mb-1rem">
 
       // Moderator
-      <app-moderator-input [projectModerator]="projectModerator"
+      <app-moderator-input [Moderator]="Moderator"
                            class="grid">
       </app-moderator-input>
 
       // member
-      <app-member-input [projectMember]="projectMember"
-                        [projectModerator]="projectModerator"
+      <app-member-input [Member]="Member"
+                        [Moderator]="Moderator"
                         class="grid">
       </app-member-input>
 

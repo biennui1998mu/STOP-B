@@ -1,12 +1,12 @@
 export interface Project {
   _id: string,
-  projectTitle: string,
-  projectDescription: string,
-  projectPriority: number,
-  projectStartDate: string,
-  projectEndDate: string
-  projectStatus: boolean,
-  projectManager: string,
-  projectModerator: string,
-  projectMember: string
+  Title: string,
+  Description: string,
+  Priority: number,
+  StartDate: string,
+  EndDate: string
+  Status: boolean,
+  Manager: string,
+  Moderator: string,
+  Member: string
 }

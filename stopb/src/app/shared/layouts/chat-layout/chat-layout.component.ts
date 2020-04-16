@@ -21,6 +21,8 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
 
   messages: Message[] = [];
 
+  socket;
+
   @ViewChild('chatContext')
   chatContext: ElementRef<HTMLDivElement>;
 

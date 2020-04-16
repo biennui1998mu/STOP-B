@@ -9,7 +9,7 @@ const Task = require('../database/models/task');
 
 // Take all projects from list
 router.post('/', checkAuth, (req, res) => {
-    Project.find({projectManager: req.userData.userId})
+    Project.find({Manager: req.userData.userId})
         .exec()
         .then(docs => {
             const response = {
@@ -17,15 +17,15 @@ router.post('/', checkAuth, (req, res) => {
                 projects : docs.map(doc => {
                     return {
                         _id: doc._id,
-                        projectTitle: doc.projectTitle,
-                        projectDescription: doc.projectDescription,
-                        projectPriority: doc.projectPriority,
-                        projectStartDate: doc.projectStartDate,
-                        projectEndDate: doc.projectEndDate,
-                        projectStatus: doc.projectStatus,
-                        projectManager: doc.projectManager,
-                        projectModerator: doc.projectModerator,
-                        projectMember: doc.projectMember
+                        Title: doc.Title,
+                        Description: doc.Description,
+                        Priority: doc.Priority,
+                        StartDate: doc.StartDate,
+                        EndDate: doc.EndDate,
+                        Status: doc.Status,
+                        Manager: doc.Manager,
+                        Moderator: doc.Moderator,
+                        Member: doc.Member
                     }
                 })
             };
@@ -45,7 +45,6 @@ router.post('/view', (req, res) => {
         // ... xu ly validate
     }
     Project.findById(id)
-        .populate(['projectTaskID'])
         .exec()
         .then(doc => {
             console.log("From database", doc);
@@ -77,8 +76,8 @@ router.post('/search', (req, res) => {
     }else{
         Project.find({
             $or: [
-                {projectTitle: new RegExp(input)},
-                {projectDescription: new RegExp(input)}
+                {Title: new RegExp(input)},
+                {Description: new RegExp(input)}
             ]
         }, function (err, projects) {
             if(projects){
@@ -94,16 +93,15 @@ router.post('/search', (req, res) => {
 router.post('/create', (req, res) => {
     const project = new Project({
         _id: new mongoose.Types.ObjectId(),
-        projectUserId: req.body.projectUserId,
-        projectTitle: req.body.projectTitle,
-        projectDescription: req.body.projectDescription,
-        projectPriority: req.body.projectPriority,
-        projectStartDate: Date.now(),
-        projectEndDate: req.body.projectEndDate,
-        projectStatus: true,
-        projectManager: req.body.projectManager,
-        projectModerator: req.body.projectModerator,
-        projectMember: req.body.projectMember
+        Title: req.body.Title,
+        Description: req.body.Description,
+        Priority: req.body.Priority,
+        StartDate: Date.now(),
+        EndDate: req.body.EndDate,
+        Status: true,
+        Manager: req.body.Manager,
+        Moderator: req.body.Moderator,
+        Member: req.body.Member
     });
     project.save()
         .then(result => {
@@ -112,16 +110,15 @@ router.post('/create', (req, res) => {
                 message: 'Project has been created',
                 createdProject: {
                     _id: result._id,
-                    projectUserId: result.projectUserId,
-                    projectTitle: result.projectTitle,
-                    projectDescription: result.projectDescription,
-                    projectPriority: result.projectPriority,
-                    projectStartDate: result.projectStartDate,
-                    projectEndDate: result.projectEndDate,
-                    projectStatus: result.projectStatus,
-                    projectManager: result.projectManager,
-                    projectModerator: result.projectModerator,
-                    projectMember: result.projectMember
+                    Title: result.Title,
+                    Description: result.Description,
+                    Priority: result.Priority,
+                    StartDate: result.StartDate,
+                    EndDate: result.EndDate,
+                    Status: result.Status,
+                    Manager: result.Manager,
+                    Moderator: result.Moderator,
+                    Member: result.Member
                 }
             });
         })
@@ -177,11 +174,11 @@ router.post('/delete/:projectId', (req, res) => {
 // query 3 projects, high priority
 router.post('/important', checkAuth, (req, res) => {
     Project.find({
-        projectManager: req.userData.userId,
-        projectPriority: {
+        Manager: req.userData.userId,
+        Priority: {
             $lte : 2
         },
-        projectStatus: true
+        Status: true
 
     }, function (err, projects) {
         if(projects){

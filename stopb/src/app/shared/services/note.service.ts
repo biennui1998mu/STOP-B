@@ -27,11 +27,11 @@ export class NoteService {
   }
 
   noteCreate(credentials: {
-    noteUserId: string,
-    noteTitle: string,
-    noteDescription: string,
-    notePriority: number,
-    noteProjectId: string
+    UserId: string,
+    Title: string,
+    Description: string,
+    Priority: number,
+    ProjectId: string
   }) {
     return this.http.post<{
       token: string;
@@ -97,10 +97,10 @@ export class NoteService {
 
   updateNote(noteId: string, credentials: {
     noteId: string,
-    noteTitle: string,
-    noteDescription: string,
-    notePriority: number,
-    noteProjectId: string
+    Title: string,
+    Description: string,
+    Priority: number,
+    ProjectId: string
   }) {
     return this.http.post<{
       message: string,

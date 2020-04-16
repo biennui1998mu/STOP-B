@@ -7,7 +7,7 @@ const Note = require('../database/models/note');
 
 // Take all notes from list
 router.post('/', checkAuth, (req, res) => {
-    Note.find({noteUserId : req.userData.userId})
+    Note.find({UserId : req.userData.userId})
         .exec()
         .then(docs => {
             const response = {
@@ -15,13 +15,13 @@ router.post('/', checkAuth, (req, res) => {
                 notes: docs.map(doc => {
                     return {
                         _id: doc._id,
-                        noteTitle: doc.noteTitle,
-                        noteUserId: doc.noteUserId,
-                        noteDescription: doc.noteDescription,
-                        notePriority: doc.notePriority,
-                        noteStartDate: doc.noteStartDate,
-                        noteStatus: doc.noteStatus,
-                        noteProjectId: doc.noteProjectId,
+                        Title: doc.Title,
+                        UserId: doc.UserId,
+                        Description: doc.Description,
+                        Priority: doc.Priority,
+                        StartDate: doc.StartDate,
+                        Status: doc.Status,
+                        ProjectId: doc.ProjectId,
                     }
                 })
             };
@@ -72,8 +72,8 @@ router.post('/search', (req, res) => {
     }else{
         Note.find({
             $or: [
-                {noteTitle: new RegExp(input)},
-                {noteDescription: new RegExp(input)}
+                {Title: new RegExp(input)},
+                {Description: new RegExp(input)}
             ]
         }, function (err, notes) {
             if(notes){
@@ -86,15 +86,15 @@ router.post('/search', (req, res) => {
 });
 
 // Create new note
-router.post('/create', (req, res) => {
+router.post('/create', checkAuth, (req, res) => {
     const note = new Note({
         _id: new mongoose.Types.ObjectId(),
-        noteUserId: req.body.noteUserId,
-        noteTitle: req.body.noteTitle,
-        noteDescription: req.body.noteDescription,
-        notePriority: req.body.notePriority,
-        noteStartDate: Date.now(),
-        noteProjectId: req.body.noteProjectId
+        UserId: req.userData.userId,
+        Title: req.body.Title,
+        Description: req.body.Description,
+        Priority: req.body.Priority,
+        StartDate: Date.now(),
+        ProjectId: req.body.ProjectId
     });
     note.save()
         .then(result => {
@@ -103,12 +103,12 @@ router.post('/create', (req, res) => {
                 message: "Created note successfully",
                 createdNote: {
                     _id: result._id,
-                    noteTitle: result.noteTitle,
-                    noteUserId: result.noteUserId,
-                    noteDescription: result.noteDescription,
-                    notePriority: result.notePriority,
-                    noteStartDate: result.noteStartDate,
-                    noteProjectId: result.noteProjectId
+                    Title: result.Title,
+                    UserId: result.UserId,
+                    Description: result.Description,
+                    Priority: result.Priority,
+                    StartDate: result.StartDate,
+                    ProjectId: result.ProjectId
                 }
             });
         })

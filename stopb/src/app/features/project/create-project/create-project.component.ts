@@ -37,46 +37,45 @@ export class CreateProjectComponent implements OnInit {
     });
   }
 
-  get projectTitle() {
-    return this.projectForm.get('projectTitle');
+  get Title() {
+    return this.projectForm.get('Title');
   }
 
-  get projectPriority() {
-    return this.projectForm.get('projectPriority');
+  get Priority() {
+    return this.projectForm.get('Priority');
   }
 
-  get projectDescription() {
-    return this.projectForm.get('projectDescription');
+  get Description() {
+    return this.projectForm.get('Description');
   }
 
-  get projectEndDate() {
-    return this.projectForm.get('projectEndDate');
+  get EndDate() {
+    return this.projectForm.get('EndDate');
   }
 
-  get projectModerator() {
-    return this.projectForm.get('projectModerator');
+  get Moderator() {
+    return this.projectForm.get('Moderator');
   }
 
-  get projectMember() {
-    return this.projectForm.get('projectMember');
+  get Member() {
+    return this.projectForm.get('Member');
   }
 
-  get projectManager() {
-    return this.projectForm.get('projectManager');
+  get Manager() {
+    return this.projectForm.get('Manager');
   }
 
   ngOnInit(): void {
     this.projectFormBuilder();
-    this.getUserdata();
+    this.getUserData();
 
     this.taskForm = this.formBuilder.group({
       createdTasks: this.formBuilder.array([]),
     });
   }
 
-  getUserdata() {
-    const decoded = this.tokenService.decodeJwt();
-    this.projectManager.setValue(decoded.userId);
+  getUserData() {
+    this.Manager.setValue(this.tokenService.user.userId);
   }
 
   createProject() {
@@ -89,16 +88,16 @@ export class CreateProjectComponent implements OnInit {
 
   private projectFormBuilder() {
     this.projectForm = this.formBuilder.group({
-      projectManager: ['', Validators.required],
-      projectTitle: ['', [Validators.required, Validators.minLength(2)]],
-      projectDescription: ['', [Validators.required]],
-      projectPriority: ['', [Validators.required]],
-      projectEndDate: ['', [Validators.required]],
-      projectModerator: [[], [
+      Manager: ['', Validators.required],
+      Title: ['', [Validators.required, Validators.minLength(2)]],
+      Description: ['', [Validators.required]],
+      Priority: ['', [Validators.required]],
+      EndDate: ['', [Validators.required]],
+      Moderator: [[], [
         // Validators.required,
         Validators.maxLength(5),
       ]],
-      projectMember: [[], [
+      Member: [[], [
         // Validators.required,
         Validators.maxLength(50),
       ]],

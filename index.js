@@ -94,7 +94,7 @@ io.on('connection', (socket) => {
 
         // show token connect
         console.log('Đăng nhập mới: ' + username);
-        User.updateOne({username: username}, {$set: {userStatus: 1}})
+        User.updateOne({username: username}, {$set: {status: 1}})
             .exec();
         // .then(result => {
         //     console.log(result);
@@ -135,20 +135,25 @@ io.on('connection', (socket) => {
 
         // lắng nghe sự kiện join room
         socket.on("userJoinRoom", function (room) {
-            console.log(socket.adapter.rooms);
             Room.findOne({_id: room._id})
                 .exec()
                 .then(data => {
+                    // user leave room
+                    socket.leave(data._id);
+
                     socket.join(data._id);
+
                     // user sẽ tự join vào room mới tạo
                     socket.emit("Joined", data);
-                })
+
+                    // lắng nghe user send message
+                    socket.on("send-Message-toServer", function (messageData) {
+                        io.to(data._id).emit("Server-send-message", messageData);
+                    });
+                });
+            console.log(socket.adapter.rooms);
         });
 
-        // lắng nghe user send message
-        socket.on("send-Message-toServer", function (messageData) {
-            io.sockets.emit("Server-send-message", messageData);
-        });
     } catch (error) {
 
     }

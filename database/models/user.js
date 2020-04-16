@@ -15,7 +15,7 @@ const  userSchema = new Schema({
     },
     name : {type: String, required: true},
     dob : {type: Date, required: true},
-    userStatus: Number,
+    status: Number,
     avatar : String
 });
 

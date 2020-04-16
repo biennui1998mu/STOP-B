@@ -51,7 +51,7 @@ router.post('/', (req, res, next) => {
                             name: user.name,
                             dob: user.dob,
                             avatar: user.avatar,
-                            userStatus: user.userStatus
+                            Status: user.Status
                         }
                     })
                 };
@@ -167,7 +167,7 @@ router.post('/signUp', upload.single('avatar'), (req, res, next) => {
                             password: hash,
                             name: req.body.name,
                             dob: req.body.dob,
-                            userStatus: 2,
+                            Status: 2,
                             avatar: url + "uploads/sample.png"
                         });
                         user.save()
@@ -180,7 +180,7 @@ router.post('/signUp', upload.single('avatar'), (req, res, next) => {
                                         password: result.password,
                                         name: result.name,
                                         dob: result.dob,
-                                        userStatus: result.userStatus,
+                                        Status: result.Status,
                                         avatar: result.avatar
                                     }
                                 })

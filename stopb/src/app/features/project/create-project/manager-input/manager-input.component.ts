@@ -20,10 +20,10 @@ export class ManagerInputComponent implements OnInit {
   managerAutocompleteInput: MatAutocomplete;
 
   @Input()
-  projectModerator: AbstractControl;
+  Moderator: AbstractControl;
 
   @Input()
-  projectMember: AbstractControl;
+  Member: AbstractControl;
 
   @Output()
   managerNotFound: string = '';
@@ -39,7 +39,7 @@ export class ManagerInputComponent implements OnInit {
   }
 
   get listManager() {
-    return this.projectModerator.value as User[];
+    return this.Moderator.value as User[];
   }
 
   get currentUser() {
@@ -53,7 +53,7 @@ export class ManagerInputComponent implements OnInit {
   removeManager(manager: User) {
     const currentList = this.listManager;
     const newList = currentList.filter(user => user._id !== manager._id);
-    this.projectModerator.setValue(newList);
+    this.Moderator.setValue(newList);
   }
 
   addManager($event: MatChipInputEvent) {
@@ -84,7 +84,7 @@ export class ManagerInputComponent implements OnInit {
     this.filteredManager = this.filteredManager.filter(
       user => user._id !== newUser._id,
     );
-    this.projectModerator.setValue(currentManagers);
+    this.Moderator.setValue(currentManagers);
   }
 
   private searchManageFormSub() {

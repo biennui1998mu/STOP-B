@@ -27,13 +27,13 @@ export class TaskService {
   }
 
   taskCreate(credentials: {
-    taskTitle: string,
-    taskDescription: string,
-    taskPriority: number,
-    taskStartDate: string,
-    taskEndDate: string,
-    taskStatus: boolean,
-    taskManager: string,
+    Title: string,
+    Description: string,
+    Priority: number,
+    StartDate: string,
+    EndDate: string,
+    Status: boolean,
+    Manager: string,
     projectId: string
   }) {
     return this.http.post<{
@@ -94,13 +94,13 @@ export class TaskService {
 
   updateTask(taskId: string, credentials: {
     taskId: string,
-    taskTitle: string,
-    taskDescription: string,
-    taskPriority: number,
-    taskStartDate: string,
-    taskEndDate: string,
-    taskStatus: boolean,
-    taskManager: string,
+    Title: string,
+    Description: string,
+    Priority: number,
+    StartDate: string,
+    EndDate: string,
+    Status: boolean,
+    Manager: string,
     projectId: string
   }) {
     return this.http.post<{

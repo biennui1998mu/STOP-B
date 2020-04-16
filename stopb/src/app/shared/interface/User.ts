@@ -4,7 +4,7 @@ export interface User {
   password?: string,
   name: string,
   dob: string,
-  userStatus: number,
+  status: number,
   avatar: string
 
   customMode?: string;
