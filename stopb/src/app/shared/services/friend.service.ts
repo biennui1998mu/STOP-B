@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { TokenService } from "./token.service";
 import { catchError, map } from "rxjs/operators";
-import { BehaviorSubject, Observable, of } from "rxjs";
+import { BehaviorSubject, of } from "rxjs";
 import { FriendRequest } from "../interface/FriendRequest";
 import { User } from "../interface/User";
 
@@ -14,6 +14,9 @@ export class FriendService {
 
   private _friends: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
   public friends = this._friends.asObservable();
+
+  private _friendRequest: BehaviorSubject<FriendRequest<User>[]> = new BehaviorSubject([]);
+  public friendRequest = this._friendRequest.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -27,15 +30,14 @@ export class FriendService {
     });
   }
 
-  getFriendRequests(): Observable<FriendRequest<User>[]> {
-    return this.http.post<FriendRequest<User>[]>(
+  getFriendRequests() {
+    this.http.post<FriendRequest<User>[]>(
       `${this.url}/request`,
       {},
       { headers: this.header },
     ).pipe(
       map(result => {
         if (result) {
-          console.log(result);
           return result;
         } else {
           return [];
@@ -45,13 +47,13 @@ export class FriendService {
         console.log(error);
         return of([]);
       }),
-    );
+    ).subscribe(request => this._friendRequest.next(request));
   }
 
   sendRequest(credentials: {
     requester: string,
     recipient: string,
-    status: number
+    status: 0
   }) {
     return this.http.post<{
       token: string;

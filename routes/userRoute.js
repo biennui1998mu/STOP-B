@@ -5,6 +5,8 @@ const multer = require('multer');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const checkAuth = require('../middleware/check-auth');
+const friendRequest = require('../database/models/friendRequest');
+const User = require('../database/models/user');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -31,9 +33,6 @@ const upload = multer({
     },
     fileFilter: fileFilter
 });
-
-const User = require('../database/models/user');
-const friendRequest = require('../database/models/friendRequest')
 
 // take all user from list user
 router.post('/', (req, res, next) => {
@@ -125,22 +124,66 @@ router.post('/friend', checkAuth, (req, res) => {
 });
 
 // Search user by username or name
-router.post('/search', (req, res) => {
+router.post('/search', checkAuth, async (req, res) => {
     const input = req.body.input;
 
-    User.find({
-        $or: [
-            {username: new RegExp(input)},
-            {name: new RegExp(input)}
-        ]
-    }, function (err, users) {
-        if (users) {
-            return res.json(users);
-        } else {
-            return err;
+    try {
+        const users = await User.find({
+            $and: [
+                {
+                    $or: [
+                        {username: new RegExp(input)},
+                        {name: new RegExp(input)}
+                    ]
+                },
+                {
+                    _id: {$ne: req.userData.userId} // not to get yourself :D
+                }
+            ]
+        }).limit(10).exec();
+
+        if (!users || users.length === 0) {
+            return res.json([]);
         }
-    }).limit(10);
-    // }
+        // parse to object for ease in use
+        const parsed = users.map(function (model) {
+            return model.toObject();
+        });
+
+        // get friend request to you that associated with found users
+        const getFriendRequest = await friendRequest.find({
+            $or: [
+                {
+                    requester: req.userData.userId,
+                    recipient: {$in: parsed.map(user => user._id)}
+                },
+                {
+                    recipient: req.userData.userId,
+                    requester: {$in: parsed.map(user => user._id)}
+                },
+            ]
+        }).exec();
+        // parse to object for ease in use
+        const requestWithMe = getFriendRequest.map(function (model) {
+            return model.toObject();
+        })
+
+        // Manually add custom friendRequest field to the return users model.
+        const finalReturn = parsed.map(user => {
+            const friendRequest = requestWithMe.find(request => {
+                return request.requester.toString() === user._id.toString() ||
+                    user._id.toString() === request.recipient.toString()
+            });
+            if (friendRequest) {
+                user.friendRequest = friendRequest;
+            }
+            return user;
+        })
+        return res.json(finalReturn);
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json([]);
+    }
 });
 
 // signup
@@ -201,10 +244,11 @@ router.post('/signIn', async (req, res, next) => {
     const {username, password} = req.body;
 
     const user = await User.findOne({username: username})
-        .select('+password') // chi dinh print field bi hidden by default trong schema.
+        // chi dinh print field bi hidden by default trong schema.
+        .select('+password')
         .exec();
 
-    if (user.length < 1) {
+    if (!user) {
         return res.status(401).json({
             message: 'Auth fail 1'
         });
