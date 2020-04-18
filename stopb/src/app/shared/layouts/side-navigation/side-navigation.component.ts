@@ -1,6 +1,6 @@
 import { AfterContentInit, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AccountComponent } from "../../components/account/account.component";
+import { AccountComponent } from "../../../features/account/account.component";
 import { Router } from '@angular/router';
 
 @Component({

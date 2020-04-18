@@ -16,6 +16,9 @@ import { of } from 'rxjs';
   templateUrl: './friends.component.html',
   styleUrls: ['./friends.component.scss'],
 })
+/**
+ * smart component / dynamic component
+ */
 export class FriendsComponent implements OnInit {
 
   friendSearchForm = new FormControl(

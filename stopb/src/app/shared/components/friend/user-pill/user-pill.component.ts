@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { User } from '../../../interface/User';
 import { TokenService } from '../../../services/token.service';
 import { UserService } from '../../../services/user.service';
@@ -9,6 +9,9 @@ import { FriendService } from '../../../services/friend.service';
   templateUrl: './user-pill.component.html',
   styleUrls: ['./user-pill.component.scss'],
 })
+/**
+ * Dummy component
+ */
 export class UserPillComponent implements OnInit {
 
   @Input()
