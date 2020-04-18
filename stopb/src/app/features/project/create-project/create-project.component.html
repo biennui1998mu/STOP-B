@@ -13,25 +13,10 @@
                placeholder="Project Valorant"
                required>
       </mat-form-field>
-      <div *ngIf="Title.invalid && (Title.dirty || Title.touched)"
-           class="alert alert-danger">
-        <div *ngIf="Title.errors.required">
-          Title is required.
-        </div>
-        <div *ngIf="Title.errors.minlength">
-          Title must be at least 2 characters.
-        </div>
-      </div>
       <div class="grid project-meta">
 
         <mat-form-field appearance="outline" class="description">
           <mat-label>Project Description</mat-label>
-          <div *ngIf="Description.invalid && (Description.dirty || Description.touched)"
-               class="alert alert-danger">
-            <div *ngIf="Description.errors.required">
-              Description is required.
-            </div>
-          </div>
           <textarea [matTextareaAutosize]="false"
                     formControlName="Description"
                     matInput
@@ -46,12 +31,6 @@
             <mat-option style="color: red" value="1">Important</mat-option>
             <mat-option value="2">Normal</mat-option>
           </mat-select>
-          <div *ngIf="Priority.invalid && (Priority.dirty || Priority.touched)"
-               class="alert alert-danger">
-            <div *ngIf="Priority.errors.required">
-              Priority is required.
-            </div>
-          </div>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="end-date">
@@ -62,12 +41,6 @@
           <mat-datepicker-toggle [for]="picker"
                                  matSuffix></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          <div *ngIf="EndDate.invalid && (EndDate.dirty || EndDate.touched)"
-               class="alert alert-danger">
-            <div *ngIf="EndDate.errors.required">
-              End date is required.
-            </div>
-          </div>
         </mat-form-field>
 
       </div>

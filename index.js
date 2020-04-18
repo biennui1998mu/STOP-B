@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
         // show token disconnect
         socket.on('disconnect', function () {
             console.log('User: ' + username + ' đã out');
-            User.updateOne({username: username}, {$set: {userStatus: 2}})
+            User.updateOne({username: username}, {$set: {status: 2}})
                 .exec();
                 // .then(result => {
                 //     console.log(result);

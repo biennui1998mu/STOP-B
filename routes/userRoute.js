@@ -71,7 +71,7 @@ router.post('/', (req, res, next) => {
         })
 });
 
-// take user by ID
+// take your info
 router.post('/view', checkAuth, (req, res, next) => {
     const id = req.userData.userId;
 
@@ -97,7 +97,7 @@ router.post('/view', checkAuth, (req, res, next) => {
         })
 });
 
-// take user by ID
+// search friend
 router.post('/friend', checkAuth, (req, res) => {
     const friendId = req.body.friendId;
 
@@ -166,19 +166,19 @@ router.post('/search', checkAuth, async (req, res) => {
         // parse to object for ease in use
         const requestWithMe = getFriendRequest.map(function (model) {
             return model.toObject();
-        })
+        });
 
         // Manually add custom friendRequest field to the return users model.
         const finalReturn = parsed.map(user => {
             const friendRequest = requestWithMe.find(request => {
                 return request.requester.toString() === user._id.toString() ||
-                    user._id.toString() === request.recipient.toString()
+                    request.recipient.toString() === user._id.toString()
             });
             if (friendRequest) {
                 user.friendRequest = friendRequest;
             }
             return user;
-        })
+        });
         return res.json(finalReturn);
     } catch (e) {
         console.log(e);

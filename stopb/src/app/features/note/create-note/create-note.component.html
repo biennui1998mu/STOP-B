@@ -9,14 +9,6 @@
         <input formControlName="Title" matInput
                name="Title"
                required>
-        <div *ngIf="Title.invalid && (Title.dirty || Title.touched)" class="alert alert-danger">
-          <div *ngIf="Title.errors.required">
-            Title is required.
-          </div>
-          <div *ngIf="Title.errors.minlength">
-            Title must be at least 2 characters.
-          </div>
-        </div>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="span-all">
@@ -25,11 +17,6 @@
           <mat-option value="1">Important</mat-option>
           <mat-option value="2">Normal</mat-option>
         </mat-select>
-        <div *ngIf="Priority.invalid && (Priority.dirty || Priority.touched)" class="alert alert-danger">
-          <div *ngIf="Priority.errors.required">
-            Priority is required.
-          </div>
-        </div>
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="span-all">
@@ -59,11 +46,6 @@
     <mat-card-title>
       Note Description
     </mat-card-title>
-    <div *ngIf="Description.invalid && (Description.dirty || Description.touched)" class="alert alert-danger">
-      <div *ngIf="Description.errors.required">
-        Description is required.
-      </div>
-    </div>
     <mat-card-content class="detail-section-content">
       <!--  note-input-paper + red/green/blue/orange/...  -->
       <textarea class="note-input-paper hand-writing mat-elevation-z5 red"
