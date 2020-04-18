@@ -64,6 +64,10 @@
   }
 }
 
+.chat-row + .chat-row.friend {
+  margin-bottom: 0.5rem;
+}
+
 .bottom {
   grid-template-columns: auto 2.5rem;
   min-height: 2.5rem;

@@ -19,7 +19,7 @@
   </div>
 
   <div #chatContext
-       class="flex-d-col flex of-scroll relative pt1 pb05 chat-context">
+       class="flex-d-col flex of-scroll relative pt1 chat-context">
     <div *ngFor="let message of messages"
          [class.friend]="message.from !== userId" class="flex chat-row">
       <div class="chat-bubble">
