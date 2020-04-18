@@ -87,6 +87,7 @@ io.on('connection', (socket) => {
     const friendRequestSchema = require('./database/models/friendRequest');
 
     const token = socket.handshake.query.token;
+
     try {
         const decoded = jwtDecode(token);
         const username = decoded.username;
