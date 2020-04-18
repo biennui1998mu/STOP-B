@@ -248,7 +248,7 @@ router.post('/update/:userId', (req, res) => {
     const id = req.params.userId;
     const updateOps = {...req.body};
 
-    console.log(updateOps);
+    // console.log(updateOps);
 
     User.update({_id: id}, {$set: updateOps})
         .exec()
