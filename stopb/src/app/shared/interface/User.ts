@@ -10,5 +10,5 @@ export interface User {
   avatar: string
 
   customMode?: string;
-  friendRequest?: FriendRequest;
+  friendRequest?: Partial<FriendRequest>;
 }

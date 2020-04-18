@@ -3277,6 +3277,10 @@
   background-color: transparent;
 }
 
+.bg-transparent-i {
+  background-color: transparent !important;
+}
+
 .flex-d-row {
   flex-direction: row;
 }
@@ -3392,6 +3396,10 @@
 
 .transform-translate-x--50 {
   transform: translateX(-50%);
+}
+
+.transform-translate-x--100 {
+  transform: translateX(-100%);
 }
 
 .transform-translate-y--50 {

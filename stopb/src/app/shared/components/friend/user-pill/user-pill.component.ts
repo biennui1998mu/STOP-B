@@ -1,8 +1,9 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { User } from '../../../interface/User';
 import { TokenService } from '../../../services/token.service';
 import { UserService } from '../../../services/user.service';
 import { FriendService } from '../../../services/friend.service';
+import { FriendRequest } from '../../../interface/FriendRequest';
 
 @Component({
   selector: 'app-user-pill',
@@ -32,12 +33,20 @@ export class UserPillComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.friend.friendRequest);
   }
 
   /**
    * 0 = new
    */
   sendRequestFriend() {
+    if (this.friend.friendRequest) {
+      // neu truoc do da decline user nao do thi se co friend request nhung status = 2
+      // minh se chi update lai request do sang status = 0 va thay doi `recipient` / `requester`
+      this.updateRequestFriend(0);
+      return;
+    }
+
     this.friendService.sendRequest({
       recipient: this.friend._id,
       requester: this.user.userId,
@@ -48,25 +57,37 @@ export class UserPillComponent implements OnInit {
   }
 
   /**
+   * 0 = new/not response
    * 1 = accept
    * 2 = decline
    * @param mode
    */
-  updateRequestFriend(mode: 1 | 2) {
+  updateRequestFriend(mode: 0 | 1 | 2) {
     if (this.friend.friendRequest) {
+      const updateInfo: Partial<FriendRequest> = {
+        status: mode,
+      };
+      if (this.friend.friendRequest?.status === 2) {
+        // neu truoc do unfriend nhau thi status === 2
+        // swap lai requester/recipient va statu = 0 (request lai ng kia lam friend)
+        updateInfo.requester = this.user.userId;
+        updateInfo.recipient = this.friend._id;
+        updateInfo.status = 0;
+      }
+
       this.friendService.setRequestStatus(
         this.friend.friendRequest._id,
-        {
-          _id: this.friend.friendRequest._id,
-          status: mode,
-          requester: this.friend.friendRequest.requester,
-          recipient: this.friend.friendRequest.recipient,
-        },
+        updateInfo,
       ).subscribe(
         result => {
           console.log(result);
         },
       );
     }
+  }
+
+  requestFriendStatus() {
+    return this.friend.friendRequest?.requester === this.friend._id &&
+      this.friend.friendRequest?.status === 0;
   }
 }

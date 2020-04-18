@@ -1,8 +1,8 @@
-//:host:hover {
-//  .option-accept {
-//    display: flex;
-//  }
-//}
+:host:hover {
+  .option-unfriend {
+    display: flex;
+  }
+}
 
 .friend-pill {
   width: 250px;
@@ -37,4 +37,9 @@
 
 .option-accept {
   right: 4rem;
+}
+
+.option-unfriend {
+  right: 1rem;
+  transform: translate(-100%, -50%);
 }

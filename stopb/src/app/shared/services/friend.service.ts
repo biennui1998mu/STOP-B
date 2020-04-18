@@ -71,18 +71,17 @@ export class FriendService {
     );
   }
 
-  setRequestStatus(requestId: string, credentials: {
-    _id: string,
-    requester: string,
-    recipient: string,
-    status: number
-  }) {
+  setRequestStatus(
+    requestId: string,
+    updateInfo: Partial<FriendRequest>,
+  ) {
     return this.http.post<FriendRequest[]>(
       `${this.url}/request/update/${requestId}`,
-      credentials,
+      updateInfo,
       { headers: this.header },
     ).pipe(
       map(result => {
+        console.log(result);
         return !!result;
       }),
       catchError(error => {
