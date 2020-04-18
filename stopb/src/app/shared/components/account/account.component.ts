@@ -25,18 +25,4 @@ export class AccountComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
-  logout(event: MouseEvent) {
-    return this.userService.updateUser(this.tokenService.user.userId, 2).subscribe(result => {
-      if (result) {
-        event.preventDefault();
-        this.authorizeService.logout();
-        this.dialog.close();
-      }
-    });
-  }
-
-  closeDialog(event: MouseEvent): void {
-    this.dialog.close();
-  }
 }
