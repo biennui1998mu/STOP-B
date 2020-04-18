@@ -64,6 +64,10 @@
   }
 }
 
+.chat-row + .chat-row.friend {
+  margin-bottom: 0.5rem;
+}
+
 .bottom {
   grid-template-columns: auto 2.5rem;
   min-height: 2.5rem;
@@ -76,6 +80,8 @@
     height: 2.5rem;
     font-size: 0.9rem;
     color: rgba(0, 0, 0, 0.87);
+    resize: none;
+    background: rgba(247, 247, 247, 0.8);
   }
 
   .send-btn {

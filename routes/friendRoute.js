@@ -15,19 +15,21 @@ router.post('/list', checkAuth, async (req, res) => {
     }
     let listFriendRequest = [];
     try {
-        listFriendRequest = await friendRequest.find({
+        const listFriendDoc = await friendRequest.find({
             $or: [
                 {requester: userId},
                 {recipient: userId},
             ],
             status: 1
         }).populate('requester recipient').exec();
+        listFriendRequest = listFriendDoc.map(doc => doc.toObject());
     } catch (e) {
         console.log(e);
         return res.status(500).json({
             Error: e
         });
     }
+
 
     if (listFriendRequest.length === 0) {
         // neu chua ket ban thi cu tra ve array rong, k can xu ly gi them
@@ -36,11 +38,24 @@ router.post('/list', checkAuth, async (req, res) => {
 
     // Array chua friend
     const arrayParser = [];
-
     listFriendRequest.forEach(request => {
         if (request.requester._id.toString() === userId) {
-            arrayParser.push(request.recipient);
+            const user = request.recipient;
+            // Add request vao nhu search user
+            // Minh chi can id va status
+            user.friendRequest = {
+                _id: request._id.toString(),
+                status: request.status,
+            };
+            arrayParser.push(user);
         } else {
+            const user = request.requester;
+            // Add request vao nhu search user
+            // Minh chi can id va status
+            user.friendRequest = {
+                _id: request._id.toString(),
+                status: request.status,
+            };
             arrayParser.push(request.requester);
         }
     });
