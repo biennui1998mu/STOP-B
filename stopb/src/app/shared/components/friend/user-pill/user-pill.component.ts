@@ -86,7 +86,7 @@ export class UserPillComponent implements OnInit {
     }
   }
 
-  requestFriendStatus() {
+  isThisFriendRequest() {
     return this.friend.friendRequest?.requester === this.friend._id &&
       this.friend.friendRequest?.status === 0;
   }
