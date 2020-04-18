@@ -274,8 +274,9 @@ router.post('/signIn', async (req, res, next) => {
             {
                 expiresIn: 604800
             });
-        console.log(jwt.verify(token, process.env.JWT_KEY));
-        console.log(token);
+
+        await User.updateOne({username: username}, {$set: {status: 1}}).exec();
+
         return res.status(200).json({
             message: 'Auth successful',
             token: token,

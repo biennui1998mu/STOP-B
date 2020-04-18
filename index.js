@@ -6,6 +6,11 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const jwtDecode = require('jwt-decode');
+const jwt = require('jsonwebtoken');
+const User = require('./database/models/user');
+const Message = require('./database/models/message');
+const Room = require('./database/models/room');
+const friendRequestSchema = require('./database/models/friendRequest');
 
 mongoose.Promise = global.Promise;
 mongoose.set('useFindAndModify', false);
@@ -80,84 +85,60 @@ app.use((error, req, res) => {
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-io.on('connection', (socket) => {
-    const User = require('./database/models/user');
-    const Message = require('./database/models/message');
-    const Room = require('./database/models/room');
-    const friendRequestSchema = require('./database/models/friendRequest');
-
-    const token = socket.handshake.query.token;
-
-    try {
-        const decoded = jwtDecode(token);
-        const username = decoded.username;
-        const userId = decoded.userId;
-
-        // show token connect
-        console.log('Đăng nhập mới: ' + username);
-        User.updateOne({username: username}, {$set: {status: 1}})
-            .exec();
-        // .then(result => {
-        //     console.log(result);
-        // });
-
-        // show token disconnect
-        socket.on('disconnect', function () {
-            console.log('User: ' + username + ' đã out');
-            User.updateOne({username: username}, {$set: {status: 2}})
-                .exec();
-                // .then(result => {
-                //     console.log(result);
-                // })
-            friendRequestSchema.find({
-                $or: [
-                    {requester: userId},
-                    {recipient: userId},
-                ],
-                status: 1
-            })
-                .exec()
-                .then(result => {
-                    // console.log(result);
-                    socket.broadcast.emit("Offline", result);
-                })
-        });
-
-        // // lắng nghe có người gõ chữ
-        // socket.on("input-inFocus", function () {
-        //     const noti = username + " is typing";
-        //     socket.broadcast.emit("isTyping", noti);
-        // });
-        //
-        // // lắng nghe có người gõ chữ xong rồi
-        // socket.on("input-outFocus", function () {
-        //     socket.broadcast.emit("isNotTyping");
-        // });
-
-        // lắng nghe sự kiện join room
-        socket.on("userJoinRoom", function (room) {
-            Room.findOne({_id: room._id})
-                .exec()
-                .then(data => {
-                    // user leave room
-                    socket.leave(data._id);
-
-                    socket.join(data._id);
-
-                    // user sẽ tự join vào room mới tạo
-                    socket.emit("Joined", data);
-
-                    // lắng nghe user send message
-                    socket.on("send-Message-toServer", function (messageData) {
-                        io.to(data._id).emit("Server-send-message", messageData);
-                    });
-                });
-            console.log(socket.adapter.rooms);
-        });
-
-    } catch (error) {
-
+io.use(async function (socket, next) {
+    if (socket.handshake.query && socket.handshake.query.token) {
+        jwt.verify(
+            socket.handshake.query.token,
+            process.env.JWT_KEY,
+            function (err, decoded) {
+                if (err) return next(new Error('Authentication error'));
+                socket.decoded = decoded;
+                // show token connect
+                console.log('Đăng nhập mới: ' + username);
+                next();
+            });
+    } else {
+        next(new Error('Authentication error'));
     }
+}).on('connection', async (socket) => {
+    const decoded = socket.decoded;
+    console.log(decoded, 'dong 100');
+    const username = decoded.username;
+    const userId = decoded.userId;
+    // set user online
+    await User.updateOne({username: username}, {$set: {status: 1}}).exec();
+
+    // show token disconnect
+    socket.on('disconnect', async function () {
+        console.log('User: ' + username + ' đã out');
+        await User.updateOne({username: username}, {$set: {status: 2}}).exec();
+        friendRequestSchema.find({
+            $or: [
+                {requester: userId},
+                {recipient: userId},
+            ],
+            status: 1
+        }).exec().then(result => {
+            socket.broadcast.emit("Offline", result);
+        })
+    });
+
+    // lắng nghe sự kiện join room
+    socket.on("userJoinRoom", function (room) {
+        Room.findOne({_id: room._id})
+            .exec()
+            .then(data => {
+                socket.join(data._id);
+
+                // user sẽ tự join vào room mới tạo
+                socket.emit("Joined", data);
+
+                // lắng nghe user send message
+                socket.on("send-Message-toServer", function (messageData) {
+                    io.to(data._id).emit("Server-send-message", messageData);
+                });
+            });
+    });
 });
 
 http.listen(PORT, () => {

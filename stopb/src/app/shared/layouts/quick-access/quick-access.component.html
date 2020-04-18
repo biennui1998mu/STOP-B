@@ -8,6 +8,7 @@
   <mat-list-item [routerLink]="['/account']"
                  class="outline-none cursor-pointer user-select-none list-item-access"
                  mat-ripple
+                 matDialogClose
                  role="button">
     <mat-icon mat-list-icon>
       person
@@ -18,6 +19,7 @@
   <mat-list-item [routerLink]="['/friends']"
                  class="outline-none cursor-pointer user-select-none list-item-access"
                  mat-ripple
+                 matDialogClose
                  role="button">
     <mat-icon mat-list-icon>
       people
@@ -29,6 +31,7 @@
   <mat-list-item (click)="logout()"
                  class="cursor-pointer user-select-none list-item-access"
                  mat-ripple
+                 matDialogClose
                  role="button">
     <mat-icon mat-list-icon>
       logout

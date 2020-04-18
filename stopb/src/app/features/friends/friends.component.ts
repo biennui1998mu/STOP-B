@@ -3,7 +3,7 @@ import { User } from "../../shared/interface/User";
 import { UserService } from "../../shared/services/user.service";
 import { FriendService } from "../../shared/services/friend.service";
 import { FriendRequest } from "../../shared/interface/FriendRequest";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { TokenService } from "../../shared/services/token.service";
 import { SocketService } from "../../shared/services/socket.service";
@@ -28,7 +28,6 @@ export class FriendsComponent implements OnInit {
   friends: User[] = [];
   strangers: User[] = [];
   requests: FriendRequest<User>[] = [];
-  requestForm: FormGroup;
 
   constructor(
     private router: Router,
@@ -45,32 +44,23 @@ export class FriendsComponent implements OnInit {
         path: '/friends',
       },
     });
-
-    this.requestForm = this.formBuilder.group({
-      _id: [],
-      requester: [],
-      recipient: [],
-      status: [0],
-    });
   }
 
   ngOnInit(): void {
-    // Form search
     this.listenSearchForm();
-    this.getFriendsInformation();
+    this.getFriends();
     this.getFriendRequests();
   }
 
-  getFriendsInformation() {
-    this.friendService.getFriends();
+  getFriends() {
+    this.friendService.refreshFriendList();
 
     this.friendService.friends
       .pipe(
         distinctUntilChanged(),
-      )
-      .subscribe(
-        friend => this.friends = friend,
-      );
+      ).subscribe(
+      friend => this.friends = friend,
+    );
   }
 
   listenSearchForm() {
@@ -108,7 +98,6 @@ export class FriendsComponent implements OnInit {
       )
       .subscribe(request => {
         this.requests = request;
-        console.log(request);
       });
   }
 }

@@ -28,8 +28,9 @@
       </div>
     </div>
 
-    <div class="user-search">
-
-    </div>
+    <small *ngIf="listFriendLoading | async"
+           class="ml05 mt02 user-select-none text-muted">
+      Loading...
+    </small>
   </div>
 </div>
