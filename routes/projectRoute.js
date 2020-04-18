@@ -98,7 +98,7 @@ router.post('/create', (req, res) => {
         Priority: req.body.Priority,
         StartDate: Date.now(),
         EndDate: req.body.EndDate,
-        Status: true,
+        Status: false,
         Manager: req.body.Manager,
         Moderator: req.body.Moderator,
         Member: req.body.Member
@@ -178,7 +178,7 @@ router.post('/important', checkAuth, (req, res) => {
         Priority: {
             $lte : 2
         },
-        Status: true
+        Status: false
 
     }, function (err, projects) {
         if(projects){

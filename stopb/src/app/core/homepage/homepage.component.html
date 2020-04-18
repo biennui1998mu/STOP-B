@@ -79,7 +79,7 @@
   </div>
   <div class="list-available">
     <a *ngFor="let project of projects"
-       [class.finished]="project.Status"
+       [class.finished]="project.Status === true"
        [class.high]="project.Priority === 1"
        [class.medium]="project.Priority === 2"
        [routerLink]="['/projects', 'view', project._id]"
