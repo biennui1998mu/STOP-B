@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FriendsRoutingModule } from './friends-routing.module';
 import { CoreImportsModule } from '../../shared/modules/core-imports.module';
 import { FriendsComponent } from './friends.component';
+import { SharedComponentModule } from '../../shared/components/shared-component.module';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { FriendsComponent } from './friends.component';
     CommonModule,
     CoreImportsModule,
     FriendsRoutingModule,
+    SharedComponentModule,
   ],
 })
 export class FriendsModule {

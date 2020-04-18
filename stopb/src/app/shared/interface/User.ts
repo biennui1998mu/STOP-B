@@ -1,3 +1,5 @@
+import { FriendRequest } from './FriendRequest';
+
 export interface User {
   _id: string,
   username: string,
@@ -8,4 +10,5 @@ export interface User {
   avatar: string
 
   customMode?: string;
+  friendRequest?: FriendRequest;
 }

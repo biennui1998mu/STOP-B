@@ -68,21 +68,11 @@
          class="grid grid-friend search-friend">
       <small class="text-muted span-all">Find strangers</small>
 
-      <div *ngFor="let user of strangers" class="grid friend-pill relative cursor-pointer user-select-none">
-        <div class="grid place-item-center avatar">
-          <img [src]="user.avatar"
-               alt="User avatar"
-               class="w100pct h100pct obj-pos-center obj-fit-cover br50">
-        </div>
-        <div class="flex flex-d-col justify-center user-info">
-          <div class="fw-bold whitespace-nowrap of-hidden text-overflow-ellipsis name">
-            {{user.name}}
-          </div>
-          <small class="whitespace-nowrap of-hidden text-overflow-ellipsis text-muted mt02em user-name">
-            {{user.username}}
-          </small>
-        </div>
-      </div>
+      <app-user-pill *ngFor="let user of strangers"
+                     [isStranger]="true"
+                     [friend]="user"
+                     class="relative">
+      </app-user-pill>
 
       <div class="ta-center text-muted cursor-pointer user-select-none p1em span-all">
         More result

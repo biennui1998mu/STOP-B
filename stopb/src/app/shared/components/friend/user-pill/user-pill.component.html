@@ -1,0 +1,40 @@
+<div class="grid friend-pill relative cursor-pointer user-select-none">
+  <div class="grid place-item-center avatar">
+    <img [src]="friend.avatar"
+         alt="User avatar"
+         class="w100pct h100pct obj-pos-center obj-fit-cover br50">
+  </div>
+  <div class="flex flex-d-col justify-center relative user-info">
+    <div class="fw-bold whitespace-nowrap of-hidden text-overflow-ellipsis name">
+      {{friend.name}}
+    </div>
+    <small class="whitespace-nowrap of-hidden text-overflow-ellipsis text-muted mt02em user-name">
+      {{friend.username}}
+    </small>
+  </div>
+</div>
+
+<div *ngIf="isStranger"
+     class="flex absolute bottom0 transform-translate-y-50 option-accept">
+  <div (click)="sendRequestFriend()"
+       *ngIf="!friend.friendRequest"
+       class="mat-custom-mini-fab of-hidden cl-white bg-info"
+       matRipple
+       matTooltip="Send friend request">
+    <mat-icon class="m0 grid place-item-center">group_add</mat-icon>
+  </div>
+  <div (click)="updateRequestFriend(1)"
+       *ngIf="friend.friendRequest?.requester === friend._id && friend.friendRequest?.status === 1"
+       class="mat-custom-mini-fab of-hidden mr05 cl-white bg-success"
+       matRipple
+       matTooltip="Accept request">
+    <mat-icon class="m0 grid place-item-center">check</mat-icon>
+  </div>
+  <div (click)="updateRequestFriend(2)"
+       *ngIf="friend.friendRequest?.requester === friend._id && friend.friendRequest?.status === 1"
+       class="mat-custom-mini-fab of-hidden cl-white bg-danger"
+       matRipple
+       matTooltip="Decline request">
+    <mat-icon class="m0 grid place-item-center">close</mat-icon>
+  </div>
+</div>

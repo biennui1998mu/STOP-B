@@ -24,15 +24,8 @@ export class FriendsComponent implements OnInit {
   );
   friends: User[] = [];
   strangers: User[] = [];
-
-  users: User[];
-  username: string;
-
-  userId: string;
-
+  requests: FriendRequest<User>[] = [];
   requestForm: FormGroup;
-  requests: FriendRequest[] = [];
-
 
   constructor(
     private router: Router,
@@ -62,14 +55,7 @@ export class FriendsComponent implements OnInit {
     // Form search
     this.listenSearchForm();
     this.getFriendsInformation();
-    this.getAllRequest();
-  }
-
-  getAllRequest() {
-    return this.friendService.getFriendRequests()
-      .subscribe(result => {
-        console.log(result);
-      });
+    this.getFriendRequests();
   }
 
   getFriendsInformation() {
@@ -109,6 +95,17 @@ export class FriendsComponent implements OnInit {
       .subscribe((users) => {
         this.strangers = users;
         console.log(users);
+      });
+  }
+
+  getFriendRequests() {
+    this.friendService.friendRequest
+      .pipe(
+        distinctUntilChanged(),
+      )
+      .subscribe(request => {
+        this.requests = request;
+        console.log(request);
       });
   }
 }
