@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SocketService } from "../../services/socket.service";
 import { UserService } from "../../services/user.service";
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -12,15 +12,10 @@ import { distinctUntilChanged } from 'rxjs/operators';
   templateUrl: './list-friend.component.html',
   styleUrls: ['./list-friend.component.scss'],
 })
-export class ListFriendComponent implements OnInit {
-
-  message: string;
-  messages: string[] = [];
+export class ListFriendComponent implements OnInit, OnDestroy {
   listFriend: User[] = [];
-
-  username: string;
-  avatar: string;
-  status: number;
+  // display placeholder indicate loading
+  listFriendLoading = this.friendService.friendLoading;
 
   chatDialog: MatDialogRef<ChatLayoutComponent>;
   private dialogFriendId: string = null;
@@ -40,7 +35,7 @@ export class ListFriendComponent implements OnInit {
 
   ngOnInit() {
     // lấy friends của user
-    this.friendService.getFriends();
+    this.friendService.refreshFriendList();
 
     this.socketService.getRoomChat
       .subscribe(roomChat => {
@@ -52,23 +47,6 @@ export class ListFriendComponent implements OnInit {
           this.openChatDialogs();
         }
       });
-  }
-
-  //
-  // getUserData() {
-  //   return this.userService.getUserData().subscribe( (result: User) => {
-  //     if(result){
-  //       this.username = result.username;
-  //       this.avatar = result.avatar;
-  //       this.userStatus = result.userStatus;
-  //       console.log(result);
-  //     }
-  //   })
-  // }
-
-  sendMessage() {
-    // this.socketService.userSendMessage(this.message, messageForm);
-    this.message = '';
   }
 
   requestRoomChat(friendId: string) {
@@ -96,5 +74,13 @@ export class ListFriendComponent implements OnInit {
     this.chatDialog.afterClosed().subscribe(
       () => this.dialogFriendId = null,
     );
+  }
+
+  ngOnDestroy(): void {
+    if (this.chatDialog) {
+      this.chatDialog.close();
+      this.chatDialog = undefined;
+      this.dialogFriendId = null;
+    }
   }
 }

@@ -29,11 +29,10 @@
   </div>
 
   <div class="grid relative bottom">
-    <textarea (keydown.enter)="userSendMessage()"
-              (keydown.shift.enter)="preventEvent()"
-              [formControl]="messageInput"
-              class="br0 p05 bg-transparent chat-input"
-              placeholder="start a conversation here..." type="text"></textarea>
+    <input (keydown.enter)="userSendMessage()"
+           [formControl]="messageInput"
+           class="br0 p05 bg-transparent chat-input"
+           placeholder="start a conversation here..." type="text">
     <div (click)="userSendMessage()"
          class="grid place-item-center br50 p05 cursor-pointer user-select-none send-btn"
          matRipple>

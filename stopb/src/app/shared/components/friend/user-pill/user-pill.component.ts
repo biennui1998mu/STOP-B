@@ -1,9 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { User } from '../../../interface/User';
 import { TokenService } from '../../../services/token.service';
 import { UserService } from '../../../services/user.service';
 import { FriendService } from '../../../services/friend.service';
 import { FriendRequest } from '../../../interface/FriendRequest';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-pill',
@@ -13,7 +14,7 @@ import { FriendRequest } from '../../../interface/FriendRequest';
 /**
  * Dummy component
  */
-export class UserPillComponent implements OnInit {
+export class UserPillComponent {
 
   @Input()
   friend: User;
@@ -32,28 +33,35 @@ export class UserPillComponent implements OnInit {
     return this.tokenService.user;
   }
 
-  ngOnInit(): void {
-    console.log(this.friend.friendRequest);
-  }
-
   /**
    * 0 = new
    */
   sendRequestFriend() {
     if (this.friend.friendRequest) {
       // neu truoc do da decline user nao do thi se co friend request nhung status = 2
-      // minh se chi update lai request do sang status = 0 va thay doi `recipient` / `requester`
+      // minh se chi update lai request do sang status = 0
+      // va thay doi `recipient` / `requester`
       this.updateRequestFriend(0);
       return;
     }
 
-    this.friendService.sendRequest({
-      recipient: this.friend._id,
-      requester: this.user.userId,
-      status: 0, // new request
-    }).subscribe(status => {
-      console.log(status);
-    });
+    this.friendService.sendFriendRequest(
+      {
+        recipient: this.friend._id,
+        requester: this.user.userId,
+        status: 0, // new request
+      },
+    )
+      .pipe(
+        tap(result => {
+          if (result) {
+            this.friendService.refreshFriendRequest();
+          }
+        }),
+      )
+      .subscribe(status => {
+        console.log(status);
+      });
   }
 
   /**
@@ -75,14 +83,22 @@ export class UserPillComponent implements OnInit {
         updateInfo.status = 0;
       }
 
-      this.friendService.setRequestStatus(
+      this.friendService.responseFriendRequest(
         this.friend.friendRequest._id,
         updateInfo,
-      ).subscribe(
-        result => {
-          console.log(result);
-        },
-      );
+      )
+        .pipe(
+          tap(result => {
+            if (result) {
+              this.friendService.refreshFriendList();
+            }
+          }),
+        )
+        .subscribe(
+          result => {
+            console.log(result);
+          },
+        );
     }
   }
 

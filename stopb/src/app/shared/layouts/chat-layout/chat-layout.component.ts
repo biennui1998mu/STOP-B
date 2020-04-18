@@ -42,7 +42,7 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get userId() {
-    return this.tokenService.user.userId;
+    return this.tokenService.user?.userId;
   }
 
   ngOnInit(): void {
@@ -129,9 +129,6 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.componentDestroyed.next(true);
     this.componentDestroyed.complete();
-  }
-
-  preventEvent() {
-    return;
+    this.dialogRef.close();
   }
 }

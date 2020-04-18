@@ -12,11 +12,21 @@ import { User } from "../interface/User";
 export class FriendService {
   public url = 'http://localhost:3000/friends';
 
-  private _friends: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
+  private _friends: BehaviorSubject<User[]> =
+    new BehaviorSubject([]);
   public friends = this._friends.asObservable();
 
-  private _friendRequest: BehaviorSubject<FriendRequest<User>[]> = new BehaviorSubject([]);
+  private _friendsLoading: BehaviorSubject<boolean> =
+    new BehaviorSubject(false);
+  public friendLoading = this._friendsLoading.asObservable();
+
+  public friendRequestLoading = this._friendsLoading.asObservable();
+  private _friendRequest: BehaviorSubject<FriendRequest<User>[]> =
+    new BehaviorSubject([]);
+
   public friendRequest = this._friendRequest.asObservable();
+  private _friendRequestLoading: BehaviorSubject<boolean> =
+    new BehaviorSubject(false);
 
   constructor(
     private http: HttpClient,
@@ -30,27 +40,7 @@ export class FriendService {
     });
   }
 
-  getFriendRequests() {
-    this.http.post<FriendRequest<User>[]>(
-      `${this.url}/request`,
-      {},
-      { headers: this.header },
-    ).pipe(
-      map(result => {
-        if (result) {
-          return result;
-        } else {
-          return [];
-        }
-      }),
-      catchError(error => {
-        console.log(error);
-        return of([]);
-      }),
-    ).subscribe(request => this._friendRequest.next(request));
-  }
-
-  sendRequest(credentials: {
+  sendFriendRequest(credentials: {
     requester: string,
     recipient: string,
     status: 0
@@ -71,7 +61,7 @@ export class FriendService {
     );
   }
 
-  setRequestStatus(
+  responseFriendRequest(
     requestId: string,
     updateInfo: Partial<FriendRequest>,
   ) {
@@ -94,24 +84,41 @@ export class FriendService {
   /**
    * Refresh and get new list friends
    */
-  getFriends() {
+  refreshFriendList() {
+    this._friendsLoading.next(true);
     return this.http.post<User[]>(
       `${this.url}/list`,
       {},
       { headers: this.header },
     ).pipe(
-      map(result => {
-        if (result) {
-          return result;
-        } else {
-          return [];
-        }
-      }),
       catchError(error => {
         console.log(error);
         return of([]);
       }),
-    ).subscribe(listFriends => this._friends.next(listFriends));
+    ).subscribe(listFriends => {
+      this._friendsLoading.next(false);
+      this._friends.next(listFriends);
+    });
+  }
+
+  /**
+   * Refresh and get new list friend requests.
+   */
+  refreshFriendRequest() {
+    this._friendRequestLoading.next(true);
+    this.http.post<FriendRequest<User>[]>(
+      `${this.url}/request`,
+      {},
+      { headers: this.header },
+    ).pipe(
+      catchError(error => {
+        console.log(error);
+        return of([]);
+      }),
+    ).subscribe(request => {
+      this._friendRequestLoading.next(false);
+      this._friendRequest.next(request);
+    });
   }
 
   getFriendOnline() {
