@@ -65,7 +65,6 @@ export class SocketService {
 
   /**
    * create/join a room chat with a selected user id
-   * @param roomName
    * @param friendsId
    */
   public userJoinRoom(...friendsId: string[]) {

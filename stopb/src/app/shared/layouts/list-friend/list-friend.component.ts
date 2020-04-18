@@ -23,6 +23,7 @@ export class ListFriendComponent implements OnInit {
   status: number;
 
   chatDialog: MatDialogRef<ChatLayoutComponent>;
+  private dialogFriendId: string = null;
 
   constructor(
     private socketService: SocketService,
@@ -46,6 +47,7 @@ export class ListFriendComponent implements OnInit {
         if (roomChat) {
           if (this.chatDialog) {
             this.chatDialog.close();
+            this.chatDialog = null;
           }
           this.openChatDialogs();
         }
@@ -69,11 +71,14 @@ export class ListFriendComponent implements OnInit {
     this.message = '';
   }
 
-  requestRoomChat(friendId) {
-    this.socketService.userJoinRoom(friendId)
-      .subscribe(result => {
-        console.log(result);
-      });
+  requestRoomChat(friendId: string) {
+    if (this.dialogFriendId !== friendId) {
+      this.dialogFriendId = friendId;
+      this.socketService.userJoinRoom(friendId)
+        .subscribe(result => {
+          console.log(result);
+        });
+    }
   }
 
   openChatDialogs() {
@@ -88,5 +93,8 @@ export class ListFriendComponent implements OnInit {
       hasBackdrop: false,
       panelClass: `setting-modal-box`,
     });
+    this.chatDialog.afterClosed().subscribe(
+      () => this.dialogFriendId = null,
+    );
   }
 }

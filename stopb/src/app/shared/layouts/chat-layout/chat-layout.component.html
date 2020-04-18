@@ -19,7 +19,7 @@
   </div>
 
   <div #chatContext
-       class="flex-d-col flex of-auto relative pt1 pb05 chat-context">
+       class="flex-d-col flex of-scroll relative pt1 pb05 chat-context">
     <div *ngFor="let message of messages"
          [class.friend]="message.from !== userId" class="flex chat-row">
       <div class="chat-bubble">
@@ -29,12 +29,15 @@
   </div>
 
   <div class="grid relative bottom">
-    <input [(ngModel)]="message"
-           class="br0 p05 bg-transparent chat-input"
-           placeholder="start a conversation here..." type="text">
-    <button (click)="userSendMessage()"
-            class="grid place-item-center br50 p05 cursor-pointer user-select-none send-btn" matRipple>
+    <textarea (keydown.enter)="userSendMessage()"
+              (keydown.shift.enter)="preventEvent()"
+              [formControl]="messageInput"
+              class="br0 p05 bg-transparent chat-input"
+              placeholder="start a conversation here..." type="text"></textarea>
+    <div (click)="userSendMessage()"
+         class="grid place-item-center br50 p05 cursor-pointer user-select-none send-btn"
+         matRipple>
       <mat-icon>send</mat-icon>
-    </button>
+    </div>
   </div>
 </div>

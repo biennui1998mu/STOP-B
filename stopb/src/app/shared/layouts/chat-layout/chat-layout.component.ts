@@ -7,6 +7,7 @@ import { User } from "../../interface/User";
 import { UserService } from "../../services/user.service";
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-chat-layout',
@@ -15,7 +16,7 @@ import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 })
 export class ChatLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  message: string;
+  messageInput = new FormControl('');
   roomId: string;
 
   friend: User;
@@ -83,14 +84,14 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   userSendMessage() {
-    this.socketService.userSendMessage(this.message, this.roomId)
+    this.socketService.userSendMessage(this.messageInput.value, this.roomId)
       .pipe(
         distinctUntilChanged(),
         takeUntil(this.componentDestroyed),
       )
       .subscribe(result => {
         // console.log(result);
-        this.message = '';
+        this.messageInput.setValue('');
       });
   }
 
@@ -98,7 +99,7 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.socketService.getUserMessage
       .pipe(
         distinctUntilChanged(), // neu message trung nhau thi skip
-        takeUntil(this.componentDestroyed), // neu dialog bi tat thi ngung listen
+        takeUntil(this.componentDestroyed),
       )
       .subscribe(result => {
         if (result) {
@@ -112,7 +113,7 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.socketService.getAllMessage(this.roomId)
       .pipe(
         distinctUntilChanged(),
-        takeUntil(this.componentDestroyed),
+        takeUntil(this.componentDestroyed), // neu dialog bi tat thi ngung listen
       )
       .subscribe(result => {
         this.messages = result.messages;
@@ -123,5 +124,9 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.componentDestroyed.next(true);
     this.componentDestroyed.complete();
+  }
+
+  preventEvent() {
+    return;
   }
 }
