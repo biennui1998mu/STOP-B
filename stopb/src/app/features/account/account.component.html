@@ -1,1 +1,41 @@
-123
+<div class="container">
+  <div class="user-info">
+    <mat-form-field appearance="outline" class="user-username">
+      <mat-label>Username</mat-label>
+      <input disabled
+             formControlName=""
+             matInput
+             placeholder="Project Valorant" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="user-name">
+      <mat-label>Name</mat-label>
+      <input formControlName=""
+             matInput
+             placeholder="Project Valorant"
+             required>
+    </mat-form-field>
+
+    <mat-form-field class="user-dob">
+      <mat-label>Date of birth</mat-label>
+      <input [matDatepicker]="picker"
+             matInput
+             name="dob" required>
+      <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <div class="user-avatar">
+    <img alt=""
+         class="user-avatar-image"
+         src="../uploads/sample.png">
+
+    <mat-form-field appearance="outline" class="user-avatar-url">
+      <mat-label>URL:</mat-label>
+      <input formControlName=""
+             matInput
+             placeholder="Project Valorant"
+             required>
+    </mat-form-field>
+  </div>
+</div>
