@@ -174,6 +174,7 @@ router.post('/search', checkAuth, async (req, res) => {
                 return request.requester.toString() === user._id.toString() ||
                     request.recipient.toString() === user._id.toString()
             });
+
             if (friendRequest) {
                 user.friendRequest = friendRequest;
             }

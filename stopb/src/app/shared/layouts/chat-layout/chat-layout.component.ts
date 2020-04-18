@@ -1,17 +1,19 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SocketService } from "../../services/socket.service";
 import { Message } from '../../interface/Message';
 import { TokenService } from "../../services/token.service";
 import { User } from "../../interface/User";
 import { UserService } from "../../services/user.service";
+import { Subject } from 'rxjs';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-chat-layout',
   templateUrl: './chat-layout.component.html',
   styleUrls: ['./chat-layout.component.scss'],
 })
-export class ChatLayoutComponent implements OnInit, AfterViewInit {
+export class ChatLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   message: string;
   roomId: string;
@@ -25,6 +27,8 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
 
   @ViewChild('chatContext')
   chatContext: ElementRef<HTMLDivElement>;
+
+  private componentDestroyed: Subject<boolean> = new Subject();
 
   constructor(
     public dialogRef: MatDialogRef<ChatLayoutComponent>,
@@ -52,9 +56,14 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
   getFriend() {
     this.listId.splice(this.listId.indexOf(this.tokenService.user.userId), 1);
     this.listId.forEach(data => {
-      this.userService.getFriendData(data).subscribe((friendData: User) => {
-        this.friend = friendData;
-      });
+      this.userService.getFriendData(data)
+        .pipe(
+          distinctUntilChanged(),
+          takeUntil(this.componentDestroyed),
+        )
+        .subscribe((friendData: User) => {
+          this.friend = friendData;
+        });
     });
   }
 
@@ -74,14 +83,23 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
   }
 
   userSendMessage() {
-    this.socketService.userSendMessage(this.message, this.roomId).subscribe(result => {
-      // console.log(result);
-      this.message = '';
-    });
+    this.socketService.userSendMessage(this.message, this.roomId)
+      .pipe(
+        distinctUntilChanged(),
+        takeUntil(this.componentDestroyed),
+      )
+      .subscribe(result => {
+        // console.log(result);
+        this.message = '';
+      });
   }
 
   userListenMessage() {
     this.socketService.getUserMessage
+      .pipe(
+        distinctUntilChanged(), // neu message trung nhau thi skip
+        takeUntil(this.componentDestroyed), // neu dialog bi tat thi ngung listen
+      )
       .subscribe(result => {
         if (result) {
           this.messages.push(result);
@@ -91,9 +109,19 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit {
   }
 
   getAllMessage() {
-    this.socketService.getAllMessage(this.roomId).subscribe(result => {
-      this.messages = result.messages;
-      setTimeout(() => this.scrollToBottom(), 10);
-    });
+    this.socketService.getAllMessage(this.roomId)
+      .pipe(
+        distinctUntilChanged(),
+        takeUntil(this.componentDestroyed),
+      )
+      .subscribe(result => {
+        this.messages = result.messages;
+        setTimeout(() => this.scrollToBottom(), 10);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.componentDestroyed.next(true);
+    this.componentDestroyed.complete();
   }
 }

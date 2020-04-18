@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SocketService } from "../../services/socket.service";
 import { UserService } from "../../services/user.service";
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ChatLayoutComponent } from '../chat-layout/chat-layout.component';
 import { FriendService } from "../../services/friend.service";
 import { User } from '../../interface/User';
@@ -22,7 +22,7 @@ export class ListFriendComponent implements OnInit {
   avatar: string;
   status: number;
 
-  chatDialogOn = false;
+  chatDialog: MatDialogRef<ChatLayoutComponent>;
 
   constructor(
     private socketService: SocketService,
@@ -44,9 +44,10 @@ export class ListFriendComponent implements OnInit {
     this.socketService.getRoomChat
       .subscribe(roomChat => {
         if (roomChat) {
-          if (!this.chatDialogOn) {
-            this.openChatDialogs();
+          if (this.chatDialog) {
+            this.chatDialog.close();
           }
+          this.openChatDialogs();
         }
       });
   }
@@ -77,8 +78,7 @@ export class ListFriendComponent implements OnInit {
 
   openChatDialogs() {
     const dialogCounted = 1;
-    this.chatDialogOn = true;
-    this.matDialog.open(ChatLayoutComponent, {
+    this.chatDialog = this.matDialog.open(ChatLayoutComponent, {
       width: '280px',
       height: `350px`,
       position: {
@@ -87,8 +87,6 @@ export class ListFriendComponent implements OnInit {
       },
       hasBackdrop: false,
       panelClass: `setting-modal-box`,
-    }).afterClosed().subscribe(
-      () => this.chatDialogOn = false,
-    );
+    });
   }
 }

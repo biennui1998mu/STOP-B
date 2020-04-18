@@ -22,10 +22,10 @@ const routes: Routes = [
         path: 'friends',
         loadChildren: () => import('./features/friends/friends.module').then(m => m.FriendsModule),
       },
-      // {
-      //   path: 'account',
-      //   loadChildren: () => import('./shared/components/account/account.component').then(m => m.AccountComponent),
-      // },
+      {
+        path: 'account',
+        loadChildren: () => import('./features/account/account.module').then(m => m.AccountModule),
+      },
     ],
   },
   { path: 'login', component: LoginComponent },
