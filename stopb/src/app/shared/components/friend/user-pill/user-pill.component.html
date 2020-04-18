@@ -16,7 +16,7 @@
 
 <div *ngIf="isStranger"
      class="flex absolute bottom0 transform-translate-y-50 option-accept">
-  <div *ngIf="friend.friendRequest?.status === 0"
+  <div *ngIf="friend.friendRequest?.recipient === friend._id && friend.friendRequest?.status === 0"
        class="mat-custom-mini-fab of-hidden cl-white bg-grayer"
        matTooltip="Already sent request">
     <mat-icon class="m0 grid place-item-center">group_add</mat-icon>
@@ -29,14 +29,14 @@
     <mat-icon class="m0 grid place-item-center">group_add</mat-icon>
   </div>
   <div (click)="updateRequestFriend(1)"
-       *ngIf="requestFriendStatus()"
+       *ngIf="isThisFriendRequest()"
        class="mat-custom-mini-fab of-hidden mr05 cl-white bg-success"
        matRipple
        matTooltip="Accept request">
     <mat-icon class="m0 grid place-item-center">check</mat-icon>
   </div>
   <div (click)="updateRequestFriend(2)"
-       *ngIf="requestFriendStatus()"
+       *ngIf="isThisFriendRequest()"
        class="mat-custom-mini-fab of-hidden cl-white bg-danger"
        matRipple
        matTooltip="Decline request">
