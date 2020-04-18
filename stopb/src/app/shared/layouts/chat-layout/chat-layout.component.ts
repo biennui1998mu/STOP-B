@@ -7,7 +7,7 @@ import { User } from "../../interface/User";
 import { UserService } from "../../services/user.service";
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-chat-layout',
@@ -16,7 +16,9 @@ import { FormControl } from '@angular/forms';
 })
 export class ChatLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  messageInput = new FormControl('');
+  messageInput = new FormControl('', [
+    Validators.required, Validators.minLength(1),
+  ]);
   roomId: string;
 
   friend: User;
@@ -84,15 +86,18 @@ export class ChatLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   userSendMessage() {
-    this.socketService.userSendMessage(this.messageInput.value, this.roomId)
-      .pipe(
-        distinctUntilChanged(),
-        takeUntil(this.componentDestroyed),
-      )
-      .subscribe(result => {
-        // console.log(result);
-        this.messageInput.setValue('');
-      });
+    if (this.messageInput.valid && this.messageInput.value.trim().length > 0) {
+      this.socketService.userSendMessage(this.messageInput.value, this.roomId)
+        .pipe(
+          distinctUntilChanged(),
+          takeUntil(this.componentDestroyed),
+        )
+        .subscribe(result => {
+          // console.log(result);
+          this.messageInput.setValue('');
+        });
+    }
+    return;
   }
 
   userListenMessage() {
