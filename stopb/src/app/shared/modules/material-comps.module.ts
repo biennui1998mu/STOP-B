@@ -19,6 +19,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const modules = [
   MatFormFieldModule,
@@ -41,6 +42,7 @@ const modules = [
   MatDividerModule,
   MatListModule,
   MatTooltipModule,
+  MatDialogModule,
 ];
 
 @NgModule({
