@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SocketService } from "../../services/socket.service";
 import { UserService } from "../../services/user.service";
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ChatLayoutComponent } from '../chat-layout/chat-layout.component';
 import { FriendService } from "../../services/friend.service";
 import { User } from '../../interface/User';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-list-friend',
@@ -21,7 +21,7 @@ export class ListFriendComponent implements OnInit, OnDestroy {
   private dialogFriendId: string = null;
 
   constructor(
-    private socketService: SocketService,
+    private chatService: ChatService,
     private userService: UserService,
     private matDialog: MatDialog,
     private friendService: FriendService,
@@ -37,9 +37,15 @@ export class ListFriendComponent implements OnInit, OnDestroy {
     // lấy friends của user
     this.friendService.refreshFriendList();
 
-    this.socketService.getRoomChat
+    this.chatService.room
+      .pipe(
+        distinctUntilChanged(),
+      )
       .subscribe(roomChat => {
         if (roomChat) {
+          // retrieve message
+          this.chatService.refreshMessage();
+
           if (this.chatDialog) {
             this.chatDialog.close();
             this.chatDialog = null;
@@ -50,12 +56,9 @@ export class ListFriendComponent implements OnInit, OnDestroy {
   }
 
   requestRoomChat(friendId: string) {
-    if (this.dialogFriendId !== friendId) {
+    if (this.dialogFriendId !== friendId && !this.chatService.roomLoadingValue) {
       this.dialogFriendId = friendId;
-      this.socketService.userJoinRoom(friendId)
-        .subscribe(result => {
-          console.log(result);
-        });
+      this.chatService.startRoomChat(friendId);
     }
   }
 

@@ -102,7 +102,6 @@ io.use(async function (socket, next) {
     }
 }).on('connection', async (socket) => {
     const decoded = socket.decoded;
-    console.log(decoded, 'dong 100');
     const username = decoded.username;
     const userId = decoded.userId;
     // set user online
@@ -124,7 +123,7 @@ io.use(async function (socket, next) {
     });
 
     // lắng nghe sự kiện join room
-    socket.on("userJoinRoom", function (room) {
+    socket.on("user-join-room-chat", function (room) {
         Room.findOne({_id: room._id})
             .exec()
             .then(data => {
