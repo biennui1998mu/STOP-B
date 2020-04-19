@@ -6,13 +6,13 @@ import {TokenService} from "../../services/token.service";
 
 @Component({
   selector: 'app-setting',
-  templateUrl: './quick-access.component.html',
-  styleUrls: ['./quick-access.component.scss'],
+  templateUrl: './account-menu.component.html',
+  styleUrls: ['./account-menu.component.scss'],
 })
-export class QuickAccessComponent implements OnInit {
+export class AccountMenuComponent implements OnInit {
 
   constructor(
-    public dialogRef: MatDialogRef<QuickAccessComponent>,
+    public dialogRef: MatDialogRef<AccountMenuComponent>,
     private authorizeService: AuthorizeService,
     private userService: UserService,
     private tokenService: TokenService,

@@ -34,7 +34,7 @@ export class CreateNoteComponent implements OnInit {
     this.createNoteFrom = this.formBuilder.group({
       Title: ['', [Validators.required, Validators.minLength(2)]],
       Description: [''],
-      Priority: ['',],
+      Priority: [''],
       ProjectId: [''],
     });
 
@@ -69,8 +69,9 @@ export class CreateNoteComponent implements OnInit {
   }
 
   getAllProject() {
-    return this.projectService.getAllProject().subscribe(projects => {
-      this.projects = projects.projects;
+    this.projectService.refreshProjects();
+    this.projectService.projects.subscribe(projects => {
+      this.projects = projects;
     });
   }
 }

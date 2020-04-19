@@ -79,7 +79,7 @@ export class CreateProjectComponent implements OnInit {
   }
 
   createProject() {
-    return this.planService.projectCreate(this.projectForm.value).subscribe(success => {
+    return this.planService.createProject(this.projectForm.value).subscribe(success => {
       if (success) {
         this.router.navigateByUrl('/dashboard');
       }

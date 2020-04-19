@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Breadcrumb } from '../../models/Breadcrumb';
 import { UiStateService } from '../../services/state/ui-state.service';
-import { QuickAccessComponent } from '../quick-access/quick-access.component';
+import { AccountMenuComponent } from '../account-menu/account-menu.component';
 import { MatDialog } from '@angular/material/dialog';
 import { User } from "../../interface/User";
 import { UserService } from "../../services/user.service";
@@ -30,7 +30,7 @@ export class RouterBreadcrumbComponent implements OnInit {
   }
 
   openDialogSetting(): void {
-    this.dialog.open(QuickAccessComponent, {
+    this.dialog.open(AccountMenuComponent, {
       position: {
         top: `calc(4rem + 2px)`,
         right: `1rem`,

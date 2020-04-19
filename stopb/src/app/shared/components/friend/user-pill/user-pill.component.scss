@@ -1,5 +1,11 @@
 :host {
   width: 250px;
+
+  &:hover {
+    .option-unfriend {
+      display: flex !important;
+    }
+  }
 }
 
 .friend-pill {

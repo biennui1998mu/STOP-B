@@ -58,6 +58,6 @@ export class ViewProjectComponent implements OnInit {
   }
 
   readProject(id: string) {
-    return this.planService.readProject(id);
+    return this.planService.viewProject(id);
   }
 }

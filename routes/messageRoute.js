@@ -147,7 +147,7 @@ router.post('/room/get', checkAuth, async (req, res) => {
 
     return res.status(200).json({
         message: "Created room successfully",
-        room: room,
+        data: room,
     });
 });
 

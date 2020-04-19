@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QuickAccessComponent } from './quick-access.component';
+import { AccountMenuComponent } from './account-menu.component';
 
 describe('SettingComponent', () => {
-  let component: QuickAccessComponent;
-  let fixture: ComponentFixture<QuickAccessComponent>;
+  let component: AccountMenuComponent;
+  let fixture: ComponentFixture<AccountMenuComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [QuickAccessComponent],
+      declarations: [AccountMenuComponent],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QuickAccessComponent);
+    fixture = TestBed.createComponent(AccountMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
