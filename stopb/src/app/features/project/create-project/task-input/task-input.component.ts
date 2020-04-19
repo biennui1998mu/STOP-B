@@ -34,11 +34,11 @@ export class TaskInputComponent implements OnInit {
   }
 
   get listMember() {
-    return this.Member.value as User[] || [];
+    return this.member.value as User[] || [];
   }
 
   get listManager() {
-    return this.Moderator.value as User[] || [];
+    return this.moderator.value as User[] || [];
   }
 
   get currentUser() {
@@ -53,7 +53,7 @@ export class TaskInputComponent implements OnInit {
   removeMember(manager: User) {
     const currentList = this.listMember;
     const newList = currentList.filter(user => user._id !== manager._id);
-    this.Member.setValue(newList);
+    this.member.setValue(newList);
   }
 
   addMember($event: MatChipInputEvent) {
@@ -79,7 +79,7 @@ export class TaskInputComponent implements OnInit {
     this.filteredMember = this.filteredMember.filter(
       user => user._id !== newUser._id,
     );
-    this.Member.setValue(currentMember);
+    this.member.setValue(currentMember);
   }
 
   private searchMemberFormSub() {
@@ -113,13 +113,13 @@ export class TaskInputComponent implements OnInit {
   }
 
   private observeManager() {
-    this.Moderator.valueChanges.subscribe((value: User[]) => {
+    this.moderator.valueChanges.subscribe((value: User[]) => {
         const currentMembers = this.listMember.filter(member => {
           return !value.find(
             manager => manager._id == member._id,
           );
         });
-        this.Member.setValue(currentMembers);
+        this.member.setValue(currentMembers);
       },
     );
   }

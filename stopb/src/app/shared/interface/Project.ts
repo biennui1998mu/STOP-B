@@ -1,12 +1,17 @@
-export interface Project {
+export interface Project<Populate = string> {
   _id: string,
-  Title: string,
-  Description: string,
-  Priority: number,
-  StartDate: string,
-  EndDate: string
-  Status: boolean,
-  Manager: string,
-  Moderator: string,
-  Member: string
+  title: string,
+  description: string,
+  priority: number,
+  colorCover: string,
+  colorText: string,
+
+  manager: Populate,
+  moderator: Populate[],
+  member: Populate[],
+
+  status: boolean,
+  startDate: string,
+  endDate: string,
+  createdAt: string;
 }

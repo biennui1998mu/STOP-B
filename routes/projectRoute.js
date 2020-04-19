@@ -9,7 +9,7 @@ const Task = require('../database/models/task');
 
 // Take all projects from list
 router.post('/', checkAuth, (req, res) => {
-    Project.find({Manager: req.userData.userId})
+    Project.find({manager: req.userData.userId})
         .exec()
         .then(docs => {
             const response = {
@@ -28,30 +28,64 @@ router.post('/', checkAuth, (req, res) => {
 });
 
 // Take project from db by ID
-router.post('/view', (req, res) => {
-    const id = req.body.projectId;
-    if (!id) {
+router.post('/view', checkAuth, async (req, res) => {
+    const projectId = req.body._id;
+    const userId = req.userData.userId;
+    if (!projectId) {
         // ... xu ly validate
+        return res.status(301).json({
+            message: 'Cannot find project with empty id.',
+            data: null
+        })
     }
-    Project.findById(id)
-        .exec()
-        .then(doc => {
-            console.log("From database", doc);
-            if (doc) {
-                return res.status(200).json({
-                    project: doc,
-                })
-            }
-            return res.status(404).json({
-                message: 'No valid id was found',
+    let project = null;
+
+    try {
+        project = await Project.findById(projectId)
+            .populate('manager moderator member')
+            .exec();
+
+        if (!project) {
+            return res.status(301).json({
+                message: 'Project not found',
+                data: null
             });
+        }
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            message: 'Query find project error!',
+            data: null,
+            error: e
         })
-        .catch(err => {
-            console.log(err);
-            return res.status(500).json({
-                error: err
-            })
-        })
+    }
+
+    const isManager = project.manager && project.manager._id.toString() === userId;
+    let isModerator = false;
+    let isMember = false;
+    if (!isManager && project.moderator) {
+        isModerator = !!project.moderator.find(
+            moderator => moderator._id === userId,
+        );
+    }
+    if (!isModerator && project.member) {
+        isMember = project.member.find(
+            member => member._id === userId
+        );
+    }
+    if (!isManager && !isModerator && !isMember) {
+        // neu k trong project do thi se k tim thay project do
+        // nhu github private repo
+        return res.status(301).json({
+            message: 'Project not found',
+            data: null
+        });
+    }
+
+    return res.status(200).json({
+        message: 'Success get project data',
+        data: project,
+    })
 });
 
 // Search by string
@@ -65,8 +99,8 @@ router.post('/search', (req, res) => {
     } else {
         Project.find({
             $or: [
-                {Title: new RegExp(input)},
-                {Description: new RegExp(input)}
+                {title: new RegExp(input, 'i')},
+                {description: new RegExp(input, 'i')}
             ]
         }, function (err, projects) {
             if (projects) {
@@ -79,18 +113,19 @@ router.post('/search', (req, res) => {
 });
 
 // Create new project
-router.post('/create', (req, res) => {
+router.post('/create', checkAuth, (req, res) => {
+    const userId = req.userData.userId;
+
     const project = new Project({
-        _id: new mongoose.Types.ObjectId(),
-        Title: req.body.Title,
-        Description: req.body.Description,
-        Priority: req.body.Priority,
-        StartDate: Date.now(),
-        EndDate: req.body.EndDate,
-        Status: false,
-        Manager: req.body.Manager,
-        Moderator: req.body.Moderator,
-        Member: req.body.Member
+        title: req.body.title,
+        description: req.body.description,
+        priority: req.body.priority,
+        startDate: Date.now(),
+        endDate: req.body.endDate,
+        status: false,
+        manager: userId,
+        moderator: req.body.moderator,
+        member: req.body.member
     });
     project.save()
         .then(result => {
@@ -99,15 +134,15 @@ router.post('/create', (req, res) => {
                 message: 'Project has been created',
                 createdProject: {
                     _id: result._id,
-                    Title: result.Title,
-                    Description: result.Description,
-                    Priority: result.Priority,
-                    StartDate: result.StartDate,
-                    EndDate: result.EndDate,
-                    Status: result.Status,
-                    Manager: result.Manager,
-                    Moderator: result.Moderator,
-                    Member: result.Member
+                    title: result.title,
+                    description: result.description,
+                    priority: result.priority,
+                    startDate: result.startDate,
+                    endDate: result.endDate,
+                    status: result.status,
+                    manager: result.manager,
+                    moderator: result.moderator,
+                    member: result.member
                 }
             });
         })
@@ -163,11 +198,11 @@ router.post('/delete/:projectId', (req, res) => {
 // query 3 projects, high priority
 router.post('/important', checkAuth, (req, res) => {
     Project.find({
-        Manager: req.userData.userId,
-        Priority: {
+        manager: req.userData.userId,
+        priority: {
             $lte: 2
         },
-        Status: false
+        status: false
 
     }, function (err, projects) {
         if (projects) {

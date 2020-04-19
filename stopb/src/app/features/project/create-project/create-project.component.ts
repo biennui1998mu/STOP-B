@@ -37,32 +37,32 @@ export class CreateProjectComponent implements OnInit {
     });
   }
 
-  get Title() {
-    return this.projectForm.get('Title');
+  get title() {
+    return this.projectForm.get('title');
   }
 
-  get Priority() {
-    return this.projectForm.get('Priority');
+  get priority() {
+    return this.projectForm.get('priority');
   }
 
-  get Description() {
-    return this.projectForm.get('Description');
+  get description() {
+    return this.projectForm.get('description');
   }
 
-  get EndDate() {
-    return this.projectForm.get('EndDate');
+  get endDate() {
+    return this.projectForm.get('endDate');
   }
 
-  get Moderator() {
-    return this.projectForm.get('Moderator');
+  get moderator() {
+    return this.projectForm.get('moderator');
   }
 
-  get Member() {
-    return this.projectForm.get('Member');
+  get member() {
+    return this.projectForm.get('member');
   }
 
-  get Manager() {
-    return this.projectForm.get('Manager');
+  get manager() {
+    return this.projectForm.get('manager');
   }
 
   ngOnInit(): void {
@@ -75,7 +75,7 @@ export class CreateProjectComponent implements OnInit {
   }
 
   getUserData() {
-    this.Manager.setValue(this.tokenService.user.userId);
+    this.manager.setValue(this.tokenService.user.userId);
   }
 
   createProject() {
@@ -88,16 +88,18 @@ export class CreateProjectComponent implements OnInit {
 
   private projectFormBuilder() {
     this.projectForm = this.formBuilder.group({
-      Manager: ['', Validators.required],
-      Title: ['', [Validators.required, Validators.minLength(2)]],
-      Description: ['', [Validators.required]],
-      Priority: ['', [Validators.required]],
-      EndDate: ['', [Validators.required]],
-      Moderator: [[], [
+      manager: ['', Validators.required],
+      title: ['', [Validators.required, Validators.minLength(2)]],
+      description: ['', [Validators.required]],
+      priority: ['', [Validators.required]],
+      colorCover: ['#14579c'],
+      colorText: ['#ffffff'],
+      endDate: ['', [Validators.required]],
+      moderator: [[], [
         // Validators.required,
         Validators.maxLength(5),
       ]],
-      Member: [[], [
+      member: [[], [
         // Validators.required,
         Validators.maxLength(50),
       ]],

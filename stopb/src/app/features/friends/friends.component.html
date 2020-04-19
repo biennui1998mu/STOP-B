@@ -40,6 +40,7 @@
       </small>
 
       <app-user-pill *ngFor="let user of friends"
+                     [class.none-i]="friendsLoading | async"
                      [friend]="user"
                      [isStranger]="false"
                      class="relative mb15 block"></app-user-pill>

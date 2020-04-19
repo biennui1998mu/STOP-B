@@ -21,21 +21,28 @@ export class ProjectMenuComponent implements OnInit {
   ) {
   }
 
+  get getProjectPersonalization() {
+    return {
+      background: this.project.colorCover ? this.project.colorCover : '#14579c',
+      color: this.project.colorText ? this.project.colorText : '#ffffff',
+    };
+  }
+
   @Input()
   set defaultExpandState(isExpand: boolean) {
     this.clickExpand(isExpand, true);
   }
 
   get shortName() {
-    const splitName = this.project.Title.split(/[\s\-]/g);
+    const splitName = this.project.title.split(/[\s\-]/g);
     let firstChar: string;
     let secondChar: string;
     if (splitName.length > 1) {
       firstChar = splitName[0][0];
       secondChar = splitName[1][0];
     } else {
-      firstChar = this.project.Title[0];
-      secondChar = this.project.Title[1];
+      firstChar = this.project.title[0];
+      secondChar = this.project.title[1];
     }
     return (firstChar + secondChar).toUpperCase();
   }

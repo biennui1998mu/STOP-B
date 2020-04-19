@@ -6,6 +6,7 @@ import { Router } from "@angular/router";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { TokenService } from "./token.service";
 import { APIResponse } from '../interface/API-Response';
+import { User } from '../interface/User';
 
 @Injectable({
   providedIn: 'root',
@@ -63,29 +64,23 @@ export class ProjectService {
     });
   }
 
-  createProject(credentials: {
-    Title: string,
-    Description: string,
-    Priority: number,
-    StartDate: string,
-    EndDate: string,
-    Status: boolean,
-    Manager: string,
-    Moderator: string,
-    Member: string
-  }) {
-    return this.http.post<{
-      // token: string;
-      message: string,
-      createdProject?: Project,
-      error: any
-    }>(`${this.url}/create`, credentials, { headers: this.header }).pipe(
+  /**
+   * create a new project, then return that new created project
+   * for angular to add to active list
+   * @param credentials
+   */
+  createProject(credentials: Partial<Project>): Observable<Project> {
+    return this.http.post<APIResponse<Project>>(
+      `${this.url}/create`,
+      credentials,
+      { headers: this.header },
+    ).pipe(
       map(result => {
-        return !!result.createdProject;
+        return result.data;
       }),
       catchError(error => {
         console.log(error);
-        return of(false);
+        return of(null);
       }),
     );
   }
@@ -113,6 +108,41 @@ export class ProjectService {
     });
   }
 
+  /**
+   * Get information of the project with provided id.
+   * option `setActive` is used when viewing the specified project
+   * @param projectId
+   * @param setActive
+   */
+  viewProject(
+    projectId: string,
+    setActive: boolean = false,
+  ): Observable<Project<User>> {
+    if (setActive) {
+      this._activeProjectLoadingValue = true;
+      this._activeProjectLoading.next(true);
+    }
+
+    return this.http.post<APIResponse<Project<User>>>(
+      `${this.url}/view`,
+      { _id: projectId },
+      { headers: this.header },
+    ).pipe(
+      map(result => {
+        if (setActive) {
+          this._activeProjectLoadingValue = false;
+          this._activeProjectLoading.next(false);
+        }
+        console.log(result);
+        return result.data;
+      }),
+      catchError(error => {
+        console.log(error);
+        return of(null);
+      }),
+    );
+  }
+
   getProjectHighPriority() {
     return this.http.post<Project[]>(
       `${this.url}/important`,
@@ -131,26 +161,6 @@ export class ProjectService {
         return [];
       }),
     );
-  }
-
-  viewProject(projectId: string): Observable<Project> {
-    return this.http.post<{
-      token: string,
-      error: any,
-      project: Project,
-    }>(`${this.url}/view`, { projectId: projectId }, { headers: this.header })
-      .pipe(
-        map(result => {
-          if (result && result.project) {
-            return result.project;
-          }
-          return null;
-        }),
-        catchError(error => {
-          console.log(error);
-          return of(null);
-        }),
-      );
   }
 
   updateProject(projectId: string, credentials: Partial<Project>) {
