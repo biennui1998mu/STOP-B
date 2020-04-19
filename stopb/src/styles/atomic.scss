@@ -98,6 +98,10 @@
   display: none;
 }
 
+.none-i {
+  display: none !important;
+}
+
 .block {
   display: block;
 }
@@ -3285,8 +3289,16 @@
   flex-direction: row;
 }
 
+.flex-d-row-reverse {
+  flex-direction: row-reverse;
+}
+
 .flex-d-col {
   flex-direction: column;
+}
+
+.flex-d-col-reverse {
+  flex-direction: column-reverse;
 }
 
 .align-item-flex-start {

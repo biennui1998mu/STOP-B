@@ -1,0 +1,29 @@
+<div (click)="clickExpand(!expandState)"
+     class="cursor-pointer p1em grid relative url-header">
+  <div class="grid place-item-center bg-info text-white icon-represent mat-elevation-z1">
+    {{shortName}}
+  </div>
+  {{project.Title}}
+</div>
+
+<a [routerLinkActiveOptions]="{exact: true}"
+   [routerLinkActive]="['active']"
+   [routerLink]="['/project', 'view', project._id]"
+   class="td-none bg-darkest relative user-select-none text-muted p05 pl3 tt-capitalize url-item">
+  <mat-icon>assignment</mat-icon>
+  Dashboard
+</a>
+<a [routerLinkActiveOptions]="{exact: true}"
+   [routerLinkActive]="['active']"
+   [routerLink]="['/project', 'view', project._id, 'tasks']"
+   class="td-none bg-darkest relative user-select-none text-muted p05 pl3 tt-capitalize url-item">
+  <mat-icon>add_circle</mat-icon>
+  Tasks
+</a>
+<a [routerLinkActiveOptions]="{exact: true}"
+   [routerLinkActive]="['active']"
+   [routerLink]="['/project', 'view', project._id, 'options']"
+   class="td-none bg-darkest relative user-select-none text-muted p05 pl3 tt-capitalize url-item">
+  <mat-icon>add_circle</mat-icon>
+  options
+</a>

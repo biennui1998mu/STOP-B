@@ -1,6 +1,6 @@
 const moment = require('moment');
 const express = require('express');
-const router =  express.Router();
+const router = express.Router();
 const mongoose = require('mongoose');
 const checkAuth = require("../middleware/check-auth");
 
@@ -13,27 +13,16 @@ router.post('/', checkAuth, (req, res) => {
         .exec()
         .then(docs => {
             const response = {
-                count: docs.length,
-                projects : docs.map(doc => {
-                    return {
-                        _id: doc._id,
-                        Title: doc.Title,
-                        Description: doc.Description,
-                        Priority: doc.Priority,
-                        StartDate: doc.StartDate,
-                        EndDate: doc.EndDate,
-                        Status: doc.Status,
-                        Manager: doc.Manager,
-                        Moderator: doc.Moderator,
-                        Member: doc.Member
-                    }
-                })
+                message: 'Retrieved all project successfully',
+                data: docs
             };
             res.status(200).json(response)
         })
         .catch(err => {
             res.status(500).json({
-                error: err
+                message: 'Retrieved all project error',
+                data: null,
+                error: err,
             })
         })
 });
@@ -41,14 +30,14 @@ router.post('/', checkAuth, (req, res) => {
 // Take project from db by ID
 router.post('/view', (req, res) => {
     const id = req.body.projectId;
-    if(!id) {
+    if (!id) {
         // ... xu ly validate
     }
     Project.findById(id)
         .exec()
         .then(doc => {
             console.log("From database", doc);
-            if(doc) {
+            if (doc) {
                 return res.status(200).json({
                     project: doc,
                 })
@@ -69,20 +58,20 @@ router.post('/view', (req, res) => {
 router.post('/search', (req, res) => {
     const input = req.body.search;
 
-    if(input.length < 2){
+    if (input.length < 2) {
         return res.json({
             message: 'Must be at least 2 character'
         })
-    }else{
+    } else {
         Project.find({
             $or: [
                 {Title: new RegExp(input)},
                 {Description: new RegExp(input)}
             ]
         }, function (err, projects) {
-            if(projects){
+            if (projects) {
                 return res.json(projects);
-            }else{
+            } else {
                 return err;
             }
         }).limit(10);
@@ -166,7 +155,7 @@ router.post('/delete/:projectId', (req, res) => {
         .catch(err => {
             console.log(err);
             res.status(500).json({
-                Error : err,
+                Error: err,
             })
         });
 });
@@ -176,14 +165,14 @@ router.post('/important', checkAuth, (req, res) => {
     Project.find({
         Manager: req.userData.userId,
         Priority: {
-            $lte : 2
+            $lte: 2
         },
         Status: false
 
     }, function (err, projects) {
-        if(projects){
+        if (projects) {
             return res.json(projects);
-        }else{
+        } else {
             return err;
         }
     }).limit(3)

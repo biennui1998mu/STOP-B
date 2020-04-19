@@ -1,14 +1,29 @@
 <div class="grid p05 pl1 relative bg-white sticky top0 breadcrumb">
-  <div class="flex flex-d-col justify-center left-side">
+  <div class="flex justify-between align-items-center left-side">
     <div class="breadcrumb-routes">
       <div class="breadcrumb-route">
         {{(breadcrumbState | async)?.current.title}}
       </div>
     </div>
+
+    <div class="flex flex-d-row-reverse right-side-bc">
+      <button [routerLink]="['/note', 'create']"
+              class="bg-transparent note-routing"
+              mat-icon-button
+              matTooltip="Quick note">
+        <mat-icon class="text-muted">note_add</mat-icon>
+      </button>
+      <button [routerLink]="['/note']"
+              class="none-i bg-transparent view-all note-routing"
+              mat-icon-button
+              matTooltip="View all notes">
+        <mat-icon class="text-muted">note</mat-icon>
+      </button>
+    </div>
   </div>
 
   <div (click)="openDialogSetting()"
-       class="grid align-items-center user-select-none cursor-pointer right-side">
+       class="grid align-items-center user-select-none cursor-pointer relative right-side">
     <div class="relative grid place-item-center user-avatar">
       <img [src]="user?.avatar"
            alt=""

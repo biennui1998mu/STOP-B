@@ -5,6 +5,7 @@ import { catchError, map, tap } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { TokenService } from "./token.service";
+import { APIResponse } from '../interface/API-Response';
 
 @Injectable({
   providedIn: 'root',
@@ -92,7 +93,7 @@ export class ProjectService {
   refreshProjects() {
     this._projectsLoading.next(true);
     this._projectsLoadingValue = true;
-    this.http.post<Project[]>(
+    this.http.post<APIResponse<Project[]>>(
       `${this.url}`,
       {},
       { headers: this.header },
@@ -101,9 +102,10 @@ export class ProjectService {
         this._projectsLoading.next(false);
         this._projectsLoadingValue = false;
       }),
+      map(res => res.data),
       catchError(error => {
         console.log(error);
-        return [];
+        return of([] as Project[]);
       }),
     ).subscribe(projects => {
       this._projectsValue = projects;
