@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { TokenService } from "./token.service";
 import { catchError, map } from "rxjs/operators";
-import { BehaviorSubject, of } from "rxjs";
+import { BehaviorSubject, Observable, of } from "rxjs";
 import { FriendRequest } from "../interface/FriendRequest";
 import { User } from "../interface/User";
+import { APIResponse } from '../interface/API-Response';
 
 @Injectable({
   providedIn: 'root',
@@ -44,7 +45,7 @@ export class FriendService {
     requester: string,
     recipient: string,
     status: 0
-  }) {
+  }): Observable<FriendRequest> {
     return this.http.post<{
       token: string;
       message: string,
@@ -52,11 +53,11 @@ export class FriendService {
       error: any
     }>(`${this.url}/add`, credentials, { headers: this.header }).pipe(
       map(result => {
-        return !!result.sendRequest;
+        return result.sendRequest;
       }),
       catchError(error => {
         console.log(error);
-        return of(false);
+        return of(null);
       }),
     );
   }
@@ -64,19 +65,18 @@ export class FriendService {
   responseFriendRequest(
     requestId: string,
     updateInfo: Partial<FriendRequest>,
-  ) {
-    return this.http.post<FriendRequest[]>(
+  ): Observable<FriendRequest> {
+    return this.http.post<APIResponse<FriendRequest>>(
       `${this.url}/request/update/${requestId}`,
       updateInfo,
       { headers: this.header },
     ).pipe(
       map(result => {
-        console.log(result);
-        return !!result;
+        return result.data;
       }),
       catchError(error => {
         console.log(error);
-        return of(false);
+        return of(null);
       }),
     );
   }

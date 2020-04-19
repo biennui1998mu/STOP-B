@@ -1,11 +1,9 @@
-:host:hover {
-  .option-unfriend {
-    display: flex;
-  }
+:host {
+  width: 250px;
 }
 
 .friend-pill {
-  width: 250px;
+  width: inherit;
   height: 4rem;
   border-radius: 4rem;
   grid-template-areas: 'avatar user-info';
@@ -25,6 +23,7 @@
 
   .user-info {
     grid-area: user-info;
+    padding-right: 2.5rem;
   }
 
   .request-status {
@@ -36,10 +35,9 @@
 }
 
 .option-accept {
-  right: 4rem;
+  right: 1rem;
 }
 
 .option-unfriend {
-  right: 1rem;
-  transform: translate(-100%, -50%);
+  right: 0.25rem;
 }

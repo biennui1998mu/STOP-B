@@ -7,6 +7,7 @@ import { Message } from '../interface/Message';
 import { catchError, map } from 'rxjs/operators';
 import { Room } from "../interface/Room";
 import { User } from '../interface/User';
+import { APIResponse } from '../interface/API-Response';
 
 @Injectable({
   providedIn: 'root',
@@ -63,15 +64,15 @@ export class SocketService {
    * @param friendsId
    */
   public getRoomChat(friendsId: string[]): Observable<Room<User>> {
-    return this.http.post<{ room: Room, message: string }>(
+    return this.http.post<APIResponse<Room>>(
       `${this.url}/room/get`,
       { listUser: [...friendsId, this.tokenService.user.userId] },
       { headers: this.header },
     ).pipe(
       map(result => {
-        if (result.room) {
-          this.socket.emit("user-join-room-chat", result.room);
-          return result.room;
+        if (result.data) {
+          this.socket.emit("user-join-room-chat", result.data);
+          return result.data;
         }
         return null;
       }),
