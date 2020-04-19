@@ -11,8 +11,8 @@ const projectSchema = new Schema({
     EndDate: Date,
     Status: {type: Boolean, required: true},
     Manager: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    Moderator: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'},
-    Member: {type: [mongoose.Schema.Types.ObjectId], ref: 'User'}
+    Moderator: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    Member: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
 });
 
 module.exports = mongoose.model('Project', projectSchema);

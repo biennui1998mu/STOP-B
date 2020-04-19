@@ -5,6 +5,7 @@ const checkAuth = require("../middleware/check-auth");
 
 const Message = require('../database/models/message');
 const Room = require('../database/models/room');
+const User = require('../database/models/user');
 
 // get message from room
 router.post('', (req, res) => {
@@ -44,7 +45,6 @@ router.post('/save', checkAuth, (req, res) => {
         roomId: req.body.roomId,
         message: req.body.message,
         from: req.userData.userId,
-        createdAt: Date.now()
     });
     message.save()
         .then(result => {
@@ -88,15 +88,46 @@ router.post('/delete/:messageId', (req, res) => {
 
 // create room
 router.post('/room/get', checkAuth, async (req, res) => {
-
     let room = null;
+
+    if (!req.body.listUser || !Array.isArray(req.body.listUser)) {
+        return res.status(301).json({
+            message: 'Invalid user information in a room',
+            data: room,
+        });
+    }
+
+    if (req.body.listUser.length <= 1) {
+        // default always contain 1 id of yourself
+        return res.status(301).json({
+            message: 'Room cannot be created alone',
+            data: room,
+        });
+    }
+
+    const findUsers = await User.find({
+        _id: {$in: req.body.listUser}
+    }).exec();
+
+    if (findUsers.length === 0) {
+        return res.status(301).json({
+            message: 'Cannot find any associated users to create the room',
+            data: room,
+        });
+    }
+
+    const listIds = findUsers.map(function (model) {
+        return model.toObject()._id.toString();
+    }).filter(id => id !== req.userData.userId);
+
     try {
         room = await Room.findOne({
-            $or: [
-                {listUser: {$all: [...req.body.listUser, req.userData.userId]}},
-                {listUser: {$all: [req.userData.userId, ...req.body.listUser]}}
-            ]
-        }).exec();
+            listUser: {
+                $all: [...listIds, req.userData.userId],
+                $size: listIds.length + 1 // +1 as yourself
+            }
+        }).populate('listUser')
+            .exec();
     } catch (e) {
         console.log(e);
         return res.status(500).json({
@@ -108,7 +139,7 @@ router.post('/room/get', checkAuth, async (req, res) => {
         // query tim k thay ket qua
         room = new Room({
             _id: mongoose.Types.ObjectId(),
-            listUser: req.body.listUser
+            listUser: [...listIds, req.userData.userId]
         });
         // tao record moi
         await room.save();

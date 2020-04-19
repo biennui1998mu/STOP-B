@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Message } from '../interface/Message';
 import { catchError, map } from 'rxjs/operators';
 import { Room } from "../interface/Room";
+import { User } from '../interface/User';
 
 @Injectable({
   providedIn: 'root',
@@ -24,8 +25,8 @@ export class SocketService {
   private _getUserMessage: Subject<Message> = new Subject();
   public getUserMessage = this._getUserMessage.asObservable();
 
-  private _getRoomChat: BehaviorSubject<Room> = new BehaviorSubject<Room>(null);
-  public getRoomChat = this._getRoomChat.asObservable();
+  private _roomChat: BehaviorSubject<Room> = new BehaviorSubject<Room>(null);
+  public roomChat = this._roomChat.asObservable();
 
   constructor(
     private tokenService: TokenService,
@@ -50,14 +51,8 @@ export class SocketService {
     // Lấy messages
     this.listenNewMessage();
 
-    // listen room event TODO: today job
+    // listen room event
     this.userJoinedRoom();
-
-    // NoTi typing
-    // this.noTiTyping();
-
-    // NoTi not typing
-    // this.noTiNotTyping();
 
     // Lấy user có trong mảng User/ = online
     this.getUserLogOut();
@@ -67,49 +62,27 @@ export class SocketService {
    * create/join a room chat with a selected user id
    * @param friendsId
    */
-  public userJoinRoom(...friendsId: string[]) {
+  public getRoomChat(friendsId: string[]): Observable<Room<User>> {
     return this.http.post<{ room: Room, message: string }>(
       `${this.url}/room/get`,
-      { listUser: [friendsId, this.tokenService.user.userId] },
+      { listUser: [...friendsId, this.tokenService.user.userId] },
       { headers: this.header },
     ).pipe(
       map(result => {
         if (result.room) {
-          this.socket.emit("userJoinRoom", result.room);
+          this.socket.emit("user-join-room-chat", result.room);
           return result.room;
         }
-        return false;
+        return null;
       }),
       catchError(error => {
         console.log(error);
-        return of(false);
+        return of(null);
       }),
     );
   }
 
-  // public onFocus() {
-  //   this.socket.emit("input-inFocus")
-  // }
-  //
-  // public outFocus() {
-  //   this.socket.emit("input-outFocus")
-  // }
-  //
-  // public noTiTyping() {
-  //   this.socket.on("isTyping", (noTi) => {
-  //     document.getElementById('noTi-typing').innerHTML +=
-  //       "<p>" + noTi + "</p>"
-  //   });
-  // }
-  //
-  // public noTiNotTyping() {
-  //   this.socket.on("isNotTyping", () => {
-  //     document.getElementById('noTi-typing').innerHTML +=
-  //       "<p></p>"
-  //   });
-  // }
-
-  userSendMessage(message: string, roomId: string) {
+  sendChatMessage(message: string, roomId: string): Observable<Message> {
     return this.http.post<Message>(`${this.url}/save`, {
       message: message,
       roomId: roomId,
@@ -120,12 +93,16 @@ export class SocketService {
       }),
       catchError(error => {
         console.log(error);
-        return of(false);
+        return of(null);
       }),
     );
   }
 
-  getAllMessage(roomId): Observable<{
+  /**
+   * TODO: performance hit when too many message
+   * @param roomId
+   */
+  getMessages(roomId): Observable<{
     count: number,
     messages: Message[]
   }> {
@@ -164,7 +141,7 @@ export class SocketService {
   private userJoinedRoom() {
     const _ = this;
     this.socket.on("Joined", function (room: Room) {
-      _._getRoomChat.next(room);
+      _._roomChat.next(room);
     });
   }
 

@@ -21,19 +21,28 @@
   <div #chatContext
        class="flex-d-col flex of-scroll relative pt1 chat-context">
     <div *ngFor="let message of messages"
-         [class.friend]="message.from !== userId" class="flex chat-row">
+         [class.friend]="message.from !== userId"
+         [matTooltipPosition]="message.from !== userId ? 'left' : 'right'"
+         [matTooltipShowDelay]="400"
+         [matTooltip]="message.createdAt | date: 'dd/MM/yyyy - hh:mm:ss'"
+         class="flex chat-row">
       <div class="chat-bubble">
         {{message.message}}
       </div>
     </div>
+
+    <div *ngIf="messageLoading | async"
+         class="ta-center text-muted">
+      Loading...
+    </div>
   </div>
 
   <div class="grid relative bottom">
-    <input (keydown.enter)="userSendMessage()"
+    <input (keydown.enter)="sendChatMessage()"
            [formControl]="messageInput"
            class="br0 p05 bg-transparent chat-input"
            placeholder="start a conversation here..." type="text">
-    <div (click)="userSendMessage()"
+    <div (click)="sendChatMessage()"
          class="grid place-item-center br50 p05 cursor-pointer user-select-none send-btn"
          matRipple>
       <mat-icon>send</mat-icon>

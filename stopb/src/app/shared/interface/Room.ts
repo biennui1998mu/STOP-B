@@ -1,4 +1,5 @@
-export interface Room {
+export interface Room<T = string> {
   _id: string,
-  listUser: [],
+  listUser: T[],
+  createdAt: string,
 }

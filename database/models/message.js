@@ -6,7 +6,7 @@ const chatSchema = new Schema({
     roomId: {type: mongoose.Schema.Types.ObjectId, ref: 'Room'},
     message: String,
     from: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-    createdAt: Date
+    createdAt: {type: Date, default: Date.now}
 });
 
 module.exports = mongoose.model('Chat', chatSchema);
