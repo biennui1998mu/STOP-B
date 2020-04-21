@@ -18,10 +18,10 @@ export class TaskInputComponent implements OnInit {
   memberSearchInput: ElementRef<HTMLInputElement>;
 
   @Input()
-  Member: AbstractControl;
+  member: AbstractControl;
 
   @Input()
-  Moderator: AbstractControl;
+  moderator: AbstractControl;
 
   filteredMember: User[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];

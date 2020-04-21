@@ -1,3 +1,16 @@
 .loading {
   left: 230px;
+  z-index: 999;
+}
+
+.container {
+  background: var(--main-color);
+}
+
+.contrast {
+  mix-blend-mode: difference;
+}
+
+.personalize-cover {
+  height: 200px;
 }

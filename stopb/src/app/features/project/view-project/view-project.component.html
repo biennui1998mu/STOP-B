@@ -2,3 +2,20 @@
      class="bg-white fixed top0 bottom0 right0 text-muted grid place-item-center loading">
   loading...
 </div>
+
+<div class="relative w100pct h100vh flex flex-d-col container">
+  <div [style.background]="project?.colorCover"
+       [style.color]="project?.colorText"
+       class="flex flex-d-col justify-center p3 personalize-cover">
+    <h1 class="fw-bold title">
+      {{project?.title}}
+    </h1>
+    <small class="fw-lighter contrast">
+      {{memberCount}} people in this project
+    </small>
+  </div>
+
+  <div class="routing">
+    <router-outlet></router-outlet>
+  </div>
+</div>

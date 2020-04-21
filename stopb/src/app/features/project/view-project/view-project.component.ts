@@ -33,11 +33,18 @@ export class ViewProjectComponent implements OnInit {
         this.project = project;
         this.uiStateService.setPageTitle({
           current: {
-            title: 'Projects - ' + this.project.title,
+            title: 'Projects',
             path: '/project/view/' + this.project._id,
           },
         });
       });
+  }
+
+  get memberCount() {
+    const members = this.project?.member.length | 0;
+    const moderator = this.project?.moderator.length | 0;
+    // 1 as the owner
+    return members + moderator + 1;
   }
 
   ngOnInit(): void {

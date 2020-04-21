@@ -30,6 +30,7 @@
     "jwt-decode": "^2.2.0",
     "moment": "^2.24.0",
     "mongoose": "^5.9.4",
+    "mongoose-sequence": "^5.2.2",
     "morgan": "^1.9.1",
     "nodemon": "^2.0.2",
     "socket.io": "^2.3.0"

@@ -11,6 +11,8 @@ export class UiStateService {
     current: {
       title: 'Dashboard',
       path: '/homepage',
+      color: '#111',
+      background: '#fff',
     },
   });
   public pageTitle = this._pageTitle.asObservable();

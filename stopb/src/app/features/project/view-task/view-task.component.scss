@@ -1,0 +1,27 @@
+.wrapper {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.title-section {
+  grid-template-areas: 'title button' 'meta button';
+  grid-template-columns: auto max-content;
+  grid-template-rows: max-content 1rem;
+  grid-gap: 1rem 2rem;
+
+  .task-title {
+    grid-area: title;
+    outline: none;
+    border-radius: 6px;
+    font-size: 1.8rem;
+    line-height: 2rem;
+  }
+
+  .button {
+    grid-area: button;
+  }
+
+  .meta {
+    grid-area: meta;
+  }
+}

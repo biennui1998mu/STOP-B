@@ -1,5 +1,7 @@
 <div class="grid p05 pl1 relative bg-white sticky top0 breadcrumb">
-  <div class="flex justify-between align-items-center left-side">
+  <div [style.background]="(breadcrumbState | async)?.current.background"
+       [style.color]="(breadcrumbState | async)?.current.color"
+       class="flex justify-between align-items-center left-side">
     <div class="breadcrumb-routes">
       <div class="breadcrumb-route">
         {{(breadcrumbState | async)?.current.title}}

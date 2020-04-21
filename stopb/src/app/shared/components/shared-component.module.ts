@@ -6,6 +6,7 @@ import { UserPillComponent } from './friend/user-pill/user-pill.component';
 import { ConfirmDialogsComponent } from './dialogs/confirm-dialogs/confirm-dialogs.component';
 import { ChatLayoutComponent } from './chat-layout/chat-layout.component';
 import { ProjectMenuComponent } from './projects/project-menu/project-menu.component';
+import { TaskPillComponent } from './tasks/task-pill/task-pill.component';
 
 const components = [
   NewTaskComponent,
@@ -18,10 +19,12 @@ const components = [
   declarations: [
     ...components,
     ProjectMenuComponent,
+    TaskPillComponent,
   ],
   exports: [
     ...components,
     ProjectMenuComponent,
+    TaskPillComponent,
   ],
   imports: [
     CommonModule,
