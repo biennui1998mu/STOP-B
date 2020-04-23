@@ -107,22 +107,24 @@ router.post('/request/update/:requestId', (req, res) => {
     const id = req.params.requestId;
     const updateOps = {...req.body};
 
-    console.log(updateOps);
-
-    friendRequest.update({_id: id}, {$set: updateOps})
-        .exec()
-        .then(result => {
-            console.log(result);
-            return res.status(200).json({
-                message: 'Request updated',
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            return res.status(500).json({
-                Error: err
-            });
+    friendRequest.findOneAndUpdate(
+        {_id: id},
+        updateOps,
+        {
+            new: true
+        }
+    ).exec().then(result => {
+        return res.status(200).json({
+            message: 'Request updated',
+            data: result
         });
+    }).catch(err => {
+        console.log(err);
+        return res.status(500).json({
+            message: 'Update failed. Catch an error!',
+            data: null
+        });
+    });
 });
 
 // Check friend online

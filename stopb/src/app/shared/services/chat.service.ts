@@ -44,13 +44,13 @@ export class ChatService {
     this._roomLoading.next(true);
     this.roomLoadingValue = true;
     this.socketService.getRoomChat(userId).pipe(
-      tap((room) => {
-        this.roomValue = room;
+      tap(() => {
         this.roomLoadingValue = false;
         this._roomLoading.next(false);
       }),
     ).subscribe(room => {
       this._room.next(room);
+      this.roomValue = room;
     });
   }
 

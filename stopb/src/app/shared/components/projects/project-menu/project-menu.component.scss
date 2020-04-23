@@ -1,0 +1,44 @@
+:host {
+
+  .url-header, .url-link, .url-item {
+    grid-template-columns: max-content auto;
+    grid-gap: 1rem;
+    align-items: center;
+  }
+
+  .url-item {
+    display: none;
+    font-size: 0.8rem;
+
+    &.active {
+      &:before {
+        position: absolute;
+        content: '';
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        background: #00c851;
+      }
+    }
+  }
+
+  &.active {
+    .url-item {
+      display: grid;
+    }
+  }
+}
+
+.url-header {
+  grid-template-columns: max-content auto;
+  grid-gap: 1rem;
+  align-items: center;
+
+  .icon-represent {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+}

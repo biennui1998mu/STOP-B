@@ -4,17 +4,16 @@ import { SideNavigationComponent } from './side-navigation/side-navigation.compo
 import { ListFriendComponent } from './list-friend/list-friend.component';
 import { LayoutsComponent } from './layouts.component';
 import { RouterBreadcrumbComponent } from './router-breadcrumb/router-breadcrumb.component';
-import { QuickAccessComponent } from './quick-access/quick-access.component';
+import { AccountMenuComponent } from './account-menu/account-menu.component';
 import { CoreImportsModule } from '../modules/core-imports.module';
-import { ChatLayoutComponent } from './chat-layout/chat-layout.component';
+import { SharedComponentModule } from '../components/shared-component.module';
 
 const comps = [
   SideNavigationComponent,
   ListFriendComponent,
   LayoutsComponent,
   RouterBreadcrumbComponent,
-  QuickAccessComponent,
-  ChatLayoutComponent,
+  AccountMenuComponent,
 ];
 
 @NgModule({
@@ -27,6 +26,7 @@ const comps = [
   imports: [
     CommonModule,
     CoreImportsModule,
+    SharedComponentModule,
   ],
 })
 export class LayoutsModule {

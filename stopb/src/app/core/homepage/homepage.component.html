@@ -47,7 +47,7 @@
        [class.finished]="note.Status"
        [class.high]="note.Priority === 1"
        [class.medium]="note.Priority === 2"
-       [routerLink]="['/notes', 'view', note._id]"
+       [routerLink]="['/note', 'view', note._id]"
        class="item mat-elevation-z1 note-card">
       <div class="header">
         {{note.Title}}
@@ -79,19 +79,19 @@
   </div>
   <div class="list-available">
     <a *ngFor="let project of projects"
-       [class.finished]="project.Status === true"
-       [class.high]="project.Priority === 1"
-       [class.medium]="project.Priority === 2"
-       [routerLink]="['/projects', 'view', project._id]"
+       [class.finished]="project.status"
+       [class.high]="project.priority === 1"
+       [class.medium]="project.priority === 2"
+       [routerLink]="['/project', 'view', project._id]"
        class="item mat-elevation-z1 note-card">
       <div class="header">
-        {{project.Title}}
+        {{project.title}}
         <mat-icon class="icon-header">zoom_out_map</mat-icon>
       </div>
       <small class="time">
-        {{project.StartDate | date:"dd-MM-yyyy hh:mm:ss"}}
+        {{project.startDate | date:"dd-MM-yyyy hh:mm:ss"}}
       </small>
-      <textarea class="textarea-custom" disabled>{{project.Description}}</textarea>
+      <textarea class="textarea-custom" disabled>{{project.description}}</textarea>
     </a>
     <a class="see-more" href="">See more</a>
   </div>

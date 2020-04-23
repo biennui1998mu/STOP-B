@@ -8,7 +8,7 @@
       <hr class="mb-1rem">
       <mat-form-field appearance="outline">
         <mat-label>Project Title</mat-label>
-        <input formControlName="Title"
+        <input formControlName="title"
                matInput
                placeholder="Project Valorant"
                required>
@@ -18,7 +18,7 @@
         <mat-form-field appearance="outline" class="description">
           <mat-label>Project Description</mat-label>
           <textarea [matTextareaAutosize]="false"
-                    formControlName="Description"
+                    formControlName="description"
                     matInput
                     placeholder="Project FPS shooter"
                     required
@@ -27,7 +27,7 @@
 
         <mat-form-field appearance="outline" class="priority">
           <mat-label>Priority</mat-label>
-          <mat-select formControlName="Priority" required>
+          <mat-select formControlName="priority" required>
             <mat-option style="color: red" value="1">Important</mat-option>
             <mat-option value="2">Normal</mat-option>
           </mat-select>
@@ -36,7 +36,7 @@
         <mat-form-field appearance="outline" class="end-date">
           <mat-label>End Date</mat-label>
           <input [matDatepicker]="picker"
-                 formControlName="EndDate"
+                 formControlName="endDate"
                  matInput>
           <mat-datepicker-toggle [for]="picker"
                                  matSuffix></mat-datepicker-toggle>
@@ -47,14 +47,14 @@
       <h1 class="text-muted fw-lighter">Member</h1>
       <hr class="mb-1rem">
 
-<!--      Moderator-->
-      <app-moderator-input [Moderator]="Moderator"
+      <!--      Moderator-->
+      <app-moderator-input [moderator]="moderator"
                            class="grid">
       </app-moderator-input>
 
-<!--      member-->
-      <app-member-input [Member]="Member"
-                        [Moderator]="Moderator"
+      <!--      member-->
+      <app-member-input [member]="member"
+                        [moderator]="moderator"
                         class="grid">
       </app-member-input>
 

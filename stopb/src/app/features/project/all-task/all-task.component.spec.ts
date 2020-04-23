@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QuickAccessComponent } from './quick-access.component';
+import { AllTaskComponent } from './all-task.component';
 
-describe('SettingComponent', () => {
-  let component: QuickAccessComponent;
-  let fixture: ComponentFixture<QuickAccessComponent>;
+describe('AllTaskComponent', () => {
+  let component: AllTaskComponent;
+  let fixture: ComponentFixture<AllTaskComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [QuickAccessComponent],
+      declarations: [ AllTaskComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QuickAccessComponent);
+    fixture = TestBed.createComponent(AllTaskComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

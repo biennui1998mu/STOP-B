@@ -2,12 +2,18 @@
   grid-area: menu;
   grid-template-columns: 1fr;
   height: inherit;
-  overflow: auto;
+
+  &::-webkit-scrollbar {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-color: #333;
+  }
 
   .url-header, .url-link, .url-item {
     grid-template-columns: max-content auto;
     grid-gap: 1rem;
-    align-content: center;
     align-items: center;
   }
 
@@ -32,33 +38,6 @@
     &.active {
       &:before {
         background: #00c851;
-      }
-    }
-  }
-
-  .combo-url {
-    overflow: hidden;
-
-    .url-item {
-      display: none;
-      font-size: 0.8rem;
-
-      &.active {
-        &:before {
-          position: absolute;
-          content: '';
-          top: 0;
-          left: 0;
-          bottom: 0;
-          width: 4px;
-          background: #00c851;
-        }
-      }
-    }
-
-    &.active {
-      .url-item {
-        display: grid;
       }
     }
   }

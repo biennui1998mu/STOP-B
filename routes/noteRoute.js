@@ -72,8 +72,8 @@ router.post('/search', (req, res) => {
     }else{
         Note.find({
             $or: [
-                {Title: new RegExp(input)},
-                {Description: new RegExp(input)}
+                {Title: new RegExp(input, 'i')},
+                {Description: new RegExp(input, 'i')}
             ]
         }, function (err, notes) {
             if(notes){

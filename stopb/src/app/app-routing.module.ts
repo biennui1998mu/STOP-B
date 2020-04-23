@@ -11,11 +11,11 @@ const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
       { path: 'dashboard', component: HomepageComponent },
       {
-        path: 'projects', // lazy load
+        path: 'project', // lazy load
         loadChildren: () => import('./features/project/project.module').then(m => m.ProjectModule),
       },
       {
-        path: 'notes',
+        path: 'note',
         loadChildren: () => import('./features/note/note.module').then(m => m.NoteModule),
       },
       {

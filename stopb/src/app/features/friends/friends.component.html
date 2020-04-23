@@ -1,41 +1,49 @@
-<div class="grid container">
+<div class="grid container mt1 mb1 pl1 pr1 mh-auto">
   <label class="relative flex justify-flex-end input">
     <input [formControl]="friendSearchForm"
            class="input-custom"
            placeholder="Find friends by name, etc."
            type="text">
-    <mat-icon>search</mat-icon>
+    <mat-icon class="absolute top-50 transform-translate-y--50">search</mat-icon>
   </label>
-  <hr class="divider">
-  <div class="grid list-friends">
 
-    <div *ngIf="strangers?.length > 0"
-         class="grid grid-friend search-friend">
-      <small class="text-muted span-all">Find strangers</small>
+  <div class="grid list-user">
+    <div class="grid grid-user pt1 strangers">
+      <h3 class="text-muted mb1 tt-uppercase span-all">Find people</h3>
+
+      <small *ngIf="isSearching || (friendRequestLoading | async)"
+             class="text-muted ta-center">
+        Searching...
+      </small>
+
+      <ng-container *ngIf="friendSearchForm.invalid && strangers.length === 0">
+        <app-user-pill *ngFor="let user of friendRequest"
+                       [friend]="user"
+                       [isStranger]="true"
+                       class="relative mb15 block">
+        </app-user-pill>
+      </ng-container>
 
       <app-user-pill *ngFor="let user of strangers"
                      [friend]="user"
                      [isStranger]="true"
-                     class="relative">
+                     class="relative mb15 block">
       </app-user-pill>
-
-      <div class="ta-center text-muted cursor-pointer user-select-none p1em span-all">
-        More result
-      </div>
     </div>
 
-    <div class="grid grid-friend">
-      <small class="text-muted span-all">From friend list</small>
+    <div class="grid grid-user pt1 friends">
+      <h3 class="text-muted mb1 tt-uppercase span-all">From friend list</h3>
+
+      <small *ngIf="friendsLoading | async"
+             class="text-muted ta-center">
+        Searching...
+      </small>
 
       <app-user-pill *ngFor="let user of friends"
+                     [class.none-i]="friendsLoading | async"
                      [friend]="user"
                      [isStranger]="false"
-                     class="relative"></app-user-pill>
-
-      <div class="ta-center text-muted cursor-pointer user-select-none p1em span-all">
-        More result
-      </div>
-
+                     class="relative mb15 block"></app-user-pill>
     </div>
   </div>
 </div>

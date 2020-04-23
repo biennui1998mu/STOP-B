@@ -132,8 +132,8 @@ router.post('/search', checkAuth, async (req, res) => {
             $and: [
                 {
                     $or: [
-                        {username: new RegExp(input)},
-                        {name: new RegExp(input)}
+                        {username: new RegExp(input, 'i')},
+                        {name: new RegExp(input, 'i')}
                     ]
                 },
                 {

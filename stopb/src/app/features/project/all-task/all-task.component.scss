@@ -1,0 +1,94 @@
+.input-custom {
+  background: white;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+  font-size: 1rem;
+  line-height: 1rem;
+  padding: 0.75rem;
+
+  &:focus, &:focus-within {
+    //background: #fafafa;
+  }
+}
+
+.search-form {
+  grid-template-areas: 'input-search filter-search' 'task-status task-status';
+  grid-template-columns: auto max-content;
+  grid-template-rows: 1fr;
+  grid-gap: 1rem;
+
+  .input-search {
+    grid-area: input-search;
+  }
+
+  .filter-search {
+    grid-area: filter-search;
+    grid-template-columns: 150px 150px;
+    grid-gap: 0.5rem;
+  }
+
+  .task-status {
+    grid-area: task-status;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 200px));
+    grid-gap: 1rem;
+
+    .normal-pill {
+      min-width: 150px;
+    }
+
+    .small-pill {
+      width: 100px;
+    }
+  }
+}
+
+.task-pill {
+  grid-template-areas: 'title comment' 'owner comment';
+  grid-template-columns: auto 3rem;
+  grid-template-rows: max-content max-content;
+  grid-gap: 0.25rem 1rem;
+  padding: 1rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  .task-identifier {
+    grid-area: identifier;
+    min-width: 40px;
+  }
+
+  .task-title {
+    grid-area: title;
+    font-size: 1.2rem;
+
+    .index-indicator {
+      min-width: 40px;
+      text-align: left;
+    }
+
+    .title-text {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-size: 1.2rem;
+    }
+  }
+
+  .task-owner {
+    grid-area: owner;
+  }
+
+  .task-comments {
+    grid-area: comment;
+    justify-self: center;
+    align-self: center;
+  }
+
+  .task-status {
+    border-radius: 0.72rem;
+    font-size: 0.8rem;
+    line-height: 0.8rem;
+    padding: 0.32rem 0.3rem;
+  }
+}

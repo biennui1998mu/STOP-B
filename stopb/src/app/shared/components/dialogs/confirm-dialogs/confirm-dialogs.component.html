@@ -1,0 +1,27 @@
+<h3 matDialogTitle>
+  {{data.title}}
+</h3>
+
+<div matDialogContent>
+  {{data.body}}
+  <ng-container *ngIf="data.subBody">
+    <br>
+    <small class="text-muted">
+      {{data.subBody}}
+    </small>
+  </ng-container>
+  <hr class="mt1" style="border: 1px solid #cccccc;">
+</div>
+
+<div class="flex pt1 justify-between" matDialogActions>
+  <button [matDialogClose]="false"
+          [ngClass]="data.cancelClass"
+          mat-button>
+    {{data.optionCancel ? data.optionCancel : 'Cancel'}}
+  </button>
+  <button [matDialogClose]="true"
+          [ngClass]="data.acceptClass"
+          mat-raised-button>
+    {{data.optionAccept ? data.optionAccept : 'Confirm'}}
+  </button>
+</div>

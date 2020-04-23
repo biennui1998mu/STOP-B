@@ -1,10 +1,10 @@
-<div class="grid friend-pill relative cursor-pointer user-select-none">
+<div class="grid relative cursor-pointer user-select-none friend-pill">
   <div class="grid place-item-center avatar">
     <img [src]="friend.avatar"
          alt="User avatar"
          class="w100pct h100pct obj-pos-center obj-fit-cover br50">
   </div>
-  <div class="flex flex-d-col justify-center relative user-info">
+  <div class="flex flex-d-col justify-center relative of-hidden user-info">
     <div class="fw-bold whitespace-nowrap of-hidden text-overflow-ellipsis name">
       {{friend.name}}
     </div>
@@ -45,7 +45,7 @@
 </div>
 
 <div *ngIf="!isStranger"
-     class="flex absolute top-50 of-hidden option-unfriend">
+     class="none absolute top-50 of-hidden transform-translate-y--50 option-unfriend">
   <div (click)="updateRequestFriend(2)"
        class="mat-custom-mini-fab shadow-none of-hidden cl-white bg-warning"
        matRipple
