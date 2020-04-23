@@ -13,8 +13,8 @@
     grid-area: title;
     outline: none;
     border-radius: 6px;
-    font-size: 1.8rem;
-    line-height: 2rem;
+    font-size: 2rem;
+    line-height: 2.3rem;
   }
 
   .button {
@@ -25,3 +25,16 @@
     grid-area: meta;
   }
 }
+
+.grid-task {
+  grid-template-columns: 3rem auto;
+  grid-template-rows: 1fr;
+  grid-gap: 1rem;
+
+  .avatar {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+.task-deliver {}
