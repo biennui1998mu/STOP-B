@@ -1,0 +1,134 @@
+:host {
+  display: grid;
+  grid-template-columns: 3rem auto;
+  grid-template-rows: 1fr;
+  grid-gap: 1rem;
+  margin-bottom: 1rem;
+
+  .avatar {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .content-section {
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+
+    .meta {
+      grid-template-areas: 'username time option';
+      grid-template-columns: auto max-content max-content;
+      grid-template-rows: 1fr;
+      grid-gap: 0.5rem;
+      padding: 1rem;
+      align-items: center;
+      border-bottom: 1px solid #cccccc;
+
+      .username {
+        grid-area: username;
+        font-size: 1rem;
+        line-height: 1rem;
+      }
+
+      .time {
+        grid-area: time;
+      }
+
+      .option {
+        grid-area: option;
+
+        mat-icon {
+          height: 16px;
+          width: 16px;
+          font-size: 1rem;
+        }
+      }
+
+      .hover-black:hover {
+        color: black;
+      }
+    }
+
+    .content {
+      grid-template-areas: 'markdown' 'resource-content';
+      grid-template-columns: 1fr;
+      grid-template-rows: max-content max-content;
+      grid-gap: 1rem;
+
+      .mark-down-content {
+        grid-area: markdown;
+
+        .see-more {
+          display: none;
+          color: transparent;
+          transition: all 0.2s;
+          background: rgba(255, 255, 255, 0);
+        }
+
+        &.hide-external {
+          max-height: 200px;
+
+          .see-more {
+            display: grid;
+
+            &:hover {
+              background: rgba(255, 255, 255, 0.7);
+              color: black;
+            }
+          }
+        }
+      }
+
+      .resource-content {
+        grid-area: resource-content;
+
+        > *:not(:nth-last-child) {
+          margin-bottom: 1rem;
+        }
+      }
+    }
+  }
+}
+
+.resource-content {
+  .images {
+    > * {
+      margin-right: 0.5rem;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    .image-holder {
+      width: 4rem;
+      height: 4rem;
+      border-radius: 4px;
+      background: #848484;
+
+      &:hover {
+        img {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+
+  .references {
+    max-height: 64px;
+
+    .reference-task {
+      font-size: 14px;
+      grid-template-columns: max-content auto max-content;
+      grid-gap: 0.5rem;
+      border-radius: 4px;
+      background: rgba(204, 204, 204, 0.4);
+
+      .name {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    }
+  }
+}

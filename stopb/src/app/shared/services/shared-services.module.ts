@@ -9,6 +9,7 @@ import { UiStateService } from './state/ui-state.service';
   imports: [
     CommonModule,
   ],
+  declarations: [],
 })
 export class SharedServicesModule {
 }
