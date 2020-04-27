@@ -16,8 +16,6 @@ export class MarkdownService {
 
   toMarkdown(rawText: string) {
     const stringSafe: string = this.sanitizeString(rawText);
-    const markedString = marked(stringSafe);
-    console.log(markedString);
-    return markedString;
+    return marked(stringSafe);
   }
 }

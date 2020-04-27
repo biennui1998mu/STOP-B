@@ -18,7 +18,7 @@ export interface Task<user = string, project = string> {
    * 0 = open
    * 1 = closed
    */
-  status: boolean;
+  status: number;
   /**
    * from 0->3
    * 0 = none; 1 = low; 2 = medium; 3 = high

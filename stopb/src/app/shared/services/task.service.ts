@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Task } from "../interface/Task";
 import { catchError, map } from "rxjs/operators";
-import { BehaviorSubject, of } from "rxjs";
+import { BehaviorSubject, Observable, of } from "rxjs";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { TokenService } from "./token.service";
@@ -15,7 +15,7 @@ import { APIResponse } from '../interface/API-Response';
 export class TaskService {
   private url = "http://localhost:3000/tasks";
 
-  private _tasks = new BehaviorSubject<Task<User, Project>[]>([]);
+  private _tasks = new BehaviorSubject<Task<User>[]>([]);
   public tasks = this._tasks.asObservable();
 
   private _tasksLoading = new BehaviorSubject<boolean>(false);
@@ -52,30 +52,67 @@ export class TaskService {
     return this._tasksValue;
   }
 
-  createTask(formData: Partial<Task<User, Project<any>>>) {
+  /**
+   * get the latest created task of a project
+   * @param project
+   */
+  getLatestTask(project: Project<any>) {
+    return this.http.post<APIResponse<Task>>(
+      `${this.url}/latest`,
+      { project: project },
+      { headers: this.header }).pipe(
+      catchError(error => {
+        console.log(error);
+        return of({
+          message: 'Error catch!',
+          data: null,
+        });
+      }),
+    );
+  }
+
+  createTask(formData: Partial<Task<User, Project<any>>>):
+    Observable<APIResponse<Task>> {
     return this.http.post<APIResponse<Task>>(
       `${this.url}/create`,
       formData,
       { headers: this.header }).pipe(
       catchError(error => {
         console.log(error);
-        return of(false);
+        return of({
+          message: 'Error catch!',
+          data: null,
+        });
       }),
     );
   }
 
-  refreshTasks() {
-    this.http.post<APIResponse<Task<User, Project>[]>>(
+  refreshTasks(project: Project<User>) {
+    this._tasksLoading.next(true);
+    this._tasksLoadingValue = true;
+
+    return this.http.post<APIResponse<{
+      ongoingCount: number,
+      finishedCount: number,
+      tasks: Task<User>[]
+    }>>(
       `${this.url}`,
-      {},
+      { project },
       { headers: this.header },
     ).pipe(
       map(result => {
-
+        this._tasksLoading.next(false);
+        this._tasksLoadingValue = false;
+        this._tasks.next(result.data.tasks);
+        return result.data;
       }),
       catchError(error => {
         console.log(error);
-        return [];
+        return of({
+          ongoingCount: 0,
+          finishedCount: 0,
+          tasks: [],
+        });
       }),
     );
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from '../../../../shared/interface/User';
 import { ProjectService } from '../../../../shared/services/project.service';
@@ -8,6 +8,9 @@ import * as moment from 'moment';
 import { Task } from '../../../../shared/interface/Task';
 import { deepMutableObject } from '../../../../shared/tools';
 import { TaskService } from '../../../../shared/services/task.service';
+import { Router } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-task-create',
@@ -17,7 +20,7 @@ import { TaskService } from '../../../../shared/services/task.service';
     './task-create.component.scss',
   ],
 })
-export class TaskCreateComponent implements OnInit {
+export class TaskCreateComponent {
   project: Project<User> = null;
 
   isPreview: boolean = false;
@@ -25,6 +28,8 @@ export class TaskCreateComponent implements OnInit {
 
   taskForm: FormGroup;
   projectMembers: User[] = [];
+
+  indicator = 'x';
 
   public title: FormControl = new FormControl({
     value: '', disabled: false,
@@ -55,21 +60,12 @@ export class TaskCreateComponent implements OnInit {
     value: [] as User[], disabled: false,
   });
 
-  // public images: FormControl = new FormControl({
-  //   value: '', disabled: false,
-  // }, [
-  //   Validators.maxLength(10),
-  // ]);
-  //
-  // public tasks: FormControl = new FormControl({
-  //   value: '', disabled: false,
-  // });
-
   constructor(
     private fb: FormBuilder,
     private projectService: ProjectService,
     private markdownService: MarkdownService,
     private taskService: TaskService,
+    private router: Router,
   ) {
     this.taskForm = this.fb.group({
       title: this.title,
@@ -78,20 +74,32 @@ export class TaskCreateComponent implements OnInit {
       startDate: this.startDate,
       endDate: this.endDate,
       assignee: this.assignee,
-      // images: this.images, TODO future feature
-      // tasks: this.tasks, TODO future feature
     });
 
     this.projectService.activeProject
-      .subscribe(project => {
-        if (project) {
-          this.project = project;
-          this.setupMemberList(project);
+      .pipe(
+        switchMap(project => {
+          if (project) {
+            this.project = project;
+            this.setupMemberList(project);
+          } else {
+            this.router.navigate(['/']);
+            return of({
+              message: 'project did not exist',
+              data: null,
+            });
+          }
+
+          return this.taskService.getLatestTask(project);
+        }),
+      )
+      .subscribe(task => {
+        if (task && task.data) {
+          this.indicator = task.data.indicator + 1;
+        } else {
+          this.indicator = '1';
         }
       });
-  }
-
-  ngOnInit(): void {
   }
 
   preview() {
@@ -118,6 +126,9 @@ export class TaskCreateComponent implements OnInit {
      * prevent pass by reference
      */
     const taskNew: Partial<Task<User, Project<User>>> = deepMutableObject(this.taskForm.value);
+    if (this.taskForm.value.description && this.taskForm.value.description.length > 0) {
+      taskNew.description = this.markdownService.sanitizeString(taskNew.description);
+    }
     if (this.taskForm.value.startDate) {
       const startDate = moment(this.taskForm.value.startDate);
       taskNew.startDate = startDate.format('x');
@@ -132,7 +143,18 @@ export class TaskCreateComponent implements OnInit {
       this.taskService.createTask(
         taskNew,
       ).subscribe(result => {
-        console.log(result);
+        if (result.data) {
+          console.log(result);
+          this.router.navigate(
+            [
+              '/project',
+              'view',
+              this.project._id,
+              'tasks',
+              result.data.indicator,
+            ],
+          );
+        }
       });
     }
   }

@@ -30,12 +30,16 @@
 
   <div class="grid task-status">
     <mat-card class="user-select-none cursor-pointer normal-pill">
-      <mat-card-title class="text-danger">201</mat-card-title>
+      <mat-card-title class="text-danger">
+        {{finishedTasks}}
+      </mat-card-title>
       <mat-card-subtitle>Closed tasks</mat-card-subtitle>
     </mat-card>
 
     <mat-card class="user-select-none cursor-pointer normal-pill">
-      <mat-card-title class="text-success">201</mat-card-title>
+      <mat-card-title class="text-success">
+        {{ongoingTasks}}
+      </mat-card-title>
       <mat-card-subtitle>Opening tasks</mat-card-subtitle>
     </mat-card>
 
@@ -54,9 +58,12 @@
 
 <div class="relative p1 flex-d-col flex list-tasks">
 
-  <app-task-pill></app-task-pill>
+  <app-task-pill *ngFor="let task of tasks"
+                 [project]="project"
+                 [task]="task"></app-task-pill>
 
-  <div class="p1 ta-center text-muted">
+  <div *ngIf="taskLoading | async"
+       class="p1 ta-center text-muted">
     Loading...
   </div>
 

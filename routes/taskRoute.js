@@ -8,64 +8,32 @@ const checkProject = require('../middleware/check-project');
 const Task = require('../database/models/task');
 const Project = require('../database/models/project');
 
-// Take all tasks from list
-router.post('/', (req, res) => {
-    Task.find()
-        .exec()
-        .then(docs => {
-            const response = {
-                count: docs.length,
-                tasks: docs.map(doc => {
-                    return {
-                        _id: doc._id,
-                        Manager: doc.Manager,
-                        projectId: doc.projectId,
-                        Title: doc.Title,
-                        Description: doc.Description,
-                        Priority: doc.Priority,
-                        StartDate: doc.StartDate,
-                        EndDate: doc.EndDate,
-                        Status: doc.Status
-                    }
-                })
-            };
-            res.status(200).json(response)
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: err
-            })
-        })
-});
+router.post('/latest', checkAuth, checkProject, async (req, res) => {
+    const currentProject = req.projectData;
 
-// Take task from db by ID
-router.post('/view', (req, res, next) => {
-    const id = req.body.taskId;
-    if (!id) {
-        // ... xu ly validate
-    }
-    Task.findById(id)
-        .exec()
-        .then(task => {
-            if (task) {
-                return res.status(200).json({
-                    task: task
-                });
-            }
-            return res.status(404).json({
-                message: 'No valid id was found',
-            })
+    let getLatestTag = null;
+
+    try {
+        getLatestTag = await Task.findOne({
+            project: currentProject._id,
+        }).sort('-indicator').exec();
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({
+            message: 'Got error in query',
+            data: null,
+            error: e
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            })
-        });
-});
+    }
+
+    return res.status(200).json({
+        message: 'Got latest task!',
+        data: getLatestTag,
+    })
+})
 
 // Create task
-router.post('/create', checkAuth, checkProject, (req, res, next) => {
+router.post('/create', checkAuth, checkProject, (req, res) => {
     const currentUser = req.userData;
     const currentProject = req.projectData;
     // Object destructuring => get data in the body
@@ -78,7 +46,7 @@ router.post('/create', checkAuth, checkProject, (req, res, next) => {
         assignee,
     } = req.body;
     // person who create the issue
-    const issuer = currentUser._id;
+    const issuer = currentUser.userId;
 
     /**
      * shorthand response with fixed message.
@@ -131,41 +99,40 @@ router.post('/create', checkAuth, checkProject, (req, res, next) => {
             return responseError('assignee');
         }
 
-        // check if contain field _id
-        const userAssignee = assignee.filter(user => !!user._id);
+        if (assignee.length > 0) {
+            // check if contain field _id
+            const userAssignee = assignee.filter(user => !!user._id);
 
-        if (
-            !userAssignee ||
-            userAssignee.length === 0 ||
-            userAssignee.length !== assignee.length
-        ) {
-            return responseError('assignee');
-        }
-
-        console.log(currentProject);
-
-        const getMemberProject = [
-            ...currentProject.moderator || [],
-            ...currentProject.member || [],
-            currentProject.manager,
-        ];
-        console.log(getMemberProject);
-
-        const isNotInvolved = [];
-        userAssignee.forEach(user => {
-            console.log(user);
-            if (getMemberProject.find(member =>
-                member._id.toString() !== user._id // member is still mongoose doc
-            )) {
-                isNotInvolved.push(user);
+            if (
+                !userAssignee ||
+                userAssignee.length !== assignee.length
+            ) {
+                // if when filter, an user does not have a _id field
+                // then the array output will have different length
+                return responseError('assignee');
             }
-        });
 
-        if (isNotInvolved.length > 0) {
-            return res.status(301).json({
-                data: isNotInvolved,
-                message: `Some member did not participate this project`,
+            const getMemberProject = [
+                ...currentProject.moderator || [],
+                ...currentProject.member || [],
+                currentProject.manager,
+            ];
+            const isNotInvolved = [];
+            userAssignee.forEach(user => {
+                console.log(user);
+                if (getMemberProject.find(member =>
+                    member._id.toString() !== user._id // member is still mongoose doc
+                )) {
+                    isNotInvolved.push(user);
+                }
             });
+
+            if (isNotInvolved.length > 0) {
+                return res.status(301).json({
+                    data: isNotInvolved,
+                    message: `Some member did not participate this project`,
+                });
+            }
         }
     }
 
@@ -196,6 +163,66 @@ router.post('/create', checkAuth, checkProject, (req, res, next) => {
                 error: err
             })
         })
+});
+
+// Take all tasks from list
+router.post('/', checkAuth, checkProject, (req, res) => {
+    const currentProject = req.projectData;
+
+    Task.find({
+        project: currentProject._id
+    }).sort(
+        '-indicator'
+    ).populate(
+        'issuer'
+    ).exec().then(docs => {
+        const countFinished = docs.filter(
+            task => task.status === 1
+        ).length;
+        const countOngoingTask = docs.length - countFinished;
+        const response = {
+            message: 'Fetched all tasks',
+            data: {
+                ongoingCount: countOngoingTask,
+                finishedCount: countFinished,
+                tasks: docs,
+            },
+        };
+        res.status(200).json(response)
+    }).catch(err => {
+        res.status(500).json({
+            message: 'Error while fetching the data',
+            data: [],
+            error: err
+        });
+    })
+});
+
+// Take task from db by ID
+router.post('/view', checkAuth, checkProject, (req, res) => {
+    const currentProject = req.projectData;
+    const id = req.body.taskId;
+    if (!id) {
+        // ... xu ly validate
+    }
+    Task.findById(id)
+        .exec()
+        .then(task => {
+            if (task) {
+                return res.status(200).json({
+                    task: task
+                });
+            }
+            return res.status(404).json({
+                message: 'No valid id was found',
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            })
+        });
 });
 
 // Update task by ID
