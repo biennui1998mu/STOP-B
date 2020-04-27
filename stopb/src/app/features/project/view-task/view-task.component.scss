@@ -1,13 +1,24 @@
 .wrapper {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: auto;
+  grid-template-areas: 'title title' 'context properties';
+  grid-template-columns: auto 300px;
+  align-items: start;
+  grid-gap: 1rem;
+}
+
+.context-section {
+  grid-area: context;
 }
 
 .title-section {
+  grid-area: title;
   grid-template-areas: 'title button' 'meta button';
   grid-template-columns: auto max-content;
   grid-template-rows: max-content 1rem;
   grid-gap: 1rem 2rem;
+  border-radius: 0 0 6px 6px;
+  padding: 1rem;
 
   .task-title {
     grid-area: title;
@@ -26,15 +37,6 @@
   }
 }
 
-.grid-task {
-  grid-template-columns: 3rem auto;
-  grid-template-rows: 1fr;
-  grid-gap: 1rem;
+.task-deliver {
 
-  .avatar {
-    width: 3rem;
-    height: 3rem;
-  }
 }
-
-.task-deliver {}

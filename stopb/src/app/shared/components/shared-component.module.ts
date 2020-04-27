@@ -7,6 +7,8 @@ import { ConfirmDialogsComponent } from './dialogs/confirm-dialogs/confirm-dialo
 import { ChatLayoutComponent } from './chat-layout/chat-layout.component';
 import { ProjectMenuComponent } from './projects/project-menu/project-menu.component';
 import { TaskPillComponent } from './tasks/task-pill/task-pill.component';
+import { TaskCommentComponent } from './tasks/task-comment/task-comment.component';
+import { TaskCommentInputComponent } from './tasks/task-comment-input/task-comment-input.component';
 
 const components = [
   NewTaskComponent,
@@ -20,11 +22,15 @@ const components = [
     ...components,
     ProjectMenuComponent,
     TaskPillComponent,
+    TaskCommentComponent,
+    TaskCommentInputComponent,
   ],
   exports: [
     ...components,
     ProjectMenuComponent,
     TaskPillComponent,
+    TaskCommentComponent,
+    TaskCommentInputComponent,
   ],
   imports: [
     CommonModule,
