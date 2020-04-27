@@ -5,7 +5,7 @@
 <mat-form-field appearance="outline">
   <mat-label>Moderators</mat-label>
   <mat-chip-list #chipList
-                 aria-label="Fruit selection">
+                 aria-label="Manager selection">
     <mat-chip (removed)="removeManager(manager)"
               *ngFor="let manager of listManager"
               [removable]="manager._id !== currentUser.userId"

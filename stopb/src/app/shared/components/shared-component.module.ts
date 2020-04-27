@@ -7,8 +7,11 @@ import { ConfirmDialogsComponent } from './dialogs/confirm-dialogs/confirm-dialo
 import { ChatLayoutComponent } from './chat-layout/chat-layout.component';
 import { ProjectMenuComponent } from './projects/project-menu/project-menu.component';
 import { TaskPillComponent } from './tasks/task-pill/task-pill.component';
-import { TaskCommentComponent } from './tasks/task-comment/task-comment.component';
-import { TaskCommentInputComponent } from './tasks/task-comment-input/task-comment-input.component';
+import { TaskCommentComponent } from './tasks/comment/task-comment/task-comment.component';
+import { TaskCommentInputComponent } from './tasks/comment/task-comment-input/task-comment-input.component';
+import { TaskMetaComponent } from './tasks/task-meta/task-meta.component';
+import { RelatedTasksComponent } from './resources/related-tasks/related-tasks.component';
+import { ImagePreviewComponent } from './resources/image-preview/image-preview.component';
 
 const components = [
   NewTaskComponent,
@@ -24,6 +27,9 @@ const components = [
     TaskPillComponent,
     TaskCommentComponent,
     TaskCommentInputComponent,
+    TaskMetaComponent,
+    RelatedTasksComponent,
+    ImagePreviewComponent,
   ],
   exports: [
     ...components,
@@ -31,6 +37,7 @@ const components = [
     TaskPillComponent,
     TaskCommentComponent,
     TaskCommentInputComponent,
+    TaskMetaComponent,
   ],
   imports: [
     CommonModule,

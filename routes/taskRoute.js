@@ -1,9 +1,12 @@
 const express = require('express');
-const router =  express.Router();
+const router = express.Router();
 const mongoose = require('mongoose');
-const checkAuth = require("../middleware/check-auth");
+const moment = require('moment');
+const checkAuth = require('../middleware/check-auth');
+const checkProject = require('../middleware/check-project');
 
 const Task = require('../database/models/task');
+const Project = require('../database/models/project');
 
 // Take all tasks from list
 router.post('/', (req, res) => {
@@ -12,7 +15,7 @@ router.post('/', (req, res) => {
         .then(docs => {
             const response = {
                 count: docs.length,
-                tasks : docs.map(doc => {
+                tasks: docs.map(doc => {
                     return {
                         _id: doc._id,
                         Manager: doc.Manager,
@@ -38,13 +41,13 @@ router.post('/', (req, res) => {
 // Take task from db by ID
 router.post('/view', (req, res, next) => {
     const id = req.body.taskId;
-    if(!id){
+    if (!id) {
         // ... xu ly validate
     }
     Task.findById(id)
         .exec()
-        .then( task => {
-            if(task) {
+        .then(task => {
+            if (task) {
                 return res.status(200).json({
                     task: task
                 });
@@ -62,38 +65,134 @@ router.post('/view', (req, res, next) => {
 });
 
 // Create task
-router.post('/create', (req, res, next) => {
+router.post('/create', checkAuth, checkProject, (req, res, next) => {
+    const currentUser = req.userData;
+    const currentProject = req.projectData;
+    // Object destructuring => get data in the body
+    const {
+        title,
+        description,
+        priority,
+        startDate,
+        endDate,
+        assignee,
+    } = req.body;
+    // person who create the issue
+    const issuer = currentUser._id;
+
+    /**
+     * shorthand response with fixed message.
+     * @param field which field has the error
+     * @param error (optional) passing error from try/catch
+     * @returns {any}
+     */
+    const responseError = (field, error) => {
+        return res.status(301).json({
+            data: null,
+            message: `${field} is not valid`,
+            error
+        });
+    }
+
+    if (!title || typeof title !== 'string' || title.length === 0) {
+        return responseError('title');
+    }
+
+    if (!priority || isNaN(Number(priority)) || Number(priority) < 0) {
+        return responseError('priority');
+    }
+
+    if (startDate) {
+        const parsed = moment(String(startDate), 'x');
+        if (!parsed.isValid()) {
+            return responseError('startDate');
+        }
+    }
+
+    if (endDate) {
+        const momentEndDate = moment(String(endDate), 'x');
+        if (!momentEndDate.isValid()) {
+            return responseError('endDate');
+        }
+        if (startDate) {
+            const momentStartDate = moment(String(startDate), 'x');
+            if (momentEndDate.isBefore(momentStartDate)) {
+                return res.status(301).json({
+                    data: null,
+                    message: `endDate cannot happen before startDate`,
+                })
+            }
+        }
+    }
+
+    if (assignee) {
+        if (!Array.isArray(assignee)) {
+            // must be an array
+            return responseError('assignee');
+        }
+
+        // check if contain field _id
+        const userAssignee = assignee.filter(user => !!user._id);
+
+        if (
+            !userAssignee ||
+            userAssignee.length === 0 ||
+            userAssignee.length !== assignee.length
+        ) {
+            return responseError('assignee');
+        }
+
+        console.log(currentProject);
+
+        const getMemberProject = [
+            ...currentProject.moderator || [],
+            ...currentProject.member || [],
+            currentProject.manager,
+        ];
+        console.log(getMemberProject);
+
+        const isNotInvolved = [];
+        userAssignee.forEach(user => {
+            console.log(user);
+            if (getMemberProject.find(member =>
+                member._id.toString() !== user._id // member is still mongoose doc
+            )) {
+                isNotInvolved.push(user);
+            }
+        });
+
+        if (isNotInvolved.length > 0) {
+            return res.status(301).json({
+                data: isNotInvolved,
+                message: `Some member did not participate this project`,
+            });
+        }
+    }
+
     const task = new Task({
-        _id : new mongoose.Types.ObjectId,
-        Manager : req.body.Manager,
-        projectId : req.body.projectId,
-        Title : req.body.Title,
-        Description : req.body.Description,
-        Priority : req.body.Priority,
-        StartDate: Date.now(),
-        EndDate: req.body.EndDate,
-        Status : req.body.Status
+        _id: new mongoose.Types.ObjectId,
+        title,
+        description,
+        priority,
+        startDate,
+        endDate,
+        issuer,
+        status: 0, // default open status
+        project: currentProject._id,
+        assignee: assignee.map(user => user._id),
     });
+
     task.save()
         .then(result => {
             return res.status(200).json({
-                message: 'created task successfully',
-                createdTask: {
-                    _id: result._id,
-                    Manager : result.Manager,
-                    projectId : result.projectId,
-                    Title : result.Title,
-                    Description : result.Description,
-                    Priority : result.Priority,
-                    StartDate: result.StartDate,
-                    EndDate: result.EndDate,
-                    Status : result.Status
-                }
+                message: 'Created task successfully',
+                data: result
             })
         })
         .catch(err => {
             console.log(err);
             res.status(500).json({
+                message: 'Failed to create the task',
                 error: err
             })
         })
@@ -144,14 +243,14 @@ router.post('/delete/:taskId', (req, res) => {
 router.post('/important', (req, res) => {
     Task.find({
         Priority: {
-            $lte : 2
+            $lte: 2
         },
         Status: true,
 
     }, function (err, tasks) {
-        if(tasks){
+        if (tasks) {
             return res.json(tasks);
-        }else{
+        } else {
             return err;
         }
     }).limit(2)

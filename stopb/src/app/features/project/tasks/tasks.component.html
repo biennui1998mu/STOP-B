@@ -1,0 +1,63 @@
+<div class="p1 grid relative search-form">
+  <label class="flex flex-d-col input-search">
+    <mat-form-field appearance="outline"
+                    color="primary">
+      <mat-label>Find the task here</mat-label>
+      <input matInput type="text">
+    </mat-form-field>
+  </label>
+
+  <div class="grid filter-search">
+    <mat-form-field appearance="outline"
+                    color="primary">
+      <mat-label>Status</mat-label>
+      <mat-select>
+        <mat-option>None</mat-option>
+        <mat-option>Ongoing</mat-option>
+        <mat-option>Closed</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline"
+                    color="primary">
+      <mat-label>Created by</mat-label>
+      <mat-select>
+        <mat-option [value]="null">any</mat-option>
+        <mat-option>Me</mat-option>
+        <mat-option>Hai Son</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="grid task-status">
+    <mat-card class="user-select-none cursor-pointer normal-pill">
+      <mat-card-title class="text-danger">201</mat-card-title>
+      <mat-card-subtitle>Closed tasks</mat-card-subtitle>
+    </mat-card>
+
+    <mat-card class="user-select-none cursor-pointer normal-pill">
+      <mat-card-title class="text-success">201</mat-card-title>
+      <mat-card-subtitle>Opening tasks</mat-card-subtitle>
+    </mat-card>
+
+    <mat-card *ngIf="project"
+              [routerLink]="['/project', 'view', project?._id, 'tasks-create']"
+              class="user-select-none bg-info cursor-pointer small-pill">
+      <mat-card-title class="text-white">
+        <mat-icon>add</mat-icon>
+      </mat-card-title>
+      <mat-card-subtitle class="text-white">New Task</mat-card-subtitle>
+    </mat-card>
+  </div>
+</div>
+
+<hr class="m1 mt0 mb05 divider">
+
+<div class="relative p1 flex-d-col flex list-tasks">
+
+  <app-task-pill></app-task-pill>
+
+  <div class="p1 ta-center text-muted">
+    Loading...
+  </div>
+
+</div>

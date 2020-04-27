@@ -11,6 +11,11 @@ export class SafeHtmlPipe implements PipeTransform {
   ) {
   }
 
+  /**
+   * https://medium.com/@swarnakishore/angular-safe-pipe-implementation-to-bypass-domsanitizer-stripping-out-content-c1bf0f1cc36b
+   * @param value
+   * @param type
+   */
   public transform(value: any, type: string): SafeHtml | SafeStyle | SafeScript | SafeUrl | SafeResourceUrl {
     switch (type) {
       case 'html':

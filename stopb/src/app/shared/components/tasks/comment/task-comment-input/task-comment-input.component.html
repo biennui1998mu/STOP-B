@@ -1,0 +1,103 @@
+<div class="flex flex-d-col avatar-section">
+  <img alt=""
+       class="w100pct h100pct obj-fit-cover obj-pos-center mat-elevation-z1 br50 of-hidden"
+       src="http://localhost:3000/uploads/sample.png">
+
+  <div class="mt1 ph02 pv05 text-muted is-author">
+    Owner
+  </div>
+</div>
+<form [formGroup]="formInput"
+      class="flex flex-d-col bg-white content-section">
+  <div class="grid meta-block editor-meta">
+    <small class="text-muted time">
+      Markdown supported!
+    </small>
+    <div class="flex flex-center option">
+      <button (click)="preview()"
+              [class.active]="isPreview"
+              class="bg-transparent pv05 ph1 outline-none btn-custom-preview"
+              matRipple>
+        Preview
+      </button>
+    </div>
+  </div>
+
+  <div class="p1 grid content-block box-shadow editor-content">
+    <div *ngIf="isPreview"
+         [innerHTML]="previewMarkdown | safeHtml: 'html'"
+         class="markdown-editor relative markdown-content">
+    </div>
+
+    <label [class.none]="isPreview"
+           class="relative of-hidden markdown-editor">
+      <textarea #textAreaElement
+                [placeholder]="mode !== 'task' ? 'Leave a comment' : 'Task content...'"
+                class="outline-none bg-transparent input-markdown"
+                formControlName="content"></textarea>
+    </label>
+
+    <div class="flex flex-d-col resource-content editor-resource">
+      <small class="text-muted tt-capitalize mb05">
+        Resources
+      </small>
+
+      <div class="flex ofx-auto mb1 images-section">
+        <label class="of-hidden grid place-item-center cursor-pointer image-holder">
+          <mat-icon>add</mat-icon>
+          <input [disabled]="images.invalid"
+                 accept="application/octet-stream, image/png, image/jpeg"
+                 hidden
+                 name="upload-file"
+                 type="file">
+        </label>
+        <div class="relative of-hidden image-holder">
+          <img alt="Rushia Wink"
+               class="w100pct h100pct obj-pos-center obj-fit-cover"
+               src="https://user-images.githubusercontent.com/29449869/80130608-16736680-85c3-11ea-833b-d0d10dabf823.gif"/>
+          <div class="absolute cursor-pointer grid place-item-center br50 remove">
+            <mat-icon>close</mat-icon>
+          </div>
+        </div>
+      </div>
+
+      <small class="text-muted tt-capitalize mb05">
+        Referenced tasks
+      </small>
+
+      <div class="flex flex-d-col ofy-auto references-section">
+        <div class="grid align-content-center p05 reference-task">
+          <div class="identify">
+            #1 -
+          </div>
+          <div class="fw-bold name">
+            Creating structure
+          </div>
+          <div class="text-danger status">
+            Closed
+          </div>
+        </div>
+      </div>
+
+      <div class="flex mt1 pt1 justify-flex-end input-submit-section">
+        <button *ngIf="mode === 'comment'"
+                class="tt-capitalize comment-close"
+                mat-flat-button>
+          Comment and close
+        </button>
+        <button *ngIf="mode !== 'task'"
+                class="tt-capitalize"
+                color="primary"
+                mat-flat-button>
+          Comment
+        </button>
+        <button *ngIf="mode === 'task'"
+                class="tt-capitalize"
+                color="primary"
+                mat-flat-button>
+          Create new task
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
