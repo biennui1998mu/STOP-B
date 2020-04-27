@@ -1,0 +1,78 @@
+<mat-form-field class="mb05">
+  <mat-label>Issuer</mat-label>
+  <input disabled matInput type="text" value="Do Hoang Nam">
+</mat-form-field>
+
+<mat-form-field class="mb05">
+  <mat-label class="tt-capitalize">
+    Priority
+  </mat-label>
+  <mat-select [formControl]="priority">
+    <mat-option class="tt-capitalize" value="0">None</mat-option>
+    <mat-option class="tt-capitalize" value="1">Low</mat-option>
+    <mat-option class="tt-capitalize" value="2">Medium</mat-option>
+    <mat-option class="tt-capitalize" value="3">High</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field class="mb05">
+  <mat-label class="tt-capitalize">Starting Date</mat-label>
+  <input [formControl]="startDate"
+         [matDatepicker]="startingDatePicker"
+         matInput>
+  <mat-datepicker-toggle [for]="startingDatePicker"
+                         matSuffix></mat-datepicker-toggle>
+  <mat-datepicker #startingDatePicker
+                  [disabled]="readonly"></mat-datepicker>
+</mat-form-field>
+
+<mat-form-field class="mb05">
+  <mat-label class="tt-capitalize">
+    Deadline Date
+  </mat-label>
+  <input [formControl]="endDate"
+         [matDatepicker]="endDatePicker"
+         matInput>
+  <mat-datepicker-toggle [for]="endDatePicker"
+                         matSuffix></mat-datepicker-toggle>
+  <mat-datepicker #endDatePicker
+                  [disabled]="readonly"></mat-datepicker>
+</mat-form-field>
+
+<mat-form-field class="mb05">
+  <mat-chip-list #chipList
+                 aria-label="Assignee selection">
+    <mat-chip (removed)="removeAssignee(user)"
+              *ngFor="let user of assigneeList"
+              [selectable]="false">
+      <div class="grid"
+           style="grid-template-columns: auto max-content; grid-gap: 0.5rem">
+        <div class="flex align-items-center of-hidden whitespace-nowrap text-overflow-ellipsis">
+          <span>{{user.name}} - </span><small class="text-muted">{{user.username}}</small>
+        </div>
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </div>
+    </mat-chip>
+    <input #assigneeFormInput
+           (matChipInputTokenEnd)="addAssignee($event)"
+           [matAutocomplete]="assigneeAuto"
+           [matChipInputFor]="chipList"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           placeholder="New assignee...">
+  </mat-chip-list>
+  <mat-autocomplete #assigneeAuto="matAutocomplete"
+                    (optionSelected)="selectedAssignee($event)">
+    <mat-option *ngFor="let member of availableMembers"
+                [disabled]="readonly"
+                [value]="member">
+      <div class="flex align-items-center of-hidden whitespace-nowrap text-overflow-ellipsis">
+        <small class="mr02">
+          {{member.name}}
+        </small> -
+        <small class="ml02 text-muted">
+          {{member.username}}
+        </small>
+      </div>
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

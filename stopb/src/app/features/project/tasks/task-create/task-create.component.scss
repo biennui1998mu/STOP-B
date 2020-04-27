@@ -1,0 +1,64 @@
+.task-context {
+  border-radius: 6px;
+
+  .meta-section {
+    border-bottom: 1px solid #dcdcdc;
+  }
+
+  .describe {
+    border-bottom: 1px solid #dcdcdc;
+
+    .describe-input {
+      border: 1px solid #dcdcdc;
+      border-radius: 6px;
+      resize: vertical;
+      min-height: 100px;
+      max-height: 400px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  }
+
+  .resources {
+
+    .file-list {
+      flex-wrap: wrap;
+
+      > * {
+        margin: 0.25rem;
+      }
+
+      .file-placeholder {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 6px;
+        border: 1px solid #cccccc;
+
+        &.item {
+          &:hover {
+            img {
+              opacity: 0.8;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.task-properties {
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.btn-custom-preview {
+  font-size: 0.9rem;
+  line-height: 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+
+  &.active {
+    background: #6a737d;
+    color: white;
+  }
+}

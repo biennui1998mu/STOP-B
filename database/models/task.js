@@ -31,7 +31,7 @@ const taskSchema = new Schema({
     /**
      * belongs to what project
      */
-    projectId: {type: mongoose.Schema.Types.ObjectId, ref: 'Project'},
+    project: {type: mongoose.Schema.Types.ObjectId, ref: 'Project'},
     /**
      * Who needs to do this task
      */

@@ -1,0 +1,13 @@
+<div class="of-auto mb05 flex file-list">
+  <div class="bg-white-dirty grid place-item-center file-placeholder">
+    <i class="fa fa-plus text-white"></i>
+  </div>
+
+  <div *ngFor="let img of testArray"
+       class="bg-white-dirty grid place-item-center item file-placeholder">
+    <img alt=""
+         class="w100pct h100pct obj-fit-cover obj-pos-center of-hidden"
+         matTooltip="sample.png"
+         src="http://localhost:3000/uploads/sample.png">
+  </div>
+</div>

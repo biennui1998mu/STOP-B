@@ -1,0 +1,67 @@
+<form [formGroup]="taskForm"
+      class="grid pl1 pr1 pb1 wrapper">
+  <label class="grid relative bg-white mat-elevation-z1 create task-title">
+    <span class="pv05 title-size task-indicator">
+      #12 -
+    </span>
+    <input [formControl]="title"
+           class="bs-none ph02 pv05 title-size title-input"
+           placeholder="Task title..."
+           type="text">
+  </label>
+
+  <div class="flex flex-d-col mb2 bg-white box-shadow create task-context">
+    <div class="p05 flex align-items-center meta-section">
+      <button (click)="preview()"
+              [class.active]="isPreview"
+              class="bg-transparent pv05 ph1 outline-none btn-custom-preview"
+              matRipple>
+        Preview
+      </button>
+
+      <i class="text-muted ml1 mr02 fab fa-markdown"></i>
+
+      <small class="text-muted">
+        Markdown supported
+      </small>
+    </div>
+
+    <div *ngIf="isPreview"
+         [innerHTML]="previewMarkdown | safeHtml: 'html'"
+         class="p1 markdown-editor relative describe markdown-content">
+    </div>
+
+    <label [class.none]="isPreview"
+           class="ph05 pv1 describe">
+      <textarea [formControl]="description"
+                class="w100pct p05 outline-none describe-input"
+                placeholder="### Task description..."></textarea>
+    </label>
+
+    <div class="flex p05 flex-d-col resources">
+
+      <small class="mb02 tt-capitalize text-muted">Linked Tasks</small>
+
+      <div class="of-auto flex flex-d-col linked-tasks">
+
+      </div>
+    </div>
+
+    <div class="flex justify-flex-end p05 submit">
+      <button (click)="submitForm()"
+              color="primary"
+              mat-flat-button>
+        Create Task
+      </button>
+    </div>
+  </div>
+
+  <app-task-meta [assignee]="assignee"
+                 [availableMembers]="projectMembers"
+                 [endDate]="endDate"
+                 [priority]="priority"
+                 [readonly]="false"
+                 [startDate]="startDate"
+                 class="flex flex-d-col p1 box-shadow bg-white task-properties">
+  </app-task-meta>
+</form>

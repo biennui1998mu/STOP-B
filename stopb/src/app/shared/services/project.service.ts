@@ -18,7 +18,7 @@ export class ProjectService {
   private _projects = new BehaviorSubject<Project[]>([]);
   public projects = this._projects.asObservable();
 
-  private _activeProject = new BehaviorSubject<Project>(null);
+  private _activeProject = new BehaviorSubject<Project<User>>(null);
   public activeProject = this._activeProject.asObservable();
 
   private _projectsLoading = new BehaviorSubject<boolean>(false);
@@ -52,7 +52,7 @@ export class ProjectService {
     return this._projectsValue;
   }
 
-  private _activeProjectValue: Project = null;
+  private _activeProjectValue: Project<User> = null;
 
   get activeProjectValue() {
     return this._activeProjectValue;
@@ -79,7 +79,7 @@ export class ProjectService {
         return result.data;
       }),
       catchError(error => {
-        console.log(error);
+        console.error(error);
         return of(null);
       }),
     );
@@ -99,7 +99,7 @@ export class ProjectService {
       }),
       map(res => res.data),
       catchError(error => {
-        console.log(error);
+        console.error(error);
         return of([] as Project[]);
       }),
     ).subscribe(projects => {
@@ -132,12 +132,13 @@ export class ProjectService {
         if (setActive) {
           this._activeProjectLoadingValue = false;
           this._activeProjectLoading.next(false);
+          this._activeProject.next(result.data);
+          this._activeProjectValue = result.data;
         }
-        console.log(result);
         return result.data;
       }),
       catchError(error => {
-        console.log(error);
+        console.error(error);
         return of(null);
       }),
     );
@@ -157,7 +158,7 @@ export class ProjectService {
         }
       }),
       catchError(error => {
-        console.log(error);
+        console.error(error);
         return [];
       }),
     );
@@ -173,7 +174,7 @@ export class ProjectService {
         return !!result.updatedProject;
       }),
       catchError(error => {
-        console.log(error);
+        console.error(error);
         return of(false);
       }),
     );
@@ -187,7 +188,7 @@ export class ProjectService {
         return !!result.message;
       }),
       catchError(error => {
-        console.log(error);
+        console.error(error);
         return of(false);
       }),
     );
