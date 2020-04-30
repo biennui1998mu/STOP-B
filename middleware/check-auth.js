@@ -9,8 +9,8 @@ module.exports = async (req, res, next) => {
     }
 
     try {
-        const token = req.headers.authorization.split(" ")[1];
-        const userToken = jwt.verify(token, process.env.JWT_KEY);
+        const currentToken = req.headers.authorization.split(" ")[1];
+        const userToken = jwt.verify(currentToken, process.env.JWT_KEY);
         // find in DB for sure
         const user = await User.findById(userToken._id)
             .select('+previousTokens') // get field which is hidden
@@ -22,7 +22,7 @@ module.exports = async (req, res, next) => {
         }
 
         const isTokenCached = user.previousTokens.some(
-            cached => cached === token
+            oldToken => oldToken === currentToken
         )
 
         if (!isTokenCached) {

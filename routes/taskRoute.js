@@ -56,7 +56,7 @@ router.post('/create', checkAuth, checkProject, (req, res) => {
         return res.status(301).json({
             data: null,
             message: `${field} is not valid`,
-            error
+            error: error
         });
     }
 
@@ -86,7 +86,7 @@ router.post('/create', checkAuth, checkProject, (req, res) => {
                 return res.status(301).json({
                     data: null,
                     message: `endDate cannot happen before startDate`,
-                })
+                });
             }
         }
     }
@@ -101,26 +101,23 @@ router.post('/create', checkAuth, checkProject, (req, res) => {
             // check if contain field _id
             const userAssignee = assignee.filter(user => !!user._id);
 
-            if (
-                !userAssignee ||
-                userAssignee.length !== assignee.length
-            ) {
+            if (userAssignee.length !== assignee.length) {
                 // if when filter, an user does not have a _id field
                 // then the array output will have different length
                 return responseError('assignee');
             }
 
             const getMemberProject = [
-                ...currentProject.moderator || [],
-                ...currentProject.member || [],
+                ...currentProject.moderator,
+                ...currentProject.member,
                 currentProject.manager,
             ];
             const isNotInvolved = [];
             userAssignee.forEach(user => {
-                console.log(user);
-                if (getMemberProject.find(member =>
+                const findNotInGetMember = getMemberProject.find(member =>
                     member._id.toString() !== user._id // member is still mongoose doc
-                )) {
+                );
+                if (findNotInGetMember) {
                     isNotInvolved.push(user);
                 }
             });
@@ -128,14 +125,13 @@ router.post('/create', checkAuth, checkProject, (req, res) => {
             if (isNotInvolved.length > 0) {
                 return res.status(301).json({
                     data: isNotInvolved,
-                    message: `Some member did not participate this project`,
+                    message: `Some members did not participate this project`,
                 });
             }
         }
     }
 
     const task = new Task({
-        _id: new mongoose.Types.ObjectId,
         title,
         description,
         priority,
@@ -144,7 +140,7 @@ router.post('/create', checkAuth, checkProject, (req, res) => {
         issuer,
         status: 0, // default open status
         project: currentProject._id,
-        assignee: assignee.map(user => user._id),
+        assignee: assignee ? assignee.map(user => user._id) : [],
     });
 
     task.save()
