@@ -39,7 +39,7 @@ router.post('/all', checkAuth, checkProject, checkTask, (req, res) => {
  */
 router.post('/create', checkAuth, checkProject, checkTask, (req, res) => {
     const taskData = req.taskData;
-    const userId = req.userData.userId;
+    const userId = req.userData._id.toString();
     const {content} = req.body;
 
     if (!content || typeof content !== 'string' || content.length === 0) {
@@ -74,7 +74,7 @@ router.post('/create', checkAuth, checkProject, checkTask, (req, res) => {
  */
 router.post('/update', checkAuth, checkProject, checkTask, async (req, res) => {
     const taskData = req.taskData;
-    const userId = req.userData.userId;
+    const userId = req.userData._id.toString();
     const {id, content} = req.body;
 
     if (!content || typeof content !== 'string' || content.length === 0) {

@@ -44,7 +44,7 @@ export class ChatLayoutComponent implements AfterViewInit, OnDestroy {
   }
 
   get userId() {
-    return this.tokenService.user?.userId;
+    return this.tokenService.user?._id;
   }
 
   closeChat() {

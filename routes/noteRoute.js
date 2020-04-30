@@ -7,7 +7,7 @@ const Note = require('../database/models/note');
 
 // Take all notes from list
 router.post('/', checkAuth, (req, res) => {
-    Note.find({UserId : req.userData.userId})
+    Note.find({UserId : req.userData._id.toString()})
         .exec()
         .then(docs => {
             const response = {
@@ -89,7 +89,7 @@ router.post('/search', (req, res) => {
 router.post('/create', checkAuth, (req, res) => {
     const note = new Note({
         _id: new mongoose.Types.ObjectId(),
-        UserId: req.userData.userId,
+        UserId: req.userData._id.toString(),
         Title: req.body.Title,
         Description: req.body.Description,
         Priority: req.body.Priority,

@@ -18,7 +18,7 @@ export class TaskCommentComponent implements OnInit {
   @Input()
   task: Task<User, Project>;
 
-  userId = this.tokenService.user?.userId;
+  userId = this.tokenService.user?._id;
 
   constructor(
     private tokenService: TokenService,

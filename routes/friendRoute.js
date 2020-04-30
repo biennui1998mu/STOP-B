@@ -8,7 +8,7 @@ const friendRequest = require('../database/models/friendRequest');
 
 // Get all friend from list
 router.post('/list', checkAuth, async (req, res) => {
-    const userId = req.userData.userId;
+    const userId = req.userData._id.toString();
 
     if (!userId) {
         // ... xu ly validate
@@ -66,7 +66,7 @@ router.post('/list', checkAuth, async (req, res) => {
 router.post('/add', checkAuth, (req, res) => {
     const sendRequest = new friendRequest({
         _id: new mongoose.Types.ObjectId(),
-        requester: req.userData.userId,
+        requester: req.userData._id.toString(),
         recipient: req.body.recipient,
         status: 0
     });
@@ -90,7 +90,7 @@ router.post('/add', checkAuth, (req, res) => {
 router.post('/request', checkAuth, async (req, res) => {
     try {
         const requests = await friendRequest.find({
-            recipient: req.userData.userId,
+            recipient: req.userData._id.toString(),
             status: 0
         }).populate([`requester`, `recipient`])
             .exec();

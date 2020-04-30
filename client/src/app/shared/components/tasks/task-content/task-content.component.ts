@@ -16,7 +16,7 @@ export class TaskContentComponent implements OnInit {
   @Input()
   task: Task<User>;
 
-  userId = this.tokenService.user.userId;
+  userId = this.tokenService.user._id;
 
   constructor(
     private tokenService: TokenService,

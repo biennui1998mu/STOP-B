@@ -16,11 +16,10 @@ export class AuthenticateGuard implements CanActivateChild {
   canActivateChild(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot) {
-    if (this.authorizeService.isAuthorize) {
+    if (this.authorizeService.isHavingToken) {
       return true;
     }
     this.router.navigateByUrl('/login');
     return false;
   }
-
 }

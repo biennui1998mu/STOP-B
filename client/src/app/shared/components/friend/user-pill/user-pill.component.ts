@@ -50,7 +50,7 @@ export class UserPillComponent {
     this.friendService.sendFriendRequest(
       {
         recipient: this.friend._id,
-        requester: this.user.userId,
+        requester: this.user._id,
         status: 0, // new request
       },
     )
@@ -84,7 +84,7 @@ export class UserPillComponent {
       if (this.friend.friendRequest.status === 2) {
         // neu truoc do unfriend nhau thi status === 2
         // swap lai requester/recipient va statu = 0 (request lai ng kia lam friend)
-        updateInfo.requester = this.user.userId;
+        updateInfo.requester = this.user._id;
         updateInfo.recipient = this.friend._id;
         updateInfo.status = 0;
       }

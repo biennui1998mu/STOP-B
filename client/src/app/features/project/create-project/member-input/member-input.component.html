@@ -8,10 +8,10 @@
                  aria-label="Fruit selection">
     <mat-chip (removed)="removeMember(member)"
               *ngFor="let member of listMember"
-              [removable]="member._id !== currentUser.userId"
+              [removable]="member._id !== currentUser._id"
               color="accent">
       {{member.name}} <small class="text-muted"> - {{member.username}}</small>
-      <mat-icon *ngIf="member._id !== currentUser.userId"
+      <mat-icon *ngIf="member._id !== currentUser._id"
                 matChipRemove>
         cancel
       </mat-icon>

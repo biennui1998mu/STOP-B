@@ -51,7 +51,7 @@ router.post('/create', checkAuth, checkProject, (req, res) => {
         assignee,
     } = req.body;
     // person who create the issue
-    const issuer = currentUser.userId;
+    const issuer = currentUser._id.toString();
 
     /**
      * shorthand response with fixed message.

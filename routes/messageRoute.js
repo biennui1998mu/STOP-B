@@ -44,7 +44,7 @@ router.post('/save', checkAuth, (req, res) => {
         _id: mongoose.Types.ObjectId(),
         roomId: req.body.roomId,
         message: req.body.message,
-        from: req.userData.userId,
+        from: req.userData._id.toString(),
     });
     message.save()
         .then(result => {
@@ -118,12 +118,12 @@ router.post('/room/get', checkAuth, async (req, res) => {
 
     const listIds = findUsers.map(function (model) {
         return model.toObject()._id.toString();
-    }).filter(id => id !== req.userData.userId);
+    }).filter(id => id !== req.userData._id.toString());
 
     try {
         room = await Room.findOne({
             listUser: {
-                $all: [...listIds, req.userData.userId],
+                $all: [...listIds, req.userData._id.toString()],
                 $size: listIds.length + 1 // +1 as yourself
             }
         }).populate('listUser')
@@ -139,7 +139,7 @@ router.post('/room/get', checkAuth, async (req, res) => {
         // query tim k thay ket qua
         room = new Room({
             _id: mongoose.Types.ObjectId(),
-            listUser: [...listIds, req.userData.userId]
+            listUser: [...listIds, req.userData._id.toString()]
         });
         // tao record moi
         await room.save();

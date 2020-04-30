@@ -7,7 +7,11 @@ import { AuthenticateGuard } from './shared/guard/authenticate.guard';
 
 const routes: Routes = [
   {
-    path: '', component: LayoutsComponent, canActivateChild: [AuthenticateGuard], children: [
+    path: '',
+    component: LayoutsComponent,
+    canLoad: [AuthenticateGuard],
+    canActivateChild: [AuthenticateGuard],
+    children: [
       { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
       { path: 'dashboard', component: HomepageComponent },
       {

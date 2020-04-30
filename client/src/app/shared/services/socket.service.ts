@@ -66,7 +66,7 @@ export class SocketService {
   public getRoomChat(friendsId: string[]): Observable<Room<User>> {
     return this.http.post<APIResponse<Room>>(
       `${this.url}/room/get`,
-      { listUser: [...friendsId, this.tokenService.user.userId] },
+      { listUser: [...friendsId, this.tokenService.user._id] },
       { headers: this.header },
     ).pipe(
       map(result => {

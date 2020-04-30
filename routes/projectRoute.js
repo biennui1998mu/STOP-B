@@ -9,7 +9,7 @@ const Task = require('../database/models/task');
 
 // Take all projects from list
 router.post('/', checkAuth, (req, res) => {
-    Project.find({manager: req.userData.userId})
+    Project.find({manager: req.userData._id.toString()})
         .exec()
         .then(docs => {
             const response = {
@@ -30,7 +30,7 @@ router.post('/', checkAuth, (req, res) => {
 // Take project from db by ID
 router.post('/view', checkAuth, async (req, res) => {
     const projectId = req.body._id;
-    const userId = req.userData.userId;
+    const userId = req.userData._id.toString();
     if (!projectId) {
         // ... xu ly validate
         return res.status(301).json({
@@ -114,7 +114,7 @@ router.post('/search', (req, res) => {
 
 // Create new project
 router.post('/create', checkAuth, (req, res) => {
-    const userId = req.userData.userId;
+    const userId = req.userData._id.toString();
 
     const project = new Project({
         title: req.body.title,
@@ -198,7 +198,7 @@ router.post('/delete/:projectId', (req, res) => {
 // query 3 projects, high priority
 router.post('/important', checkAuth, (req, res) => {
     Project.find({
-        manager: req.userData.userId,
+        manager: req.userData._id.toString(),
         priority: {
             $lte: 2
         },

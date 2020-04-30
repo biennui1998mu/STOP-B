@@ -20,7 +20,7 @@ export class TaskDetailComponent implements OnInit {
   task: Task<User, Project>;
   project: Project<User> = null;
   isLoading: boolean = false;
-  userId = this.tokenService.user.userId;
+  userId = this.tokenService.user._id;
 
   comments = this.commentService.comments;
 

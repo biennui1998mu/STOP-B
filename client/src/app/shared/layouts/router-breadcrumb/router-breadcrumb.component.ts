@@ -42,7 +42,7 @@ export class RouterBreadcrumbComponent implements OnInit {
   }
 
   getUserData() {
-    return this.userService.getUserData()
+    return this.userService.viewProfile()
       .subscribe((result: User) => {
         if (result) {
           this.user = result;

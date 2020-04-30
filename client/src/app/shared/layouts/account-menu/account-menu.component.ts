@@ -23,7 +23,7 @@ export class AccountMenuComponent implements OnInit {
   }
 
   logout() {
-    return this.userService.changeStatusUser(this.tokenService.user.userId, 2).subscribe(result => {
+    return this.userService.changeStatusUser(this.tokenService.user._id, 2).subscribe(result => {
       if (result) {
         // event.preventDefault();
         this.authorizeService.logout();

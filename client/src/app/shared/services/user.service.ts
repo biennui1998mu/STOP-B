@@ -5,6 +5,7 @@ import { User } from "../interface/User";
 import { TokenService } from "./token.service";
 import { Observable, of } from "rxjs";
 import { Note } from "../interface/Note";
+import { APIResponse } from '../interface/API-Response';
 
 @Injectable({
   providedIn: 'root',
@@ -19,34 +20,24 @@ export class UserService {
   ) {
   }
 
-  private _user: User = null;
-
-  get user() {
-    return this._user;
-  }
-
   get header() {
     return new HttpHeaders({
       "Authorization": "Bearer " + this.tokenService.getToken(),
     });
   }
 
-  getUserData() {
-    return this.http.post<User>(
+  viewProfile(): Observable<User> {
+    return this.http.post<APIResponse<User>>(
       `${this.url}/view`,
       {},
       { headers: this.header },
     ).pipe(
       map(result => {
-        if (result) {
-          return result;
-        } else {
-          return {};
-        }
+        return result.data;
       }),
       catchError(error => {
         console.log(error);
-        return error;
+        return of(null as User);
       }),
     );
   }

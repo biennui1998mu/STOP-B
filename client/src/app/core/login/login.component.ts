@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
 
   getUserId() {
     const decoded = this.tokenService.decodeJwt();
-    this.userId = decoded.userId;
+    this.userId = decoded._id;
   }
 
   onSignIn() {

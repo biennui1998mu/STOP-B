@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
     if (req.userData) {
         // If has userData (check-auth middleware) then
         // skip query DB for faster
-        userId = req.userData.userId;
+        userId = req.userData._id.toString();
     } else {
         try {
             const token = req.headers.authorization.split(" ")[1];

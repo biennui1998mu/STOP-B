@@ -8,10 +8,10 @@
                  aria-label="Manager selection">
     <mat-chip (removed)="removeManager(manager)"
               *ngFor="let manager of listManager"
-              [removable]="manager._id !== currentUser.userId"
+              [removable]="manager._id !== currentUser._id"
               color="primary">
       {{manager.name}} <small class="text-muted"> - {{manager.username}}</small>
-      <mat-icon *ngIf="manager._id !== currentUser.userId"
+      <mat-icon *ngIf="manager._id !== currentUser._id"
                 matChipRemove>
         cancel
       </mat-icon>

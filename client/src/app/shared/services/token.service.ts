@@ -32,13 +32,14 @@ export class TokenService {
   }
 
   decodeJwt(token?): {
-    username: string,
-    userId: string,
-    name: string,
-    iat: number,
-    exp: number,
+    _id: string;
+    username: string;
+    name: string;
+    avatar: string;
+    iat: number;
+    exp: number;
   } {
-    const tokenToDecode = token || localStorage.getItem('token');
+    const tokenToDecode = token || this.getToken();
     return jwtDecode(tokenToDecode);
   }
 }

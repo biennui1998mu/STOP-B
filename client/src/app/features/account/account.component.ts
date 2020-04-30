@@ -59,7 +59,7 @@ export class AccountComponent implements OnInit {
   }
 
   getUser() {
-    return this.userService.getUserData().subscribe((data: User) => {
+    return this.userService.viewProfile().subscribe((data: User) => {
       this.username.setValue(data.username);
       this.name.setValue(data.name);
       this.dob.setValue(data.dob);
@@ -69,7 +69,7 @@ export class AccountComponent implements OnInit {
 
   updateUser() {
     return this.userService.updateUser(
-      this.tokenService.user.userId,
+      this.tokenService.user._id,
       this.updateUserForm.value,
     ).subscribe(updated => {
       console.log(updated);

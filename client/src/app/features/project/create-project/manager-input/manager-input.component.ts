@@ -101,9 +101,9 @@ export class ManagerInputComponent implements OnInit {
           users.forEach(found => {
             const findExisted = this.listManager.find(
               manager => manager._id == found._id ||
-                found._id === this.currentUser.userId,
+                found._id === this.currentUser._id,
             );
-            if (!findExisted && found._id !== this.currentUser.userId) {
+            if (!findExisted && found._id !== this.currentUser._id) {
               returnAvailable.push(found);
             }
           });

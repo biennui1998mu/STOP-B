@@ -105,7 +105,7 @@ io.use(async function (socket, next) {
 }).on('connection', async (socket) => {
     const decoded = socket.decoded;
     const username = decoded.username;
-    const userId = decoded.userId;
+    const userId = decoded._id;
     // set user online
     await User.updateOne({username: username}, {$set: {status: 1}}).exec();
 

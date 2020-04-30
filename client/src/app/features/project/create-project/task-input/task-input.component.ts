@@ -100,7 +100,7 @@ export class TaskInputComponent implements OnInit {
             );
             if (
               !findExisted && !findManager &&
-              found._id !== this.currentUser.userId
+              found._id !== this.currentUser._id
             ) {
               returnAvailable.push(found);
             }

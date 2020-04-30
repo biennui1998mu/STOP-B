@@ -75,7 +75,7 @@ export class CreateProjectComponent implements OnInit {
   }
 
   getUserData() {
-    this.manager.setValue(this.tokenService.user.userId);
+    this.manager.setValue(this.tokenService.user._id);
   }
 
   createProject() {

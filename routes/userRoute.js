@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const multer = require('multer');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const checkAuth = require('../middleware/check-auth');
 const friendRequest = require('../database/models/friendRequest');
 const User = require('../database/models/user');
+const moment = require('moment');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -34,6 +34,225 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
+/**
+ * sign-in / login the user based on the username/password
+ */
+router.post('/login', async (req, res) => {
+    const {username, password} = req.body;
+    let user = null;
+    try {
+        user = await User.findOne(
+            {username: username}
+        )
+            // chi dinh print field bi hidden by default trong schema.
+            .select('+password +previousToken')
+            .exec();
+    } catch (e) {
+        return res.status(500).json({
+            message: 'Unable to query the user',
+            data: null,
+            error: e,
+        });
+    }
+
+    if (!user) {
+        return res.status(401).json({
+            message: 'Username not found',
+            data: null,
+        });
+    }
+    let validatePassword = false;
+    try {
+        validatePassword = await bcrypt.compare(password, user.password);
+    } catch (e) {
+        return res.status(500).json({
+            message: 'Unable to check the password',
+            data: null,
+            error: e,
+        });
+    }
+
+    if (!validatePassword) {
+        return res.status(401).json({
+            message: 'Password does not match.',
+            data: null,
+        });
+    }
+
+    /**
+     * retrieve the list of stored token for refresh.
+     * @type {string[]}
+     */
+    const currentTokens = user.previousTokens || [];
+    /**
+     * @type {string}
+     */
+    let token;
+    try {
+        token = jwt.sign({
+                _id: user._id,
+                name: user.name,
+                username: user.username,
+                avatar: user.avatar,
+            },
+            process.env.JWT_KEY,
+            {
+                expiresIn: 604800
+            });
+    } catch (e) {
+        return res.status(500).json({
+            message: 'Unable to sign token',
+            data: null,
+            error: e
+        });
+    }
+    /**
+     * Push the new token to the tracking token list.
+     */
+    currentTokens.push(token);
+    user.previousTokens = currentTokens;
+    user.status = 1;                // set online
+    user.lastOnline = Date.now();   // set the last time online
+    await user.save();              // save the new information
+
+    // Because user is a mongoose.document
+    // => which does not provide some method like normal object.
+    const userObject = user.toObject();
+    delete userObject.password;         // remove field `password` from object
+    delete userObject.__v;              // remove field `__v` from object
+    delete userObject.previousTokens;   // remove field `previousTokens` from object
+
+    return res.status(200).json({
+        message: 'Auth successful',
+        data: {
+            token: token,
+            user: userObject,
+        },
+    });
+});
+
+/**
+ * Sign-up / register a new user.
+ */
+router.post('/register', upload.single('avatar'), async (req, res) => {
+    const {name, username, password, dob} = req.body;
+
+    if (!name || !username || !password) {
+        return res.status(301).json({
+            message: 'Missing important data to register the user!'
+        });
+    }
+
+    if (!moment(dob).isValid()) {
+        return res.status(301).json({
+            message: 'Day of birth is in invalid format'
+        });
+    }
+
+    try {
+        const matchedUser = await User.findOne({
+            username: username
+        });
+
+        if (matchedUser) {
+            return res.status(409).json({
+                message: 'Username exist'
+            });
+        }
+    } catch (e) {
+        return res.status(500).json({
+            message: 'Database failure',
+            data: null,
+            error: e,
+        })
+    }
+
+    let hashedPassword = null;
+
+    try {
+        hashedPassword = await bcrypt.hash(password, 10);
+    } catch (e) {
+        return res.status(500).json({
+            message: 'Hashing failure',
+            data: null,
+            error: e,
+        });
+    }
+
+    const user = new User({
+        username: username,
+        password: hashedPassword,
+        name: name,
+        dob: dob,
+    });
+
+    try {
+        await user.save();
+    } catch (e) {
+        return res.status(500).json({
+            message: 'Unable to create the user',
+            error: e,
+        });
+    }
+
+    return res.status(200).json({
+        message: 'Create account successfully.',
+        data: user._id,
+    });
+});
+
+/**
+ * sign-out / Logout the user => remove token from list previousTokens
+ */
+router.post('/logout', checkAuth, async (req, res) => {
+    const token = req.headers.authorization.split(" ")[1];
+    /**
+     * @type string[]
+     */
+    const currentTokens = req.userData.previousTokens;
+
+    try {
+        // find again in DB...
+        const user = await User.findById(req.userData._id).exec();
+        user.previousTokens = currentTokens.filter(
+            cached => cached !== token
+        );
+        await user.save();
+        return res.status(200).json({
+            message: 'Logout successfully',
+            data: true,
+        });
+    } catch (e) {
+        return res.status(500).json({
+            message: 'unable to save the new state',
+            data: false,
+            error: e,
+        });
+    }
+})
+
+/**
+ * get our own information
+ */
+router.post('/view', checkAuth, (req, res) => {
+    const id = req.userData._id.toString();
+    User.findById(id)
+        .exec()
+        .then(user => {
+            return res.status(200).json({
+                message: 'Retrieved user information',
+                data: user
+            })
+        })
+        .catch(err => {
+            console.error(err);
+            return res.status(500).json({
+                message: 'Failed to retrieve user info',
+                error: err
+            })
+        })
+});
+
 // take all user from list user
 router.post('/', (req, res, next) => {
     User.find({})
@@ -50,7 +269,7 @@ router.post('/', (req, res, next) => {
                             name: user.name,
                             dob: user.dob,
                             avatar: user.avatar,
-                            Status: user.Status
+                            status: user.status
                         }
                     })
                 };
@@ -67,32 +286,6 @@ router.post('/', (req, res, next) => {
             res.status(500).json({
                 message: 'No user found',
                 error: err,
-            })
-        })
-});
-
-// take your info
-router.post('/view', checkAuth, (req, res, next) => {
-    const id = req.userData.userId;
-
-    if (!id) {
-        // ... xu ly validate
-    }
-    User.findById(id)
-        .exec()
-        .then(user => {
-            if (user) {
-                return res.status(200).json(user)
-            } else {
-                return res.status(404).json({
-                    message: 'No user found by id'
-                })
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            return res.status(500).json({
-                error: err
             })
         })
 });
@@ -137,7 +330,7 @@ router.post('/search', checkAuth, async (req, res) => {
                     ]
                 },
                 {
-                    _id: {$ne: req.userData.userId} // not to get yourself :D
+                    _id: {$ne: req.userData._id.toString()} // not to get yourself :D
                 }
             ]
         }).limit(10).exec();
@@ -154,11 +347,11 @@ router.post('/search', checkAuth, async (req, res) => {
         const getFriendRequest = await friendRequest.find({
             $or: [
                 {
-                    requester: req.userData.userId,
+                    requester: req.userData._id.toString(),
                     recipient: {$in: parsed.map(user => user._id)}
                 },
                 {
-                    recipient: req.userData.userId,
+                    recipient: req.userData._id.toString(),
                     requester: {$in: parsed.map(user => user._id)}
                 },
             ]
@@ -184,108 +377,6 @@ router.post('/search', checkAuth, async (req, res) => {
     } catch (e) {
         console.log(e);
         return res.status(500).json([]);
-    }
-});
-
-// signup
-router.post('/signUp', upload.single('avatar'), (req, res, next) => {
-    User.find({username: req.body.username})
-        .exec()
-        .then(user => {
-            if (user.length >= 1) {
-                return res.status(409).json({
-                    message: 'username exist'
-                });
-            } else {
-                const url = `${process.env.PROTOCOL}://${process.env.HOST_NAME}:${process.env.PORT}/`;
-
-                bcrypt.hash(req.body.password, 10, (err, hash) => {
-                    if (err) {
-                        return res.status(500).json({
-                            error: err
-                        })
-                    } else {
-                        const user = new User({
-                            _id: new mongoose.Types.ObjectId(),
-                            username: req.body.username,
-                            password: hash,
-                            name: req.body.name,
-                            dob: req.body.dob,
-                            Status: 2,
-                            avatar: url + "uploads/sample.png"
-                        });
-                        user.save()
-                            .then(result => {
-                                res.status(201).json({
-                                    message: 'Created account successfully',
-                                    createdUser: {
-                                        _id: result._id,
-                                        username: result.username,
-                                        password: result.password,
-                                        name: result.name,
-                                        dob: result.dob,
-                                        Status: result.Status,
-                                        avatar: result.avatar
-                                    }
-                                })
-                            })
-                            .catch(err => {
-                                res.status(500).json({
-                                    error: err
-                                })
-                            })
-                    }
-                });
-            }
-        })
-});
-
-// signin
-router.post('/signIn', async (req, res, next) => {
-    const {username, password} = req.body;
-
-    const user = await User.findOne({username: username})
-        // chi dinh print field bi hidden by default trong schema.
-        .select('+password')
-        .exec();
-
-    if (!user) {
-        return res.status(401).json({
-            message: 'Auth fail 1'
-        });
-    }
-
-    const validatePassword = await bcrypt.compare(password, user.password);
-
-    if (validatePassword) {
-        const toResponse = user.toObject();
-        delete toResponse.password;
-        delete toResponse.__v;
-        // let userResponse = delete toResponse.password;
-        // console.dir(toResponse);
-        // console.dir(userResponse);
-
-        const token = jwt.sign({
-                username: user.username,
-                userId: user._id,
-                name: user.name
-            },
-            process.env.JWT_KEY,
-            {
-                expiresIn: 604800
-            });
-
-        await User.updateOne({username: username}, {$set: {status: 1}}).exec();
-
-        return res.status(200).json({
-            message: 'Auth successful',
-            token: token,
-            user: toResponse
-        });
-    } else {
-        res.status(401).json({
-            message: 'Auth fail 3'
-        });
     }
 });
 

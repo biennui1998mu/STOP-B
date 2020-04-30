@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { catchError, map } from "rxjs/operators";
-import { of } from "rxjs";
+import { Observable, of } from "rxjs";
 import { TokenService } from "./token.service";
 import { Router } from "@angular/router";
 import { DataStateService } from "./state/data-state.service";
 import { User } from "../interface/User";
 import * as io from 'socket.io-client';
+import { APIResponse } from '../interface/API-Response';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthorizeService {
 
-  private url = "http://localhost:3000";
+  private baseUrl = "http://localhost:3000";
+  private url = `${this.baseUrl}/users`;
   private socket;
 
   constructor(
@@ -22,7 +24,13 @@ export class AuthorizeService {
     private dataStateService: DataStateService,
     private router: Router,
   ) {
-    this.socket = io(this.url);
+    this.socket = io(this.baseUrl);
+  }
+
+  private _user: User = null;
+
+  get user() {
+    return this._user;
   }
 
   get header() {
@@ -31,17 +39,16 @@ export class AuthorizeService {
     });
   }
 
-  get isAuthorize() {
-    // return !!this.tokenService.getToken();
+  get isHavingToken() {
     // "" => false
     // null/undefined => false
     // "..." => true
-    const token = this.tokenService.getToken();
-    if (!token) return false;
+    const tokenString = this.tokenService.getToken();
+    if (!tokenString) return false;
 
     try {
       // TODO: API check token tren server
-      this.tokenService.decodeJwt(token);
+      this.tokenService.decodeJwt(tokenString);
       return true;
     } catch (e) {
       console.log(e);
@@ -53,17 +60,16 @@ export class AuthorizeService {
     username: string,
     password: string
   }) {
-    return this.http.post<{
-      token: string;
-      user?: User
-      [key: string]: any
-    }>(`${this.url}/users/signin`, credentials)
+    return this.http.post<APIResponse<{
+      token: string,
+      user: User
+    }>>(`${this.url}/login`, credentials)
       .pipe(
         map(result => {
-          if (result && result.token && result.user) {
-            this.tokenService.setToken(result.token);
+          if (result.data && result.data.token && result.data.user) {
+            this.tokenService.setToken(result.data.token);
             // save user data globally
-            this.dataStateService.saveUserState(result.user);
+            this._user = result.data.user;
             // share user status
             return true;
           } else {
@@ -78,9 +84,38 @@ export class AuthorizeService {
       );
   }
 
+  /**
+   * to remove both token on backend-frontend
+   */
   logout() {
+    this.http.post<APIResponse<boolean>>(
+      `${this.url}/logout`,
+      {},
+      { headers: this.header },
+    ).subscribe(result => {
+      console.log(result);
+    });
     this.tokenService.clearToken();
     this.router.navigateByUrl('/login');
+  }
+
+  /**
+   * View profile of the current user
+   */
+  viewProfile(): Observable<User> {
+    return this.http.post<APIResponse<User>>(
+      `${this.url}/view`,
+      {},
+      { headers: this.header },
+    ).pipe(
+      map(result => {
+        return result.data;
+      }),
+      catchError(error => {
+        console.log(error);
+        return of(null as User);
+      }),
+    );
   }
 
   signUp(credentials: {
@@ -93,7 +128,7 @@ export class AuthorizeService {
       message: string,
       createdUser?: User,
       error: any
-    }>(`${this.url}/users/signup`, credentials)
+    }>(`${this.url}/register`, credentials)
       .pipe(
         map(status => {
           if (status.createdUser) {

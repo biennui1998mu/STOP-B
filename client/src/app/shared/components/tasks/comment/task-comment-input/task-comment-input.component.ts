@@ -21,7 +21,7 @@ export class TaskCommentInputComponent implements OnInit {
   @ViewChild('textAreaElement')
   textAreaElement: ElementRef<HTMLTextAreaElement>;
 
-  userId = this.tokenService.user?.userId;
+  userId = this.tokenService.user?._id;
 
   formInput: FormGroup;
 
