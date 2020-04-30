@@ -1,0 +1,33 @@
+<div class="flex flex-d-col avatar-section">
+  <img [alt]="task?.issuer?.name"
+       [src]="task?.issuer?.avatar"
+       class="w100pct h100pct obj-fit-cover obj-pos-center mat-elevation-z1 br50 of-hidden">
+
+  <div class="mt1 ph02 pv05 text-muted pill-identify is-author">
+    Owner
+  </div>
+</div>
+
+<div class="flex flex-d-col bg-white content-section">
+  <div class="grid meta-block meta-discussion">
+    <div class="fw-bold text-info username">
+      <span [matTooltip]="task?.issuer?.username">
+        {{task?.issuer?.name}}
+      </span>
+    </div>
+    <small [matTooltip]="(!task?.updatedAt ? task?.createdAt : task?.updatedAt) | date: 'dd/MM/yyyy - hh:mm:ss'"
+           class="text-muted time">
+      {{({createdAt: task?.createdAt, updatedAt: task?.updatedAt}) | momentRelativePipe}}
+    </small>
+    <div *ngIf="userId === task?.issuer?._id"
+         class="text-muted flex flex-center option">
+      <mat-icon>settings</mat-icon>
+    </div>
+  </div>
+
+  <div class="ph1 pt05 pb1 content-block content-discussion">
+    <div [innerHTML]="task?.description | markdown | safeHtml: 'html'"
+         class="relative markdown-content">
+    </div>
+  </div>
+</div>

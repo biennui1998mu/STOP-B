@@ -30,6 +30,7 @@ const noteRoutes = require('./routes/noteRoute');
 const projectRoutes = require('./routes/projectRoute');
 const userRoutes = require('./routes/userRoute');
 const taskRoutes = require('./routes/taskRoute');
+const commentRoutes = require('./routes/commentIssueRoute');
 const friendRoutes = require('./routes/friendRoute');
 const messageRoutes = require('./routes/messageRoute');
 
@@ -55,6 +56,7 @@ app.use('/notes', noteRoutes);
 app.use('/projects', projectRoutes);
 app.use('/users', userRoutes);
 app.use('/tasks', taskRoutes);
+app.use('/comments', commentRoutes);
 app.use('/friends', friendRoutes);
 app.use('/messages', messageRoutes);
 

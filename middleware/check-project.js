@@ -1,34 +1,43 @@
-// TODO: middleware check project
 const jwt = require('jsonwebtoken');
 const Project = require('../database/models/project');
 
 module.exports = async (req, res, next) => {
-    const {project} = req.body;
+    /**
+     * accept both object `project` and `project_id`
+     * Prioritize `project_id`
+     */
+    const {project, project_id} = req.body;
     let userId = null;
 
     let isError = null;
-    try {
-        const token = req.headers.authorization.split(" ")[1];
-        const userData = jwt.verify(token, process.env.JWT_KEY);
-        userId = userData.userId;
-        if (!userId) {
-            isError = new Error('Missing user identification!');
+    if (req.userData) {
+        // If has userData (check-auth middleware) then
+        // skip query DB for faster
+        userId = req.userData.userId;
+    } else {
+        try {
+            const token = req.headers.authorization.split(" ")[1];
+            const userData = jwt.verify(token, process.env.JWT_KEY);
+            userId = userData.userId;
+            if (!userId) {
+                isError = new Error('Missing user identification!');
+                console.error(isError);
+            }
+        } catch (e) {
+            isError = e;
             console.error(isError);
         }
-    } catch (e) {
-        isError = e;
-        console.error(isError);
+
+        if (isError) {
+            return res.status(401).json({
+                message: 'auth failed',
+                data: null,
+                error: isError,
+            });
+        }
     }
 
-    if (isError) {
-        return res.status(401).json({
-            message: 'auth failed',
-            data: null,
-            error: isError,
-        });
-    }
-
-    if (!project || !project._id) {
+    if (!project_id && (!project || !project._id)) {
         return res.status(301).json({
             message: 'Missing project information',
             data: null,
@@ -36,7 +45,7 @@ module.exports = async (req, res, next) => {
     }
 
     const dataProject = await Project.findOne({
-        _id: project._id,
+        _id: project_id ? project_id : project._id,
         $or: [
             {manager: userId},
             {moderator: {$in: [userId]}},

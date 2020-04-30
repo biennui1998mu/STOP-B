@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm-run-all --parallel dev start-client",
     "start-server": "node -r dotenv index",
-    "start-client": "cd stopb && ng s -o",
+    "start-client": "cd client && ng s -o",
     "dev": "nodemon --watch ."
   },
   "repository": {

@@ -8,6 +8,9 @@ const checkProject = require('../middleware/check-project');
 const Task = require('../database/models/task');
 const Project = require('../database/models/project');
 
+/**
+ * Get the latest task created in the project
+ */
 router.post('/latest', checkAuth, checkProject, async (req, res) => {
     const currentProject = req.projectData;
 
@@ -32,7 +35,9 @@ router.post('/latest', checkAuth, checkProject, async (req, res) => {
     })
 })
 
-// Create task
+/**
+ * create a new task and return the new task back to the client.
+ */
 router.post('/create', checkAuth, checkProject, (req, res) => {
     const currentUser = req.userData;
     const currentProject = req.projectData;
@@ -165,7 +170,10 @@ router.post('/create', checkAuth, checkProject, (req, res) => {
         })
 });
 
-// Take all tasks from list
+/**
+ * Get all the task in the project
+ * TODO might need to paginate
+ */
 router.post('/', checkAuth, checkProject, (req, res) => {
     const currentProject = req.projectData;
 
@@ -198,31 +206,44 @@ router.post('/', checkAuth, checkProject, (req, res) => {
     })
 });
 
-// Take task from db by ID
+/**
+ * view the task
+ */
 router.post('/view', checkAuth, checkProject, (req, res) => {
     const currentProject = req.projectData;
-    const id = req.body.taskId;
-    if (!id) {
-        // ... xu ly validate
-    }
-    Task.findById(id)
-        .exec()
-        .then(task => {
-            if (task) {
-                return res.status(200).json({
-                    task: task
-                });
-            }
-            return res.status(404).json({
-                message: 'No valid id was found',
-            })
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            })
+    const {indicator} = req.body;
+
+    if (!indicator) {
+        return res.status(301).json({
+            message: 'Missing criteria to find the task.',
+            data: null,
         });
+    }
+
+    Task.findOne({
+        indicator: indicator,
+        project: currentProject._id,
+    }).populate(
+        'issuer project assignee'
+    ).exec().then(task => {
+        if (task) {
+            return res.status(200).json({
+                message: 'Queried the task successfully',
+                data: task,
+            });
+        }
+        return res.status(404).json({
+            message: 'No valid id was found',
+            data: null,
+        })
+    }).catch(err => {
+        console.error(err);
+        res.status(500).json({
+            message: 'Error occurred while querying.',
+            data: null,
+            error: err,
+        })
+    });
 });
 
 // Update task by ID

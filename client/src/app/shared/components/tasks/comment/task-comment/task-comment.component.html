@@ -1,0 +1,38 @@
+<div class="flex flex-d-col avatar-section">
+  <img [alt]="comment.createdBy.name"
+       [src]="comment.createdBy.avatar"
+       class="w100pct h100pct obj-fit-cover obj-pos-center mat-elevation-z1 br50 of-hidden">
+
+  <div *ngIf="userId === comment.createdBy._id"
+       class="mt1 ph02 pv05 text-muted ta-center pill-identify is-author">
+    Me
+  </div>
+
+  <div *ngIf="task.issuer._id === comment.createdBy._id"
+       class="mt1 ph02 pv05 text-muted ta-center pill-identify is-author">
+    Owner
+  </div>
+</div>
+
+<div class="flex flex-d-col bg-white content-section">
+  <div class="grid meta-block meta-discussion">
+    <div class="fw-bold text-info username">
+      <span [matTooltip]="comment.createdBy.username">
+        {{comment.createdBy.name}}
+      </span>
+    </div>
+    <small class="text-muted time">
+      {{{createdAt: comment.createdAt, updatedAt: comment.updatedAt} | momentRelativePipe}}
+    </small>
+    <div *ngIf="userId === comment.createdBy._id"
+         class="text-muted flex flex-center option">
+      <mat-icon>settings</mat-icon>
+    </div>
+  </div>
+
+  <div class="p1 grid content-block content-discussion">
+    <div [innerHTML]="comment.content | markdown | safeHtml:'html'"
+         class="relative markdown-content">
+    </div>
+  </div>
+</div>

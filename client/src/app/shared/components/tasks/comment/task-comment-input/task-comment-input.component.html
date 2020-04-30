@@ -1,0 +1,51 @@
+<div class="flex flex-d-col avatar-section">
+  <img alt=""
+       class="w100pct h100pct obj-fit-cover obj-pos-center mat-elevation-z1 br50 of-hidden"
+       src="http://localhost:3000/uploads/sample.png">
+</div>
+<form [formGroup]="formInput"
+      class="flex flex-d-col bg-white content-section">
+  <div class="grid meta-block editor-meta">
+    <small class="text-muted time">
+      Markdown supported!
+    </small>
+    <div class="flex flex-center option">
+      <button (click)="preview()"
+              [class.active]="isPreview"
+              class="bg-transparent pv05 ph1 outline-none btn-custom-preview"
+              matRipple>
+        Preview
+      </button>
+    </div>
+  </div>
+
+  <div class="p05 grid content-block box-shadow editor-content">
+    <div *ngIf="isPreview"
+         [innerHTML]="previewMarkdown | safeHtml: 'html'"
+         class="markdown-editor p05 relative markdown-content">
+    </div>
+
+    <label [class.none]="isPreview"
+           class="relative of-hidden markdown-editor">
+      <textarea #textAreaElement
+                class="outline-none bg-transparent input-markdown"
+                formControlName="content"
+                placeholder="Leave a comment..."></textarea>
+    </label>
+
+    <div class="flex flex-d-col resource-content editor-resource">
+      <div class="flex mt1 pt1 justify-flex-end input-submit-section">
+        <button *ngIf="userId === task.issuer._id"
+                class="tt-capitalize comment-close"
+                mat-flat-button>
+          Comment and close
+        </button>
+        <button class="tt-capitalize comment"
+                color="primary"
+                mat-flat-button>
+          Comment
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

@@ -23,7 +23,7 @@ const taskSchema = new Schema({
      * 0 = open
      * 1 = closed
      */
-    status: {type: Boolean, default: 0},
+    status: {type: Number, default: 0},
     /**
      * The person who create the issue
      */

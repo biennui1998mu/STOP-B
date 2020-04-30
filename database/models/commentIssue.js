@@ -5,12 +5,12 @@ const commentIssueSchema = new Schema({
     /**
      * content markdown
      */
-    content: {type: String},
+    content: {type: String, required: true},
     /**
      * related task
      */
-    task: {type: mongoose.Schema.Types.ObjectId, ref: 'Task'},
-    createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    task: {type: mongoose.Schema.Types.ObjectId, ref: 'Task', required: true},
+    createdBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
     createdAt: {type: Date, default: Date.now},
     updatedAt: {type: Date},
     /**
