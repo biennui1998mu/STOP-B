@@ -19,7 +19,7 @@ module.exports = async (req, res, next) => {
         try {
             const token = req.headers.authorization.split(" ")[1];
             const userData = jwt.verify(token, process.env.JWT_KEY);
-            userId = userData.userId;
+            userId = userData._id;
             if (!userId) {
                 isError = new Error('Missing user identification!');
                 console.error(isError);
@@ -52,14 +52,14 @@ module.exports = async (req, res, next) => {
         });
     }
 
-    let dataProject;
+    let projectData;
 
     if (req.projectData) {
         // If has projectData (check-project middleware) then
         // skip query DB for faster
-        dataProject = req.projectData;
+        projectData = req.projectData;
     } else {
-        dataProject = await Project.findOne({
+        projectData = await Project.findOne({
             _id: project_id ? project_id : project._id,
             $or: [
                 {manager: userId},
@@ -69,18 +69,18 @@ module.exports = async (req, res, next) => {
         }).populate('manager moderator member').exec();
     }
 
-    if (!dataProject) {
+    if (!projectData) {
         return res.status(301).json({
             message: 'Incorrect project information',
             data: null,
         });
     } else {
-        req.projectData = dataProject;
+        req.projectData = projectData;
     }
 
     const dataTask = await Task.findOne({
         _id: task_id ? task_id : task._id,
-        project: dataProject._id,
+        project: projectData._id,
     }).populate(
         'issuer project assignee'
     ).exec();

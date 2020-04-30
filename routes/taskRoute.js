@@ -42,14 +42,7 @@ router.post('/create', checkAuth, checkProject, (req, res) => {
     const currentUser = req.userData;
     const currentProject = req.projectData;
     // Object destructuring => get data in the body
-    const {
-        title,
-        description,
-        priority,
-        startDate,
-        endDate,
-        assignee,
-    } = req.body;
+    const {title, description, priority, startDate, endDate, assignee} = req.body;
     // person who create the issue
     const issuer = currentUser._id.toString();
 
