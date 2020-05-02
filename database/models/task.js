@@ -49,8 +49,8 @@ const taskSchema = new Schema({
  * https://github.com/ramiel/mongoose-sequence
  */
 taskSchema.plugin(AutoIncrement, {
-    id: 'indicator_seq',    // required if use reference_fields
-    inc_field: 'indicator', // plugin auto create this field in schema
+    id: 'indicator_seq',            // required if use reference_fields
+    inc_field: 'indicator',         // plugin auto create this field in schema
     reference_fields: ['projectId'] // only increment based on projectId
 });
 

@@ -1,6 +1,13 @@
 const jwt = require('jsonwebtoken');
 const Project = require('../database/models/project');
 
+/**
+ * check xem la user do co trong project nay khong
+ * @param req
+ * @param res
+ * @param next
+ * @return {Promise<any>}
+ */
 module.exports = async (req, res, next) => {
     /**
      * accept both object `project` and `project_id`
@@ -18,7 +25,7 @@ module.exports = async (req, res, next) => {
         try {
             const token = req.headers.authorization.split(" ")[1];
             const userData = jwt.verify(token, process.env.JWT_KEY);
-            userId = userData.userId;
+            userId = userData._id;
             if (!userId) {
                 isError = new Error('Missing user identification!');
                 console.error(isError);
@@ -37,7 +44,7 @@ module.exports = async (req, res, next) => {
         }
     }
 
-    if (!project_id && (!project || !project._id)) {
+    if (!project_id && !(project && project._id)) {
         return res.status(301).json({
             message: 'Missing project information',
             data: null,

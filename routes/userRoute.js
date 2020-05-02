@@ -90,7 +90,7 @@ router.post('/login', async (req, res) => {
      * retrieve the list of stored token for refresh.
      * @type {string[]}
      */
-    const currentTokens = user.previousTokens || [];
+    const cachedToken = user.previousTokens || [];
     /**
      * @type {string}
      */
@@ -116,8 +116,8 @@ router.post('/login', async (req, res) => {
     /**
      * Push the new token to the tracking token list.
      */
-    currentTokens.push(token);
-    user.previousTokens = currentTokens;
+    cachedToken.push(token);
+    user.previousTokens = cachedToken;
     user.status = 1;                // set online
     user.lastOnline = Date.now();   // set the last time online
     await user.save();              // save the new information
@@ -126,7 +126,7 @@ router.post('/login', async (req, res) => {
     // => which does not provide some method like normal object.
     const userObject = user.toObject();
     delete userObject.password;         // remove field `password` from object
-    delete userObject.__v;              // remove field `__v` from object
+    delete userObject.__v;              // remove field `__v` (version Key mongoose) from object
     delete userObject.previousTokens;   // remove field `previousTokens` from object
 
     return res.status(200).json({
