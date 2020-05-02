@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const checkAuth = require('../middleware/check-auth');
@@ -8,17 +7,25 @@ const friendRequest = require('../database/models/friendRequest');
 const User = require('../database/models/user');
 const moment = require('moment');
 
+/**
+ * https://github.com/expressjs/multer
+ * @type {multer}
+ */
+const multer = require('multer');
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './uploads');
+        return cb(null, './uploads');
     },
     filename: function (req, file, cb) {
-        cb(null, new Date().toISOString().replace(/:/g, '-') + " " + file.originalname);
+        return (null, file.originalname);
     }
 });
 
 const fileFilter = (req, file, cb) => {
-    //reject
+    /**
+     * filter file upload only image type
+     */
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         cb(null, true);
     } else {
@@ -41,9 +48,9 @@ router.post('/login', async (req, res) => {
     const {username, password} = req.body;
     let user = null;
     try {
-        user = await User.findOne(
-            {username: username}
-        )
+        user = await User.findOne({
+            username: username
+        })
             // chi dinh print field bi hidden by default trong schema.
             .select('+password +previousToken')
             .exec();
@@ -381,11 +388,10 @@ router.post('/search', checkAuth, async (req, res) => {
 });
 
 // Update user
-router.post('/update/:userId', (req, res) => {
+router.post('/update/:userId', upload.single('avatar'), (req, res) => {
     const id = req.params.userId;
     const updateOps = {...req.body};
-
-    // console.log(updateOps);
+    const avatar = req.file.path;
 
     User.update({_id: id}, {$set: updateOps})
         .exec()
@@ -404,7 +410,7 @@ router.post('/update/:userId', (req, res) => {
 });
 
 // Delete user
-router.post('/delete/:userId', (req, res, next) => {
+router.post('/delete/:userId', (req, res) => {
     const id = req.params.userId;
     User.remove({_id: id})
         .exec()
