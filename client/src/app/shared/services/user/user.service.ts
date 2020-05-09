@@ -7,6 +7,7 @@ import { Observable, of } from 'rxjs';
 import { User } from '../../interface/User';
 import { APIResponse } from '../../interface/API-Response';
 import { TokenService } from '../token.service';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -17,6 +18,7 @@ export class UserService {
     private store: UserStore,
     private http: HttpClient,
     private tokenService: TokenService,
+    private router: Router,
   ) {
   }
 
@@ -150,14 +152,10 @@ export class UserService {
     name: string,
     dob: string
   }) {
-    return this.http.post<{
-      message: string,
-      createdUser?: User,
-      error: any
-    }>(`${this.url}/register`, credentials)
+    return this.http.post<APIResponse<string>>(`${this.url}/register`, credentials)
       .pipe(
         map(status => {
-          if (status.createdUser) {
+          if (status.data) {
             // tao user thanh cong...lam gi do o day (vd quay ve login)
             return true;
           }
@@ -175,6 +173,7 @@ export class UserService {
   logout() {
     this.tokenService.clearToken();
     this.reset();
+    this.router.navigateByUrl('/login');
   }
 
   reset() {

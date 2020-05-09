@@ -82,4 +82,8 @@ export class FriendRequestsService {
       }),
     );
   }
+
+  removeFromStore(request: FriendRequest) {
+    this.store.remove(request._id);
+  }
 }

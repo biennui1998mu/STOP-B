@@ -33,7 +33,6 @@ export class AuthenticateGuard implements CanActivateChild {
       }
     }
     this.userService.logout();
-    this.router.navigateByUrl('/login');
     return false;
   }
 }

@@ -1,7 +1,7 @@
 <div class="flex flex-d-col avatar-section">
-  <img alt=""
-       class="w100pct h100pct obj-fit-cover obj-pos-center mat-elevation-z1 br50 of-hidden"
-       src="http://localhost:3000/uploads/sample.png">
+  <img [alt]="user.name"
+       [src]="user.avatar"
+       class="w100pct h100pct obj-fit-cover obj-pos-center mat-elevation-z1 br50 of-hidden">
 </div>
 <form [formGroup]="formInput"
       class="flex flex-d-col bg-white content-section">
@@ -35,12 +35,17 @@
 
     <div class="flex flex-d-col resource-content editor-resource">
       <div class="flex mt1 pt1 justify-flex-end input-submit-section">
-        <button *ngIf="userId === task.issuer._id"
+        <button (click)="comment(true)"
+                *ngIf="task.status === TASK_STATUS.open"
+                [disabled]="formInput.invalid"
                 class="tt-capitalize comment-close"
                 mat-flat-button>
           Comment and close
         </button>
-        <button class="tt-capitalize comment"
+        <button (click)="comment()"
+                *ngIf="task.status === TASK_STATUS.open"
+                [disabled]="formInput.invalid"
+                class="tt-capitalize comment"
                 color="primary"
                 mat-flat-button>
           Comment

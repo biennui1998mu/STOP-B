@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const checkAuth = require('../middleware/check-auth');
 const checkProject = require('../middleware/check-project');
+const checkTask = require('../middleware/check-task');
 
 const Task = require('../database/models/task');
 const Project = require('../database/models/project');
@@ -291,5 +292,35 @@ router.post('/important', (req, res) => {
         }
     }).limit(2)
 });
+
+router.post('/change-state', checkAuth, checkProject, async (req, res) => {
+    const {task_id, project_id, status} = req.body;
+
+    const task = await Task.findOne({
+        _id: task_id,
+        project: project_id,
+    }).populate(
+        'issuer project assignee'
+    ).exec();
+
+    if (!task) {
+        return res.status(404).json({
+            message: 'Unable to find the task.'
+        });
+    }
+
+    if (typeof status !== "number") {
+        return res.status(301).json({
+            message: 'Type status does not correct.'
+        });
+    }
+
+    task.status = status; // close or open
+    await task.save();
+    return res.json({
+        message: 'Task state changed',
+        data: task,
+    });
+})
 
 module.exports = router;

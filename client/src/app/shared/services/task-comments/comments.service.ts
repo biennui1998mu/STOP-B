@@ -9,7 +9,6 @@ import { CommentIssue } from '../../interface/CommentIssue';
 import { Task } from '../../interface/Task';
 import { User } from '../../interface/User';
 import { Observable, of } from 'rxjs';
-import { Project } from '../../interface/Project';
 import { TasksQuery } from '../task';
 import { ProjectsQuery } from '../projects';
 
@@ -29,15 +28,15 @@ export class CommentsService {
 
   /**
    * get all comments in a task and push them to state
-   * @param task
-   * @param project
+   * @param task_id
+   * @param project_id
    */
-  get(task: Task, project: Project) {
+  get(task_id: string, project_id: string) {
     this.store.setLoading(true);
     this.http.post<APIResponse<CommentIssue<Task, User>[]>>(
       `${this.url}/all`,
       {
-        task, project,
+        task_id, project_id,
       },
       { headers: this.token.authorizeHeader },
     ).pipe(
@@ -55,20 +54,20 @@ export class CommentsService {
   /**
    * create a new comment in a task. The function will also push the new comment to
    * the active list state; while also return the new comment.
-   * @param task
-   * @param project
+   * @param task_id
+   * @param project_id
    * @param content
    * @return new comment
    */
   create(
-    task: Task,
-    project: Project,
+    task_id: string,
+    project_id: string,
     content: string,
   ): Observable<CommentIssue<Task, User>> {
     return this.http.post<APIResponse<CommentIssue<Task, User>>>(
       `${this.url}/create`,
       {
-        task, project, content,
+        task_id, project_id, content,
       },
       { headers: this.token.authorizeHeader },
     ).pipe(
@@ -87,21 +86,21 @@ export class CommentsService {
 
   /**
    * Update a comment
-   * @param task
-   * @param project
+   * @param task_id
+   * @param project_id
    * @param comment
    * @return CommentIssue updated comment
    */
   update(
-    task: Task,
-    project: Project,
+    task_id: string,
+    project_id: string,
     comment: CommentIssue,
   ): Observable<CommentIssue<Task, User>> {
     return this.http.post<APIResponse<CommentIssue<Task, User>>>(
       `${this.url}/update`,
       {
-        task,
-        project,
+        task_id,
+        project_id,
         id: comment._id,          // id of the updating comment
         content: comment.content, // content of the updating comment
       },

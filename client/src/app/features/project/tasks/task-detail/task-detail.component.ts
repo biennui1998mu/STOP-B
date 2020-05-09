@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Task } from '../../../../shared/interface/Task';
+import { Component } from '@angular/core';
+import { Task, TASK_STATUS } from '../../../../shared/interface/Task';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../../../shared/interface/User';
 import { Project } from '../../../../shared/interface/Project';
@@ -8,14 +8,14 @@ import { of } from 'rxjs';
 import { TasksService } from '../../../../shared/services/task';
 import { UserQuery } from '../../../../shared/services/user';
 import { ProjectsQuery } from '../../../../shared/services/projects';
-import { CommentsQuery } from '../../../../shared/services/task-comments';
+import { CommentsQuery, CommentsService } from '../../../../shared/services/task-comments';
 
 @Component({
   selector: 'app-task-detail',
   templateUrl: './task-detail.component.html',
   styleUrls: ['../style/shared-task-layout.scss'],
 })
-export class TaskDetailComponent implements OnInit {
+export class TaskDetailComponent {
 
   task: Task<User, Project>;
   project: Project<User> = null;
@@ -24,11 +24,14 @@ export class TaskDetailComponent implements OnInit {
 
   comments = this.commentsQuery.selectAll();
 
+  TASK_STATUS = TASK_STATUS;
+
   constructor(
     private userQuery: UserQuery,
     private taskService: TasksService,
     private projectsQuery: ProjectsQuery,
     private commentsQuery: CommentsQuery,
+    private commentsService: CommentsService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
   ) {
@@ -56,12 +59,21 @@ export class TaskDetailComponent implements OnInit {
           return;
         }
         this.isLoading = true;
-        console.log(task);
         this.task = task;
+        this.commentsService.get(
+          this.task._id,
+          this.project._id,
+        );
       });
   }
 
-  ngOnInit(): void {
+  reOpen() {
+    this.taskService.changeStatus(
+      this.task._id,
+      this.project._id,
+      TASK_STATUS.open,
+    ).subscribe(response => {
+      this.task = response;
+    });
   }
-
 }

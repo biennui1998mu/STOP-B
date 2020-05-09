@@ -16,7 +16,6 @@ export class CreateProjectComponent implements OnInit {
   projectFormCreate: MatVerticalStepper;
 
   projectForm: FormGroup;
-  taskForm: FormGroup;
 
   constructor(
     private uiStateService: UiStateService,
@@ -64,10 +63,6 @@ export class CreateProjectComponent implements OnInit {
   ngOnInit(): void {
     this.projectFormBuilder();
     this.getUserData();
-
-    this.taskForm = this.formBuilder.group({
-      createdTasks: this.formBuilder.array([]),
-    });
   }
 
   getUserData() {
@@ -77,7 +72,10 @@ export class CreateProjectComponent implements OnInit {
   createProject() {
     return this.projectsService.create(this.projectForm.value).subscribe(success => {
       if (success) {
-        this.router.navigateByUrl('/dashboard');
+        this.projectsService.get();
+        this.router.navigate(
+          ['/project', 'view', success._id],
+        );
       }
     });
   }

@@ -160,4 +160,23 @@ export class TasksService {
       }),
     );
   }
+
+  changeStatus(task_id: string, project_id: string, status: number) {
+    return this.http.post<APIResponse<Task<User, Project>>>(
+      `${this.url}/change-state`,
+      { task_id, project_id, status },
+      { headers: this.tokenService.authorizeHeader },
+    ).pipe(
+      map(result => result.data),
+      catchError(error => {
+        console.log(error);
+        return of(null as Task<User, any>);
+      }),
+      tap(task => {
+        if (task) {
+          this.store.update(task._id, () => task);
+        }
+      }),
+    );
+  }
 }
