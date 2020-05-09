@@ -23,6 +23,11 @@
   margin: 0.115rem 0 0.115rem 0.5rem;
   border-radius: 4px;
 
+  .loading {
+    opacity: 0.8;
+    cursor: progress;
+  }
+
   .avatar {
     grid-area: avatar;
     width: 2rem;
