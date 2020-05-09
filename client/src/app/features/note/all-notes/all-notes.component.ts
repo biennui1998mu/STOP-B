@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UiStateService } from '../../../shared/services/state/ui-state.service';
+import { NotesQuery, NotesService } from '../../../shared/services/note';
 
 @Component({
   selector: 'app-all-notes',
@@ -7,7 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AllNotesComponent implements OnInit {
 
-  constructor() {
+  notes = this.notesQuery.selectAll();
+
+  constructor(
+    private uiStateService: UiStateService,
+    private notesService: NotesService,
+    private notesQuery: NotesQuery,
+  ) {
+    this.notesService.get();
+    this.uiStateService.setPageTitle({
+      current: {
+        title: 'Notes',
+        path: '/note',
+      },
+    });
   }
 
   ngOnInit(): void {

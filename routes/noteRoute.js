@@ -7,7 +7,8 @@ const Note = require('../database/models/note');
 
 // Take all notes from list
 router.post('/', checkAuth, (req, res) => {
-    Note.find({UserId: req.userData._id.toString()})
+    Note.find({user: req.userData._id.toString()})
+        .populate('project user')
         .exec()
         .then(docs => {
             const response = {
@@ -61,8 +62,8 @@ router.post('/search', (req, res) => {
     } else {
         Note.find({
             $or: [
-                {Title: new RegExp(input, 'i')},
-                {Description: new RegExp(input, 'i')}
+                {title: new RegExp(input, 'i')},
+                {description: new RegExp(input, 'i')}
             ]
         }, function (err, notes) {
             if (notes) {
@@ -78,12 +79,11 @@ router.post('/search', (req, res) => {
 router.post('/create', checkAuth, (req, res) => {
     const note = new Note({
         _id: new mongoose.Types.ObjectId(),
-        UserId: req.userData._id.toString(),
-        Title: req.body.Title,
-        Description: req.body.Description,
-        Priority: req.body.Priority,
-        StartDate: Date.now(),
-        ProjectId: req.body.ProjectId
+        user: req.userData._id.toString(),
+        title: req.body.title,
+        description: req.body.description,
+        priority: req.body.priority,
+        project: req.body.project
     });
     note.save()
         .then(result => {
@@ -92,12 +92,12 @@ router.post('/create', checkAuth, (req, res) => {
                 message: "Created note successfully",
                 createdNote: {
                     _id: result._id,
-                    Title: result.Title,
-                    UserId: result.UserId,
-                    Description: result.Description,
-                    Priority: result.Priority,
-                    StartDate: result.StartDate,
-                    ProjectId: result.ProjectId
+                    title: result.title,
+                    user: result.user,
+                    description: result.description,
+                    priority: result.priority,
+                    createdAt: result.createdAt,
+                    project: result.project
                 }
             });
         })

@@ -66,9 +66,9 @@ export class ViewNoteComponent implements OnInit {
 
   readNote(id: string) {
     return this.notesService.getOne(id).subscribe((data: Note) => {
-      this.Title.setValue(data.Title);
-      this.Description.setValue(data.Description);
-      this.Date.setValue(data.StartDate);
+      this.Title.setValue(data.title);
+      this.Description.setValue(data.description);
+      this.Date.setValue(data.createdAt);
     });
   }
 

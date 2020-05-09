@@ -275,10 +275,10 @@ router.post('/delete/:taskId', (req, res) => {
 // query 2 tasks, high priority
 router.post('/important', (req, res) => {
     Task.find({
-        Priority: {
+        priority: {
             $lte: 2
         },
-        Status: true,
+        status: true,
 
     }, function (err, tasks) {
         if (tasks) {
