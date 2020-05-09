@@ -18,7 +18,7 @@ export interface Task<user = string, project = string> {
    * 0 = open
    * 1 = closed
    */
-  status: number;
+  status: TASK_STATUS;
   /**
    * from 0->3
    * 0 = none; 1 = low; 2 = medium; 3 = high
@@ -43,4 +43,9 @@ export interface Task<user = string, project = string> {
 
   updatedAt: string;
   createdAt: string;
+}
+
+export enum TASK_STATUS {
+  open,
+  closed
 }

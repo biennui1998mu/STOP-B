@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const checkAuth = require('../middleware/check-auth');
 const checkProject = require('../middleware/check-project');
+const checkTask = require('../middleware/check-task');
 
 const Task = require('../database/models/task');
 const Project = require('../database/models/project');
@@ -106,7 +107,6 @@ router.post('/create', checkAuth, checkProject, (req, res) => {
                 // then the array output will have different length
                 return responseError('assignee');
             }
-
             const getMemberProject = [
                 ...currentProject.moderator,
                 ...currentProject.member,
@@ -114,10 +114,10 @@ router.post('/create', checkAuth, checkProject, (req, res) => {
             ];
             const isNotInvolved = [];
             userAssignee.forEach(user => {
-                const findNotInGetMember = getMemberProject.find(member =>
-                    member._id.toString() !== user._id // member is still mongoose doc
+                const findMember = getMemberProject.find(member =>
+                    member._id.toString() === user._id // member is still mongoose doc
                 );
-                if (findNotInGetMember) {
+                if (!findMember) {
                     isNotInvolved.push(user);
                 }
             });
@@ -179,11 +179,7 @@ router.post('/', checkAuth, checkProject, (req, res) => {
         const countOngoingTask = docs.length - countFinished;
         const response = {
             message: 'Fetched all tasks',
-            data: {
-                ongoingCount: countOngoingTask,
-                finishedCount: countFinished,
-                tasks: docs,
-            },
+            data: docs,
         };
         res.status(200).json(response)
     }).catch(err => {
@@ -279,10 +275,10 @@ router.post('/delete/:taskId', (req, res) => {
 // query 2 tasks, high priority
 router.post('/important', (req, res) => {
     Task.find({
-        Priority: {
+        priority: {
             $lte: 2
         },
-        Status: true,
+        status: true,
 
     }, function (err, tasks) {
         if (tasks) {
@@ -292,5 +288,35 @@ router.post('/important', (req, res) => {
         }
     }).limit(2)
 });
+
+router.post('/change-state', checkAuth, checkProject, async (req, res) => {
+    const {task_id, project_id, status} = req.body;
+
+    const task = await Task.findOne({
+        _id: task_id,
+        project: project_id,
+    }).populate(
+        'issuer project assignee'
+    ).exec();
+
+    if (!task) {
+        return res.status(404).json({
+            message: 'Unable to find the task.'
+        });
+    }
+
+    if (typeof status !== "number") {
+        return res.status(301).json({
+            message: 'Type status does not correct.'
+        });
+    }
+
+    task.status = status; // close or open
+    await task.save();
+    return res.json({
+        message: 'Task state changed',
+        data: task,
+    });
+})
 
 module.exports = router;

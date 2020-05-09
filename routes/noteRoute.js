@@ -7,23 +7,13 @@ const Note = require('../database/models/note');
 
 // Take all notes from list
 router.post('/', checkAuth, (req, res) => {
-    Note.find({UserId : req.userData._id.toString()})
+    Note.find({user: req.userData._id.toString()})
+        .populate('project user')
         .exec()
         .then(docs => {
             const response = {
                 count: docs.length,
-                notes: docs.map(doc => {
-                    return {
-                        _id: doc._id,
-                        Title: doc.Title,
-                        UserId: doc.UserId,
-                        Description: doc.Description,
-                        Priority: doc.Priority,
-                        StartDate: doc.StartDate,
-                        Status: doc.Status,
-                        ProjectId: doc.ProjectId,
-                    }
-                })
+                notes: docs
             };
             res.status(200).json(response)
         })
@@ -65,20 +55,20 @@ router.post('/view', (req, res) => {
 router.post('/search', (req, res) => {
     const input = req.body.search;
 
-    if(input.length < 2){
+    if (input.length < 2) {
         return res.json({
             message: 'Must be at least 2 character'
         })
-    }else{
+    } else {
         Note.find({
             $or: [
-                {Title: new RegExp(input, 'i')},
-                {Description: new RegExp(input, 'i')}
+                {title: new RegExp(input, 'i')},
+                {description: new RegExp(input, 'i')}
             ]
         }, function (err, notes) {
-            if(notes){
+            if (notes) {
                 return res.json(notes);
-            }else{
+            } else {
                 return err;
             }
         }).limit(10);
@@ -89,12 +79,11 @@ router.post('/search', (req, res) => {
 router.post('/create', checkAuth, (req, res) => {
     const note = new Note({
         _id: new mongoose.Types.ObjectId(),
-        UserId: req.userData._id.toString(),
-        Title: req.body.Title,
-        Description: req.body.Description,
-        Priority: req.body.Priority,
-        StartDate: Date.now(),
-        ProjectId: req.body.ProjectId
+        user: req.userData._id.toString(),
+        title: req.body.title,
+        description: req.body.description,
+        priority: req.body.priority,
+        project: req.body.project
     });
     note.save()
         .then(result => {
@@ -103,12 +92,12 @@ router.post('/create', checkAuth, (req, res) => {
                 message: "Created note successfully",
                 createdNote: {
                     _id: result._id,
-                    Title: result.Title,
-                    UserId: result.UserId,
-                    Description: result.Description,
-                    Priority: result.Priority,
-                    StartDate: result.StartDate,
-                    ProjectId: result.ProjectId
+                    title: result.title,
+                    user: result.user,
+                    description: result.description,
+                    priority: result.priority,
+                    createdAt: result.createdAt,
+                    project: result.project
                 }
             });
         })

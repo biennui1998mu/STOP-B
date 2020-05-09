@@ -1,45 +1,71 @@
 import { Injectable } from '@angular/core';
-import * as jwtDecode from 'jwt-decode';
+import * as jwtDecoder from 'jwt-decode';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TokenService {
 
-  constructor() {
+  private _token: string = null;
+
+  get token() {
+    if (!this._token) {
+      this._token = TokenService.getToken();
+    }
+
+    return this._token;
   }
 
-  get user() {
+  set token(token: string) {
+    this._token = token;
+    TokenService.setToken(token);
+  }
+
+  /**
+   * if null => not authorize or token invalid
+   */
+  get decodedToken(): {
+    _id: string,
+    username: string,
+    name: string;
+  } {
+    const token = this.token;
+    if (!token) {
+      return null;
+    }
+
     try {
-      return this.decodeJwt();
+      return jwtDecoder(token);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return null;
     }
   }
 
-  setToken(token) {
+  /**
+   * get the header with associated token.
+   */
+  get authorizeHeader() {
+    return new HttpHeaders({
+      "Authorization": "Bearer " + this.token,
+    });
+  }
+
+  private static setToken(token: string) {
     localStorage.setItem('token', token);
   }
 
-  getToken() {
+  private static getToken() {
     return localStorage.getItem('token');
   }
 
+  /**
+   * use in logout
+   */
   clearToken() {
     localStorage.removeItem('token');
     localStorage.clear();
-  }
-
-  decodeJwt(token?): {
-    _id: string;
-    username: string;
-    name: string;
-    avatar: string;
-    iat: number;
-    exp: number;
-  } {
-    const tokenToDecode = token || this.getToken();
-    return jwtDecode(tokenToDecode);
+    this._token = null;
   }
 }

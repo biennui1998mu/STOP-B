@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UiStateService } from '../../shared/services/state/ui-state.service';
-import { HttpClient } from "@angular/common/http";
-import { Note } from "../../shared/interface/Note";
-import { NoteService } from "../../shared/services/note.service";
-import { ProjectService } from "../../shared/services/project.service";
 import { Project } from "../../shared/interface/Project";
+import { ProjectsService } from '../../shared/services/projects';
+import { NotesQuery, NotesService } from '../../shared/services/note';
 
 @Component({
   selector: 'app-homepage',
@@ -17,14 +15,14 @@ export class HomepageComponent implements OnInit {
   title: string;
   dob: string;
 
-  notes: Note[] = [];
+  notes = this.noteQuery.selectAll();
   projects: Project[] = [];
 
   constructor(
     private uiStateService: UiStateService,
-    private http: HttpClient,
-    private noteService: NoteService,
-    private projectService: ProjectService,
+    private noteQuery: NotesQuery,
+    private notesService: NotesService,
+    private projectService: ProjectsService,
   ) {
     this.uiStateService.setPageTitle({
       current: {
@@ -35,18 +33,12 @@ export class HomepageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getNote();
+    this.notesService.get();
     this.getProjectHighPriority();
   }
 
-  getNote() {
-    this.noteService.getAllNote().subscribe(result => {
-      this.notes = result.notes;
-    });
-  }
-
   getProjectHighPriority() {
-    this.projectService.getProjectHighPriority().subscribe(result => {
+    this.projectService.getImportant().subscribe(result => {
       this.projects = result;
     });
   }

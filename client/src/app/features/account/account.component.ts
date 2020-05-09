@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthorizeService } from "../../shared/services/authorize.service";
-import { SocketService } from "../../shared/services/socket.service";
-import { UserService } from "../../shared/services/user.service";
 import { TokenService } from "../../shared/services/token.service";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {User} from "../../shared/interface/User";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { User } from "../../shared/interface/User";
+import { UserQuery, UserService } from '../../shared/services/user';
 
 @Component({
   selector: 'app-account',
@@ -17,14 +15,13 @@ export class AccountComponent implements OnInit {
   user: User = null;
 
   constructor(
-    private authorizeService: AuthorizeService,
-    private socketService: SocketService,
-    private userService: UserService,
     private tokenService: TokenService,
+    private userService: UserService,
+    private userQuery: UserQuery,
     private formBuilder: FormBuilder,
   ) {
     this.updateUserForm = this.formBuilder.group({
-      username: [{value: '', disabled: true}, [Validators.required]],
+      username: [{ value: '', disabled: true }, [Validators.required]],
       name: ['', [Validators.required, Validators.minLength(3)]],
       dob: ['', [Validators.required]],
       avatar: [''],
@@ -48,31 +45,20 @@ export class AccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.updateUserForm.valueChanges.subscribe(data => {
-      // console.log(data);
-      // console.log(this.updateUserForm.invalid);
-    });
-
     this.getUser();
   }
 
   getUser() {
-    return this.userService.viewProfile().subscribe((data: User) => {
-      if (data) {
-        this.username.setValue(data.username);
-        this.name.setValue(data.name);
-        this.dob.setValue(data.dob);
-        this.user = data;
-      }
-    });
+    const user = this.userQuery.getValue();
+    this.username.setValue(user.username);
+    this.name.setValue(user.name);
+    this.dob.setValue(user.dob);
+    this.user.avatar = user.avatar;
   }
 
   updateUser() {
-    const updatedForm = new FormData();
-    // updatedForm.append('file')
-
-    return this.userService.updateUser(
-      this.tokenService.user._id,
+    return this.userService.update(
+      this.userQuery.getValue()._id,
       this.updateUserForm.value,
     ).subscribe(updated => {
       console.log(updated);

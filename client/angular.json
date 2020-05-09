@@ -129,6 +129,7 @@
   },
   "defaultProject": "stopb",
   "cli": {
-    "analytics": "ad9ec5ae-5b61-42ca-a259-2655df288951"
+    "analytics": "ad9ec5ae-5b61-42ca-a259-2655df288951",
+    "defaultCollection": "@datorama/akita"
   }
 }

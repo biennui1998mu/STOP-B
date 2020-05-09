@@ -3,7 +3,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialCompsModule } from './material-comps.module';
 import { RouterModule } from '@angular/router';
 import { SocketService } from '../services/socket.service';
-import { UserService } from '../services/user.service';
 import { SharedPipeModule } from '../pipe/shared-pipe.module';
 
 const modules = [
@@ -23,7 +22,6 @@ const modules = [
   ],
   providers: [
     SocketService,
-    UserService,
   ],
 })
 export class CoreImportsModule {

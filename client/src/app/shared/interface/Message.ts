@@ -1,7 +1,7 @@
-export interface Message {
+export interface Message<user = string> {
   _id?: string,
   roomId: string,
   message: string,
-  from: string,
+  from: user,
   createdAt: string
 }

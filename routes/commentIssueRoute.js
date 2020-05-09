@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const moment = require('moment');
 const checkAuth = require('../middleware/check-auth');
 const checkProject = require('../middleware/check-project');
@@ -38,9 +37,7 @@ router.post('/all', checkAuth, checkProject, checkTask, (req, res) => {
  * create a new comment
  */
 router.post('/create', checkAuth, checkProject, checkTask, (req, res) => {
-    const taskData = req.taskData;
-    const userId = req.userData._id.toString();
-    const {content} = req.body;
+    const {task_id, content} = req.body;
 
     if (!content || typeof content !== 'string' || content.length === 0) {
         return res.status(301).json({
@@ -51,8 +48,8 @@ router.post('/create', checkAuth, checkProject, checkTask, (req, res) => {
 
     const newComment = new CommentIssue({
         content: content,
-        task: taskData._id,
-        createdBy: userId,
+        task: task_id,
+        createdBy: req.userData,
     });
 
     newComment.save().then(result => {

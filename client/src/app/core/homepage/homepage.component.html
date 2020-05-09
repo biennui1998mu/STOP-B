@@ -43,20 +43,20 @@
   </div>
 
   <div class="list-available">
-    <a *ngFor="let note of notes"
-       [class.finished]="note.Status"
-       [class.high]="note.Priority === 1"
-       [class.medium]="note.Priority === 2"
+    <a *ngFor="let note of notes|async"
+       [class.finished]="note.status"
+       [class.high]="note.priority === 1"
+       [class.medium]="note.priority === 2"
        [routerLink]="['/note', 'view', note._id]"
        class="item mat-elevation-z1 note-card">
       <div class="header">
-        {{note.Title}}
+        {{note.title}}
         <mat-icon class="icon-header">zoom_out_map</mat-icon>
       </div>
       <small class="time">
-        {{note.StartDate | date:"dd-MM-yyyy hh:mm:ss"}}
+        {{note.createdAt | date:"dd-MM-yyyy hh:mm:ss"}}
       </small>
-      <textarea class="textarea-custom" disabled>{{note.Description}}</textarea>
+      <textarea class="textarea-custom" disabled>{{note.description}}</textarea>
     </a>
 
     <a class="see-more" href="">See more</a>

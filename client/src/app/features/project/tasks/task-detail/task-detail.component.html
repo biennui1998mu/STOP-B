@@ -43,17 +43,18 @@
                       [comment]="comment"
                       [task]="task"></app-task-comment>
 
-    <ng-container *ngIf="task?.status === 0">
+    <ng-container *ngIf="task?.status === TASK_STATUS.open">
       <app-task-comment-input [project]="project"
                               [task]="task"></app-task-comment-input>
     </ng-container>
 
-    <ng-container *ngIf="task?.status === 1">
+    <ng-container *ngIf="task?.status === TASK_STATUS.closed">
       <div class="ta-center p-1 text-muted">
         This task is closed and is in archive mode. You can not comment on this.
       </div>
       <div *ngIf="userId === task?.issuer._id" class="p1 flex justify-center">
-        <button color="primary"
+        <button (click)="reOpen()"
+                color="primary"
                 mat-flat-button>
           Open this task
         </button>

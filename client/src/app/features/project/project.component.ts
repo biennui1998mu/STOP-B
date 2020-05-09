@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from "../../shared/interface/Project";
-import { ProjectService } from "../../shared/services/project.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { UiStateService } from '../../shared/services/state/ui-state.service';
 import { filter, switchMap } from 'rxjs/operators';
 import { User } from '../../shared/interface/User';
+import { ProjectsQuery, ProjectsService } from '../../shared/services/projects';
 
 @Component({
   selector: 'app-readProject',
@@ -13,13 +13,13 @@ import { User } from '../../shared/interface/User';
 })
 export class ProjectComponent implements OnInit {
   project: Project<User>;
-  projectLoading = this.projectService.activeProjectLoading;
+  projectLoading = this.projectsQuery.selectLoading();
 
   constructor(
-    private activatedRoute: ActivatedRoute,
     private uiStateService: UiStateService,
-    private projectService: ProjectService,
-    private router: Router,
+    private projectsService: ProjectsService,
+    private projectsQuery: ProjectsQuery,
+    private activatedRoute: ActivatedRoute,
   ) {
     this.activatedRoute.paramMap
       .pipe(
@@ -51,6 +51,6 @@ export class ProjectComponent implements OnInit {
   }
 
   readProject(id: string) {
-    return this.projectService.viewProject(id, true);
+    return this.projectsService.getOne(id, true);
   }
 }

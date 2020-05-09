@@ -1,13 +1,14 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Message } from '../../interface/Message';
-import { TokenService } from "../../services/token.service";
 import { User } from "../../interface/User";
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { FormControl, Validators } from '@angular/forms';
-import { ChatService } from '../../services/chat.service';
 import { Room } from '../../interface/Room';
+import { MessageChatQuery, MessageChatService } from '../../services/roomchat-message';
+import { RoomchatQuery } from '../../services/roomchat';
+import { UserQuery } from '../../services/user';
 
 @Component({
   selector: 'app-chat-layout',
@@ -25,16 +26,18 @@ export class ChatLayoutComponent implements AfterViewInit, OnDestroy {
   friend: User;
   messages: Message[] = [];
 
-  messageLoading = this.chatService.messageLoading;
+  messageLoading = this.messageChatQuery.selectLoading();
 
   private componentDestroyed: Subject<boolean> = new Subject();
 
   constructor(
     public dialogRef: MatDialogRef<ChatLayoutComponent>,
-    private chatService: ChatService,
-    private tokenService: TokenService,
+    private messageChatService: MessageChatService,
+    private messageChatQuery: MessageChatQuery,
+    private roomChatQuery: RoomchatQuery,
+    private userQuery: UserQuery,
   ) {
-    this.chatService.room.subscribe(room => {
+    this.roomChatQuery.select().subscribe(room => {
       this.room = room;
       this.friend = room.listUser.filter(
         user => user._id !== this.userId,
@@ -44,7 +47,7 @@ export class ChatLayoutComponent implements AfterViewInit, OnDestroy {
   }
 
   get userId() {
-    return this.tokenService.user?._id;
+    return this.userQuery.getValue()._id;
   }
 
   closeChat() {
@@ -57,14 +60,14 @@ export class ChatLayoutComponent implements AfterViewInit, OnDestroy {
 
   sendChatMessage() {
     if (this.messageInput.valid && this.messageInput.value.trim().length > 0) {
-      this.chatService.sendMessage(this.messageInput.value);
+      this.messageChatService.send(this.messageInput.value, this.room._id);
       this.messageInput.setValue('');
     }
     return;
   }
 
   userListenMessage() {
-    this.chatService.messages
+    this.messageChatQuery.selectAll()
       .pipe(
         distinctUntilChanged(), // neu message trung nhau thi skip
         takeUntil(this.componentDestroyed),

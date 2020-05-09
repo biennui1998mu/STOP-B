@@ -22,6 +22,7 @@
     "@angular/platform-browser": "~9.0.5",
     "@angular/platform-browser-dynamic": "~9.0.5",
     "@angular/router": "~9.0.5",
+    "@datorama/akita": "^4.23.1",
     "@types/dompurify": "^2.0.1",
     "@types/marked": "^0.7.4",
     "@types/socket.io-client": "^1.4.32",
@@ -43,9 +44,11 @@
     "@angular/cli": "^9.0.7",
     "@angular/compiler-cli": "~9.0.5",
     "@angular/language-service": "~9.0.5",
+    "@datorama/akita-ng-router-store": "^5.0.0",
+    "@datorama/akita-ngdevtools": "^4.0.0",
+    "@types/node": "^12.11.1",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
-    "@types/node": "^12.11.1",
     "codelyzer": "^5.1.2",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -58,5 +61,10 @@
     "ts-node": "~8.3.0",
     "tslint": "~5.18.0",
     "typescript": "~3.7.5"
+  },
+  "akitaCli": {
+    "customFolderName": "true",
+    "template": "angular",
+    "basePath": "./src/app/"
   }
 }

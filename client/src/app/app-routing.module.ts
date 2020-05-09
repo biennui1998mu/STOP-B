@@ -4,13 +4,16 @@ import { HomepageComponent } from './core/homepage/homepage.component';
 import { LayoutsComponent } from './shared/layouts/layouts.component';
 import { LoginComponent } from './core/login/login.component';
 import { AuthenticateGuard } from './shared/guard/authenticate.guard';
+import { AllProjectResolver } from './shared/resolver/all-project.resolver';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutsComponent,
-    canLoad: [AuthenticateGuard],
     canActivateChild: [AuthenticateGuard],
+    resolve: {
+      projects: AllProjectResolver,
+    },
     children: [
       { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
       { path: 'dashboard', component: HomepageComponent },

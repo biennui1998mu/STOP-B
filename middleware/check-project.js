@@ -10,10 +10,10 @@ const Project = require('../database/models/project');
  */
 module.exports = async (req, res, next) => {
     /**
-     * accept both object `project` and `project_id`
+     * accept both object `project` and `project_id` and '_id'
      * Prioritize `project_id`
      */
-    const {project, project_id} = req.body;
+    const {project, project_id, _id} = req.body;
     let userId = null;
 
     let isError = null;
@@ -44,15 +44,18 @@ module.exports = async (req, res, next) => {
         }
     }
 
-    if (!project_id && !(project && project._id)) {
+    if (!project_id && !(project && project._id) && !_id) {
         return res.status(301).json({
             message: 'Missing project information',
             data: null,
         });
     }
 
+    let projectId = project_id ? project_id :
+        project ? project._id : _id;
+
     const dataProject = await Project.findOne({
-        _id: project_id ? project_id : project._id,
+        _id: projectId,
         $or: [
             {manager: userId},
             {moderator: {$in: [userId]}},

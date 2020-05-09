@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from '../../../../shared/interface/User';
-import { ProjectService } from '../../../../shared/services/project.service';
 import { Project } from '../../../../shared/interface/Project';
 import { MarkdownService } from '../../../../shared/services/markdown.service';
 import * as moment from 'moment';
 import { Task } from '../../../../shared/interface/Task';
-import { deepMutableObject } from '../../../../shared/tools';
-import { TaskService } from '../../../../shared/services/task.service';
+import { deepImmutableObject } from '../../../../shared/tools';
 import { Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { TasksService } from '../../../../shared/services/task';
+import { ProjectsQuery, ProjectsService } from '../../../../shared/services/projects';
 
 @Component({
   selector: 'app-task-create',
@@ -62,9 +62,9 @@ export class TaskCreateComponent {
 
   constructor(
     private fb: FormBuilder,
-    private projectService: ProjectService,
+    private projectsQuery: ProjectsQuery,
     private markdownService: MarkdownService,
-    private taskService: TaskService,
+    private taskService: TasksService,
     private router: Router,
   ) {
     this.taskForm = this.fb.group({
@@ -76,7 +76,7 @@ export class TaskCreateComponent {
       assignee: this.assignee,
     });
 
-    this.projectService.activeProject
+    this.projectsQuery.selectActive()
       .pipe(
         switchMap(project => {
           if (project) {
@@ -90,7 +90,7 @@ export class TaskCreateComponent {
             });
           }
 
-          return this.taskService.getLatestTask(project);
+          return this.taskService.getLatest(project);
         }),
       )
       .subscribe(task => {
@@ -114,6 +114,7 @@ export class TaskCreateComponent {
   }
 
   setupMemberList(project: Project<User>) {
+    console.log(project);
     this.projectMembers = [
       project.manager,
       ...project.moderator,
@@ -125,7 +126,7 @@ export class TaskCreateComponent {
     /**
      * prevent pass by reference
      */
-    const taskNew: Partial<Task<User, Project<User>>> = deepMutableObject(this.taskForm.value);
+    const taskNew: Partial<Task<User, Project<User>>> = deepImmutableObject(this.taskForm.value);
     if (this.taskForm.value.description && this.taskForm.value.description.length > 0) {
       taskNew.description = this.markdownService.sanitizeString(taskNew.description);
     }
@@ -140,7 +141,7 @@ export class TaskCreateComponent {
     taskNew.project = this.project;
 
     if (this.taskForm.valid) {
-      this.taskService.createTask(
+      this.taskService.create(
         taskNew,
       ).subscribe(result => {
         if (result.data) {

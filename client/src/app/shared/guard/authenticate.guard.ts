@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot } from '@angular/router';
-import { AuthorizeService } from "../services/authorize.service";
+import { UserQuery, UserService } from '../services/user';
+import { TokenService } from '../services/token.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,17 +10,29 @@ export class AuthenticateGuard implements CanActivateChild {
 
   constructor(
     private router: Router,
-    private authorizeService: AuthorizeService,
+    private tokenService: TokenService,
+    private userService: UserService,
+    private userQuery: UserQuery,
   ) {
   }
 
-  canActivateChild(
+  async canActivateChild(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot) {
-    if (this.authorizeService.isHavingToken) {
+    if (
+      this.tokenService.decodedToken &&
+      this.userQuery.getValue()._id
+    ) {
       return true;
     }
-    this.router.navigateByUrl('/login');
+    if (this.tokenService.decodedToken) {
+      // get user
+      const user = await this.userService.profile().toPromise();
+      if (user) {
+        return true;
+      }
+    }
+    this.userService.logout();
     return false;
   }
 }

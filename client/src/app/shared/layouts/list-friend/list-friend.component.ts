@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UserService } from "../../services/user.service";
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MatDialogState } from '@angular/material/dialog';
 import { ChatLayoutComponent } from '../../components/chat-layout/chat-layout.component';
-import { FriendService } from "../../services/friend.service";
 import { User } from '../../interface/User';
-import { distinctUntilChanged } from 'rxjs/operators';
-import { ChatService } from '../../services/chat.service';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
+import { FriendsQuery, FriendsService } from '../../services/friends';
+import { RoomchatQuery, RoomChatService } from '../../services/roomchat';
+import { UserQuery } from '../../services/user';
+import { MessageChatQuery, MessageChatService } from '../../services/roomchat-message';
 
 @Component({
   selector: 'app-list-friend',
@@ -15,50 +16,68 @@ import { ChatService } from '../../services/chat.service';
 export class ListFriendComponent implements OnInit, OnDestroy {
   listFriend: User[] = [];
   // display placeholder indicate loading
-  listFriendLoading = this.friendService.friendLoading;
+  listFriendLoading = this.friendsQuery.selectLoading();
+  roomChatLoading = false;
 
   chatDialog: MatDialogRef<ChatLayoutComponent>;
   private dialogFriendId: string = null;
 
   constructor(
-    private chatService: ChatService,
-    private userService: UserService,
+    private roomChatService: RoomChatService,
+    private roomChatQuery: RoomchatQuery,
+    private messageChatService: MessageChatService,
+    private messageChatQuery: MessageChatQuery,
     private matDialog: MatDialog,
-    private friendService: FriendService,
+    private friendsService: FriendsService,
+    private friendsQuery: FriendsQuery,
+    private userQuery: UserQuery,
   ) {
-    this.friendService.friends
+    this.friendsQuery.selectAll()
       .pipe(
         distinctUntilChanged(),
       )
       .subscribe(friends => this.listFriend = friends);
+
+    this.roomChatQuery.selectLoading().subscribe(
+      status => this.roomChatLoading = status,
+    );
   }
 
   ngOnInit() {
     // lấy friends của user
-    this.friendService.refreshFriendList();
+    this.friendsService.get();
 
-    this.chatService.room
+    this.roomChatQuery.select()
       .pipe(
+        filter(roomChat => !!roomChat._id),
         distinctUntilChanged(),
       )
       .subscribe(roomChat => {
-        if (roomChat) {
-          // retrieve message
-          this.chatService.refreshMessage();
-
-          if (this.chatDialog) {
-            this.chatDialog.close();
-            this.chatDialog = null;
-          }
-          this.openChatDialogs();
-        }
+        console.log(roomChat);
+        this.messageChatService.get(roomChat._id);
+        this.openChatDialogs();
       });
   }
 
   requestRoomChat(friendId: string) {
-    if (this.dialogFriendId !== friendId && !this.chatService.roomLoadingValue) {
+    if (
+      !this.roomChatLoading &&          // must not in loading state
+      this.dialogFriendId !== friendId  // must be the current chatting person
+    ) {
+      this.roomChatLoading = true;
+      if (this.chatDialog && this.chatDialog.getState() === MatDialogState.OPEN) {
+        this.chatDialog.close();
+        this.chatDialog.afterClosed().subscribe(
+          () => {
+            this.dialogFriendId = friendId;
+            this.roomChatService.get([friendId], this.userQuery.getValue()._id);
+          },
+        );
+        return;
+      }
+
       this.dialogFriendId = friendId;
-      this.chatService.startRoomChat(friendId);
+      this.roomChatService.get([friendId], this.userQuery.getValue()._id);
     }
   }
 
@@ -74,9 +93,10 @@ export class ListFriendComponent implements OnInit, OnDestroy {
       hasBackdrop: false,
       panelClass: `setting-modal-box`,
     });
-    this.chatDialog.afterClosed().subscribe(
-      () => this.dialogFriendId = null,
-    );
+    this.chatDialog.beforeClosed().subscribe(() => {
+      this.dialogFriendId = null;
+      this.roomChatService.clearRoom();
+    });
   }
 
   ngOnDestroy(): void {

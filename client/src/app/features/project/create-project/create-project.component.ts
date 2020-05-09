@@ -1,12 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UiStateService } from '../../../shared/services/state/ui-state.service';
-import { ProjectService } from "../../../shared/services/project.service";
 import { Router } from "@angular/router";
-import { TaskService } from "../../../shared/services/task.service";
-import { TokenService } from '../../../shared/services/token.service';
-import { UserService } from '../../../shared/services/user.service';
 import { MatVerticalStepper } from '@angular/material/stepper';
+import { UserQuery } from '../../../shared/services/user';
+import { ProjectsService } from '../../../shared/services/projects';
+import { Project } from '../../../shared/interface/Project';
 
 @Component({
   selector: 'app-makePlan',
@@ -18,15 +17,13 @@ export class CreateProjectComponent implements OnInit {
   projectFormCreate: MatVerticalStepper;
 
   projectForm: FormGroup;
-  taskForm: FormGroup;
+  cachedSuccess: Project = null;
 
   constructor(
-    private tokenService: TokenService,
     private uiStateService: UiStateService,
     private formBuilder: FormBuilder,
-    private planService: ProjectService,
-    private taskService: TaskService,
-    private userService: UserService,
+    private projectsService: ProjectsService,
+    private userQuery: UserQuery,
     private router: Router,
   ) {
     this.uiStateService.setPageTitle({
@@ -68,20 +65,18 @@ export class CreateProjectComponent implements OnInit {
   ngOnInit(): void {
     this.projectFormBuilder();
     this.getUserData();
-
-    this.taskForm = this.formBuilder.group({
-      createdTasks: this.formBuilder.array([]),
-    });
   }
 
   getUserData() {
-    this.manager.setValue(this.tokenService.user._id);
+    this.manager.setValue(this.userQuery.getValue()._id);
   }
 
   createProject() {
-    return this.planService.createProject(this.projectForm.value).subscribe(success => {
+    return this.projectsService.create(this.projectForm.value).subscribe((success) => {
       if (success) {
-        this.router.navigateByUrl('/dashboard');
+        this.router.navigate(
+          ['/project', 'view', success._id],
+        );
       }
     });
   }

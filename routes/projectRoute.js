@@ -1,86 +1,40 @@
 const moment = require('moment');
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const checkAuth = require("../middleware/check-auth");
+const checkProject = require("../middleware/check-project");
 
 const Project = require('../database/models/project');
-const Task = require('../database/models/task');
 
 // Take all projects from list
 router.post('/', checkAuth, (req, res) => {
-    Project.find({manager: req.userData._id.toString()})
-        .exec()
-        .then(docs => {
-            const response = {
-                message: 'Retrieved all project successfully',
-                data: docs
-            };
-            res.status(200).json(response)
+    Project.find({
+        $or: [
+            {manager: req.userData._id.toString()},
+            {moderator: {$in: [req.userData._id.toString()]}},
+            {member: {$in: [req.userData._id.toString()]}},
+        ]
+    }).populate(
+        'manager moderator member'
+    ).exec().then(docs => {
+        const response = {
+            message: 'Retrieved all project successfully',
+            data: docs
+        };
+        res.status(200).json(response)
+    }).catch(err => {
+        res.status(500).json({
+            message: 'Retrieved all project error',
+            data: null,
+            error: err,
         })
-        .catch(err => {
-            res.status(500).json({
-                message: 'Retrieved all project error',
-                data: null,
-                error: err,
-            })
-        })
+    })
 });
 
 // Take project from db by ID
-router.post('/view', checkAuth, async (req, res) => {
-    const projectId = req.body._id;
+router.post('/view', checkAuth, checkProject, async (req, res) => {
     const userId = req.userData._id.toString();
-    if (!projectId) {
-        // ... xu ly validate
-        return res.status(301).json({
-            message: 'Cannot find project with empty id.',
-            data: null
-        })
-    }
-    let project = null;
-
-    try {
-        project = await Project.findById(projectId)
-            .populate('manager moderator member')
-            .exec();
-
-        if (!project) {
-            return res.status(301).json({
-                message: 'Project not found',
-                data: null
-            });
-        }
-    } catch (e) {
-        console.log(e);
-        return res.status(500).json({
-            message: 'Query find project error!',
-            data: null,
-            error: e
-        })
-    }
-
-    const isManager = project.manager && project.manager._id.toString() === userId;
-    let isModerator = false;
-    let isMember = false;
-    if (!isManager && project.moderator) {
-        isModerator = !!project.moderator.find(
-            moderator => moderator._id === userId,
-        );
-    }
-    if (!isModerator && project.member) {
-        isMember = project.member.find(
-            member => member._id === userId
-        );
-    }
-    if (!isManager && !isModerator && !isMember) {
-        // neu k trong project do thi se k tim thay project do
-        // nhu github private repo
-        return res.status(301).json({
-            message: 'Project not found',
-            data: null
-        });
-    }
+    let project = req.projectData;
 
     return res.status(200).json({
         message: 'Success get project data',
@@ -132,18 +86,7 @@ router.post('/create', checkAuth, (req, res) => {
             console.log(result);
             res.status(200).json({
                 message: 'Project has been created',
-                createdProject: {
-                    _id: result._id,
-                    title: result.title,
-                    description: result.description,
-                    priority: result.priority,
-                    startDate: result.startDate,
-                    endDate: result.endDate,
-                    status: result.status,
-                    manager: result.manager,
-                    moderator: result.moderator,
-                    member: result.member
-                }
+                data: result
             });
         })
         .catch(err => {
@@ -155,30 +98,89 @@ router.post('/create', checkAuth, (req, res) => {
 });
 
 // Update note by ID
-router.post('/update/:projectId', (req, res) => {
-    const id = req.params.projectId;
-    const updateOps = {...req.body};
+router.post('/update', checkAuth, async (req, res) => {
+    const user = req.userData;
+    const projectId = req.body._id;
+    const {
+        title, description,
+        priority, colorCover,
+        colorText, manager,
+        moderator, member,
+        status, startDate, endDate
+    } = req.body;
 
-    console.log(updateOps);
+    const dataProject = await Project.findOne({
+        _id: projectId,
+        $or: [
+            {manager: user._id},
+            {moderator: {$in: [user._id]}},
+        ]
+    }).exec();
 
-    Project.update({_id: id}, {$set: updateOps})
-        .exec()
-        .then(result => {
-            console.log(result);
-            return res.status(200).json({
-                message: 'Project updated',
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            return res.status(500).json({
-                Error: err
-            });
+    if (!dataProject) {
+        return res.status(404).json({
+            message: 'Project not found',
         });
+    }
+
+    if (title) {
+        dataProject.title = title;
+    }
+    if (description) {
+        dataProject.description = description;
+    }
+    if (priority) {
+        dataProject.priority = priority;
+    }
+    if (colorCover) {
+        dataProject.colorCover = colorCover;
+    }
+    if (colorText) {
+        dataProject.colorText = colorText;
+    }
+    if (manager && manager._id && dataProject.manager === user._id) {
+        // only the manager is able to change the manager
+        if (
+            dataProject.moderator.find(mod => mod === manager._id) ||
+            dataProject.member.find(member => member === manager._id)
+        ) {
+            // assigner must be in the project
+            dataProject.manager = manager._id;
+        }
+    }
+    if (moderator) {
+        // TODO future check
+        dataProject.moderator = moderator.map(mod => mod._id).filter(id => !!id)
+    }
+    if (member && Array.isArray(member)) {
+        // TODO future check
+        dataProject.member = member.map(mem => mem._id).filter(id => !!id);
+    }
+    if (status) {
+        dataProject.status = status;
+    }
+    if (
+        startDate && moment(startDate).isValid() &&
+        moment(startDate).isAfter(moment(dataProject.createdAt))
+    ) {
+        dataProject.startDate = startDate;
+    }
+    if (
+        endDate && moment(endDate).isValid() &&
+        moment(endDate).isAfter(moment(dataProject.startDate))
+    ) {
+        dataProject.endDate = endDate;
+    }
+
+    await dataProject.save();
+    return res.status(200).json({
+        message: 'Project updated',
+        data: dataProject
+    });
 });
 
 // Delete note by ID
-router.post('/delete/:projectId', (req, res) => {
+router.post('/delete/:projectId', checkAuth, (req, res) => {
     const id = req.params.projectId;
     Project.remove({_id: id})
         .exec()

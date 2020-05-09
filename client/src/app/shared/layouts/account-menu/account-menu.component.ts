@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthorizeService } from '../../services/authorize.service';
 import { MatDialogRef } from '@angular/material/dialog';
-import {UserService} from "../../services/user.service";
-import {TokenService} from "../../services/token.service";
+import { TokenService } from "../../services/token.service";
+import { UserService } from '../../services/user';
 
 @Component({
   selector: 'app-setting',
@@ -13,7 +12,6 @@ export class AccountMenuComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<AccountMenuComponent>,
-    private authorizeService: AuthorizeService,
     private userService: UserService,
     private tokenService: TokenService,
   ) {
@@ -23,10 +21,10 @@ export class AccountMenuComponent implements OnInit {
   }
 
   logout() {
-    return this.userService.changeStatusUser(this.tokenService.user._id, 2).subscribe(result => {
+    return this.userService.changeStatusUser(this.tokenService.decodedToken._id, 2).subscribe(result => {
       if (result) {
         // event.preventDefault();
-        this.authorizeService.logout();
+        this.userService.logout();
         this.dialogRef.close();
       }
     });

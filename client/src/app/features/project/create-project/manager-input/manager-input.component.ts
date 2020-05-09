@@ -5,8 +5,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { AbstractControl, FormControl } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
-import { UserService } from '../../../../shared/services/user.service';
-import { TokenService } from '../../../../shared/services/token.service';
+import { UserQuery, UserService } from '../../../../shared/services/user';
 
 @Component({
   selector: 'app-moderator-input',
@@ -33,8 +32,8 @@ export class ManagerInputComponent implements OnInit {
   managerFormSearch = new FormControl();
 
   constructor(
-    private tokenService: TokenService,
     private userService: UserService,
+    private userQuery: UserQuery,
   ) {
   }
 
@@ -43,7 +42,7 @@ export class ManagerInputComponent implements OnInit {
   }
 
   get currentUser() {
-    return this.tokenService.user;
+    return this.userQuery.getValue();
   }
 
   ngOnInit(): void {
@@ -95,7 +94,7 @@ export class ManagerInputComponent implements OnInit {
           input && input.length > 1 && this.listManager.length < 6,
         ),
         distinctUntilChanged(),
-        switchMap(value => this.userService.searchUser(value)),
+        switchMap(value => this.userService.find(value)),
         map(users => {
           const returnAvailable: User[] = [];
           users.forEach(found => {

@@ -7,6 +7,7 @@ import { TasksComponent } from './tasks/tasks.component';
 import { ProjectDashboardComponent } from './project-dashboard/project-dashboard.component';
 import { TaskDetailComponent } from './tasks/task-detail/task-detail.component';
 import { TaskCreateComponent } from './tasks/task-create/task-create.component';
+import { AllTaskResolver } from '../../shared/resolver/all-task.resolver';
 
 
 const routes: Routes = [
@@ -15,11 +16,21 @@ const routes: Routes = [
       { path: '', pathMatch: 'full', component: AllProjectComponent },
       { path: 'create', component: CreateProjectComponent },
       {
-        path: 'view/:id', component: ProjectComponent, children: [
+        path: 'view/:id',
+        resolve: {
+          tasks: AllTaskResolver,
+        },
+        component: ProjectComponent,
+        children: [
           { path: '', pathMatch: 'full', component: ProjectDashboardComponent },
+          {
+            path: 'tasks',
+            children: [
+              { path: '', pathMatch: 'full', component: TasksComponent },
+              { path: ':indicator', component: TaskDetailComponent },
+            ],
+          },
           { path: 'tasks-create', component: TaskCreateComponent },
-          { path: 'tasks', pathMatch: 'full', component: TasksComponent },
-          { path: 'tasks/:indicator', component: TaskDetailComponent },
         ],
       },
     ],
