@@ -15,7 +15,7 @@ const multer = require('multer');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        return cb(null, './uploads');
+        return cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
         return (null, file.originalname);
@@ -141,7 +141,7 @@ router.post('/login', async (req, res) => {
 /**
  * Sign-up / register a new user.
  */
-router.post('/register', upload.single('avatar'), async (req, res) => {
+router.post('/register', async (req, res) => {
     const {name, username, password, dob} = req.body;
 
     if (!name || !username || !password) {
@@ -389,11 +389,17 @@ router.post('/search', checkAuth, async (req, res) => {
 
 // Update user
 router.post('/update/:userId', upload.single('avatar'), (req, res) => {
-    const id = req.params.userId;
+    const id = req.params._id;
     const updateOps = {...req.body};
-    const avatar = req.file.path;
 
-    User.update({_id: id}, {$set: updateOps})
+    if (!req.file){
+        return res.json({
+            message: 'Please upload a file'
+        });
+    }
+    const avatar = req.file.originalname;
+
+    User.update({_id: id}, {$set: {updateOps, avatar: avatar}})
         .exec()
         .then(result => {
             console.log(result);

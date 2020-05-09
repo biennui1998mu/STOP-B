@@ -84,7 +84,7 @@ export class UserService {
   }) {
     return this.http.post<{
       message: string,
-      updatedUser?: Note,
+      updatedUser?: User,
       error: any
     }>(`${this.url}/update/${userId}`, credentials).pipe(
       map(result => {

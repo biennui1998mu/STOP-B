@@ -5,7 +5,6 @@ import { UserService } from "../../shared/services/user.service";
 import { TokenService } from "../../shared/services/token.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {User} from "../../shared/interface/User";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-account',
@@ -15,7 +14,7 @@ import {Router} from "@angular/router";
 export class AccountComponent implements OnInit {
 
   updateUserForm: FormGroup;
-  user? : User;
+  user: User = null;
 
   constructor(
     private authorizeService: AuthorizeService,
@@ -23,7 +22,6 @@ export class AccountComponent implements OnInit {
     private userService: UserService,
     private tokenService: TokenService,
     private formBuilder: FormBuilder,
-    private router: Router
   ) {
     this.updateUserForm = this.formBuilder.group({
       username: [{value: '', disabled: true}, [Validators.required]],
@@ -60,14 +58,19 @@ export class AccountComponent implements OnInit {
 
   getUser() {
     return this.userService.viewProfile().subscribe((data: User) => {
-      this.username.setValue(data.username);
-      this.name.setValue(data.name);
-      this.dob.setValue(data.dob);
-      this.user.avatar = data.avatar;
+      if (data) {
+        this.username.setValue(data.username);
+        this.name.setValue(data.name);
+        this.dob.setValue(data.dob);
+        this.user = data;
+      }
     });
   }
 
   updateUser() {
+    const updatedForm = new FormData();
+    // updatedForm.append('file')
+
     return this.userService.updateUser(
       this.tokenService.user._id,
       this.updateUserForm.value,

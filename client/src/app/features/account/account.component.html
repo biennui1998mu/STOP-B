@@ -1,53 +1,27 @@
-<form [formGroup]="updateUserForm" class="container">
-  <div class="user-info">
-    <mat-form-field appearance="outline" class="user-username">
-      <mat-label>Username</mat-label>
-      <input formControlName="username"
-             matInput
-             placeholder="Project Valorant" required>
-    </mat-form-field>
+<form [formGroup]="updateUserForm" class="update-info" enctype="multipart/form-data">
+  <mat-form-field appearance="fill">
+    <mat-label>Username</mat-label>
+    <input formControlName="username"
+           matInput>
+  </mat-form-field>
 
-    <mat-form-field appearance="outline" class="user-name">
-      <mat-label>Name</mat-label>
-      <input formControlName="name"
-             matInput
-             placeholder="Project Valorant"
-             required>
-    </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Name</mat-label>
+    <input formControlName="name"
+           matInput>
+  </mat-form-field>
 
-    <mat-form-field class="user-dob">
-      <mat-label>Date of birth</mat-label>
-      <input [matDatepicker]="picker"
-             formControlName="dob"
-             matInput
-             name="dob" required>
-      <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-  </div>
-  <div class="user-avatar">
-    <img alt=""
-         class="user-avatar-image"
-         [src]="user?.avatar">
+  <mat-form-field>
+    <mat-label>Date of birth</mat-label>
+    <input matInput
+           formControlName="dob"
+           [matDatepicker]="picker">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
 
-    <div class="user-avatar-url">
-      <label class="custom-file-upload" for="file-upload">
-        <span class="material-icons">
-          add_a_photo
-        </span>
-        Take image from your computer
-      </label>
-      <input id="file-upload"
-             type="file"
-             accept="image/*"/>
-    </div>
+  <img class="image" [src]="user?.avatar" alt="">
+  <input type="file" formControlName="avatar">
 
-    <button (click)="updateUser()"
-            [disabled]="!updateUserForm.valid && updateUserForm.dirty"
-            class="btn-submit"
-            color="warn"
-            mat-raised-button>
-      Update
-    </button>
-  </div>
+  <button class="button-custom" mat-raised-button color="warn" (click)="updateUser()">Update</button>
 </form>
