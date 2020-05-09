@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UiStateService } from '../../../shared/services/state/ui-state.service';
-import { NoteService } from "../../../shared/services/note.service";
 import { Router } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { TokenService } from "../../../shared/services/token.service";
-import { ProjectService } from "../../../shared/services/project.service";
-import { Project } from "../../../shared/interface/Project";
+import { ProjectsQuery, ProjectsService } from '../../../shared/services/projects';
+import { NotesService } from '../../../shared/services/note';
 
 @Component({
   selector: 'app-create-note',
@@ -15,15 +13,15 @@ import { Project } from "../../../shared/interface/Project";
 export class CreateNoteComponent implements OnInit {
 
   createNoteFrom: FormGroup;
-  projects: Project[];
+  projects = this.projectsQuery.selectAll();
 
   constructor(
     private uiStateService: UiStateService,
-    private noteService: NoteService,
+    private notesService: NotesService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private tokenService: TokenService,
-    private projectService: ProjectService,
+    private projectService: ProjectsService,
+    private projectsQuery: ProjectsQuery,
   ) {
     this.uiStateService.setPageTitle({
       current: {
@@ -57,21 +55,15 @@ export class CreateNoteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllProject();
+    this.projectService.get();
   }
 
   createNote() {
-    return this.noteService.noteCreate(this.createNoteFrom.value).subscribe(success => {
-      if (success) {
-        this.router.navigateByUrl('/dashboard');
-      }
-    });
-  }
-
-  getAllProject() {
-    this.projectService.refreshProjects();
-    this.projectService.projects.subscribe(projects => {
-      this.projects = projects;
-    });
+    return this.notesService.create(this.createNoteFrom.value)
+      .subscribe(success => {
+        if (success) {
+          this.router.navigateByUrl('/dashboard');
+        }
+      });
   }
 }

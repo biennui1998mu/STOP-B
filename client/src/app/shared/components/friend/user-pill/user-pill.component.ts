@@ -1,12 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { User } from '../../../interface/User';
 import { TokenService } from '../../../services/token.service';
-import { FriendService } from '../../../services/friend.service';
 import { FriendRequest } from '../../../interface/FriendRequest';
 import { tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogsComponent } from '../../dialogs/confirm-dialogs/confirm-dialogs.component';
 import { ConfirmDialogModel } from '../../../interface/ConfirmDialogModel';
+import { FriendsService } from '../../../services/friends';
+import { UserQuery } from '../../../services/user';
+import { FriendRequestsService } from '../../../services/friend-requests';
 
 @Component({
   selector: 'app-user-pill',
@@ -26,13 +28,15 @@ export class UserPillComponent {
 
   constructor(
     private tokenService: TokenService,
-    private friendService: FriendService,
+    private userQuery: UserQuery,
+    private friendRequestService: FriendRequestsService,
+    private friendsService: FriendsService,
     private matDialog: MatDialog,
   ) {
   }
 
   get user() {
-    return this.tokenService.user;
+    return this.userQuery.getValue();
   }
 
   /**
@@ -47,27 +51,24 @@ export class UserPillComponent {
       return;
     }
 
-    this.friendService.sendFriendRequest(
+    this.friendRequestService.sendFriendRequest(
       {
         recipient: this.friend._id,
         requester: this.user._id,
         status: 0, // new request
       },
-    )
-      .pipe(
-        tap(result => {
-          if (result) {
-            this.friendService.refreshFriendRequest();
-          }
-        }),
-      )
-      .subscribe(status => {
-        if (status) {
-          this.friend.friendRequest = status;
-          // switch status 'offline' without total refresh dom.
+    ).pipe(
+      tap(result => {
+        if (result) {
+          this.friendRequestService.get();
         }
-        console.log(status);
-      });
+      }),
+    ).subscribe(status => {
+      if (status) {
+        this.friend.friendRequest = status;
+        // switch status 'offline' without total refresh dom.
+      }
+    });
   }
 
   /**
@@ -114,13 +115,13 @@ export class UserPillComponent {
   }
 
   private callAPIUpdateStatus(updateInfo: Partial<FriendRequest>) {
-    this.friendService.responseFriendRequest(
+    this.friendRequestService.responseFriendRequest(
       this.friend.friendRequest._id,
       updateInfo,
     ).pipe(
       tap(result => {
         if (result) {
-          this.friendService.refreshFriendList();
+          this.friendsService.get();
         }
       }),
     ).subscribe(

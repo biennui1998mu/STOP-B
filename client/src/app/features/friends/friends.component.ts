@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from "../../shared/interface/User";
-import { UserService } from "../../shared/services/user.service";
-import { FriendService } from "../../shared/services/friend.service";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { TokenService } from "../../shared/services/token.service";
 import { UiStateService } from '../../shared/services/state/ui-state.service';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { FriendRequest } from '../../shared/interface/FriendRequest';
+import { UserService } from '../../shared/services/user';
+import { FriendsQuery, FriendsService } from '../../shared/services/friends';
+import { FriendRequestsQuery, FriendRequestsService } from '../../shared/services/friend-requests';
+import { deepImmutableObject } from '../../shared/tools';
 
 @Component({
   selector: 'app-friends',
@@ -25,18 +26,20 @@ export class FriendsComponent implements OnInit {
     [Validators.required, Validators.minLength(2)],
   );
   friends: User[] = [];
-  friendsLoading = this.friendService.friendLoading;
+  friendsLoading = this.friendsQuery.selectLoading();
   strangers: User[] = [];
   friendRequest: User[] = [];
-  friendRequestLoading = this.friendService.friendRequestLoading;
+  friendRequestLoading = this.friendRequestsQuery.selectLoading();
   isSearching: boolean = false;
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private tokenService: TokenService,
     private userService: UserService,
-    private friendService: FriendService,
+    private friendService: FriendsService,
+    private friendsQuery: FriendsQuery,
+    private friendRequestsService: FriendRequestsService,
+    private friendRequestsQuery: FriendRequestsQuery,
     private uiStateService: UiStateService,
   ) {
     this.uiStateService.setPageTitle({
@@ -45,18 +48,18 @@ export class FriendsComponent implements OnInit {
         path: '/friends',
       },
     });
-    this.friendService.refreshFriendRequest();
-    this.friendService.refreshFriendList();
+    this.listenFriendList();
+    this.listenFriendRequest();
+    this.friendRequestsService.get();
+    this.friendService.get();
   }
 
   ngOnInit(): void {
     this.listenSearchForm();
-    this.listenFriendList();
-    this.listenFriendRequest();
   }
 
   private listenFriendList() {
-    this.friendService.friends
+    this.friendsQuery.selectAll()
       .pipe(
         distinctUntilChanged(),
       ).subscribe(
@@ -74,7 +77,7 @@ export class FriendsComponent implements OnInit {
             return of([]);
           }
           this.isSearching = true;
-          return this.userService.searchUser(text);
+          return this.userService.find(text);
         }),
         map((listUser: User[]) => {
           // filter out user that already friend with
@@ -92,10 +95,12 @@ export class FriendsComponent implements OnInit {
   }
 
   private listenFriendRequest() {
-    this.friendService.friendRequest.pipe(
+    this.friendRequestsQuery.selectAll().pipe(
       distinctUntilChanged(),
     ).subscribe(request => {
-      this.friendRequest = this.parsingToUserFromRequest(request);
+      this.friendRequest = this.parsingToUserFromRequest(
+        deepImmutableObject(request),
+      );
     });
   }
 

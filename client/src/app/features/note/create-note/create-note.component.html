@@ -23,7 +23,7 @@
         <mat-label>Project</mat-label>
         <mat-select formControlName="ProjectId">
           <mat-option>None</mat-option>
-          <mat-option *ngFor="let project of projects" value="{{project._id}}">{{project.title}}</mat-option>
+          <mat-option *ngFor="let project of projects | async" value="{{project._id}}">{{project.title}}</mat-option>
         </mat-select>
       </mat-form-field>
 

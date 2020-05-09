@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { TaskService } from '../../../../shared/services/task.service';
 import { Task } from '../../../../shared/interface/Task';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProjectService } from '../../../../shared/services/project.service';
 import { User } from '../../../../shared/interface/User';
 import { Project } from '../../../../shared/interface/Project';
 import { filter, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { TokenService } from '../../../../shared/services/token.service';
-import { TaskCommentService } from '../../../../shared/services/task-comment.service';
+import { TasksService } from '../../../../shared/services/task';
+import { UserQuery } from '../../../../shared/services/user';
+import { ProjectsQuery } from '../../../../shared/services/projects';
+import { CommentsQuery } from '../../../../shared/services/task-comments';
 
 @Component({
   selector: 'app-task-detail',
@@ -20,19 +20,19 @@ export class TaskDetailComponent implements OnInit {
   task: Task<User, Project>;
   project: Project<User> = null;
   isLoading: boolean = false;
-  userId = this.tokenService.user._id;
+  userId = this.userQuery.getValue()._id;
 
-  comments = this.commentService.comments;
+  comments = this.commentsQuery.selectAll();
 
   constructor(
-    private taskService: TaskService,
+    private userQuery: UserQuery,
+    private taskService: TasksService,
+    private projectsQuery: ProjectsQuery,
+    private commentsQuery: CommentsQuery,
     private activatedRoute: ActivatedRoute,
-    private projectService: ProjectService,
-    private tokenService: TokenService,
-    private commentService: TaskCommentService,
     private router: Router,
   ) {
-    this.projectService.activeProject
+    this.projectsQuery.selectActive()
       .pipe(
         filter(project => !!project),
         switchMap((project) => {
@@ -42,7 +42,7 @@ export class TaskDetailComponent implements OnInit {
         switchMap(params => {
           if (params.has('indicator')) {
             const indicator = params.get('indicator');
-            return this.taskService.viewTask(
+            return this.taskService.getOne(
               indicator,
               this.project,
             );

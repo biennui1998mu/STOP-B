@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ProjectService } from '../../../shared/services/project.service';
 import { Project } from '../../../shared/interface/Project';
 import { User } from '../../../shared/interface/User';
-import { TaskService } from '../../../shared/services/task.service';
 import { Task } from '../../../shared/interface/Task';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { TasksQuery, TasksService } from '../../../shared/services/task';
+import { ProjectsQuery } from '../../../shared/services/projects';
 
 @Component({
   selector: 'app-tasks',
@@ -19,31 +19,31 @@ export class TasksComponent implements OnInit {
   finishedTasks = 0;
   tasks: Task<User>[] = [];
 
-  projectLoading = this.projectService.activeProjectLoading;
-  taskLoading = this.taskService.tasksLoading;
+  projectLoading = this.projectsQuery.selectLoading();
+  taskLoading = this.taskQueue.selectLoading();
 
   constructor(
-    private projectService: ProjectService,
-    private taskService: TaskService,
+    private projectsQuery: ProjectsQuery,
+    private taskService: TasksService,
+    private taskQueue: TasksQuery,
   ) {
-    this.taskService.tasks.subscribe(
+    this.taskQueue.selectAll().subscribe(
       tasks => this.tasks = tasks,
     );
   }
 
   ngOnInit(): void {
-    this.projectService.activeProject
+    this.projectsQuery.selectActive()
       .pipe(
         switchMap(project => {
           this.project = project;
 
           if (project) {
-            return this.taskService.refreshTasks(project);
+            return this.taskService.get(project);
           }
           return of(null);
         }),
       ).subscribe(refreshed => {
-      console.log(refreshed);
       if (refreshed) {
         this.ongoingTasks = refreshed.ongoingCount;
         this.finishedTasks = refreshed.finishedCount;

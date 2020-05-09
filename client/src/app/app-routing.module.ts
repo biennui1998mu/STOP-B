@@ -9,7 +9,6 @@ const routes: Routes = [
   {
     path: '',
     component: LayoutsComponent,
-    canLoad: [AuthenticateGuard],
     canActivateChild: [AuthenticateGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: '/dashboard' },

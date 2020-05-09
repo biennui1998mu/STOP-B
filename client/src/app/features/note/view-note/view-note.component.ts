@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NoteService } from "../../../shared/services/note.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Note } from "../../../shared/interface/Note";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { NotesService } from '../../../shared/services/note';
 
 @Component({
   selector: 'app-view-note',
@@ -16,7 +16,7 @@ export class ViewNoteComponent implements OnInit {
   alertDelete: boolean = false;
 
   constructor(
-    private noteService: NoteService,
+    private notesService: NotesService,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private router: Router,
@@ -65,7 +65,7 @@ export class ViewNoteComponent implements OnInit {
   }
 
   readNote(id: string) {
-    return this.noteService.readNote(id).subscribe((data: Note) => {
+    return this.notesService.getOne(id).subscribe((data: Note) => {
       this.Title.setValue(data.Title);
       this.Description.setValue(data.Description);
       this.Date.setValue(data.StartDate);
@@ -73,7 +73,7 @@ export class ViewNoteComponent implements OnInit {
   }
 
   deleteNote(id: string) {
-    return this.noteService.deleteNote(id).subscribe(success => {
+    return this.notesService.delete(id).subscribe(success => {
       if (success) {
         this.router.navigateByUrl('/dashboard');
       }
@@ -81,7 +81,7 @@ export class ViewNoteComponent implements OnInit {
   }
 
   updateNote() {
-    return this.noteService.updateNote(
+    return this.notesService.update(
       this.noteId.value,
       this.readNoteForm.value,
     ).subscribe(updated => {

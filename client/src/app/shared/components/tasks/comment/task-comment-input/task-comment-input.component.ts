@@ -4,7 +4,7 @@ import { MarkdownService } from '../../../../services/markdown.service';
 import { Task } from '../../../../interface/Task';
 import { Project } from '../../../../interface/Project';
 import { User } from '../../../../interface/User';
-import { TokenService } from '../../../../services/token.service';
+import { UserQuery } from '../../../../services/user';
 
 @Component({
   selector: 'app-task-comment-input',
@@ -21,7 +21,7 @@ export class TaskCommentInputComponent implements OnInit {
   @ViewChild('textAreaElement')
   textAreaElement: ElementRef<HTMLTextAreaElement>;
 
-  userId = this.tokenService.user?._id;
+  userId = this.userQuery.getValue()._id;
 
   formInput: FormGroup;
 
@@ -32,7 +32,7 @@ export class TaskCommentInputComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private markdown: MarkdownService,
-    private tokenService: TokenService,
+    private userQuery: UserQuery,
   ) {
     this.formInput = this.fb.group({
       content: ['', [Validators.required]],

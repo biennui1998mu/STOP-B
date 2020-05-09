@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { User } from '../../../interface/User';
 import * as moment from 'moment';
-import { TokenService } from '../../../services/token.service';
 import { MarkdownService } from '../../../services/markdown.service';
 import { Task } from '../../../interface/Task';
+import { UserQuery } from '../../../services/user';
 
 @Component({
   selector: 'app-task-content',
@@ -16,10 +16,10 @@ export class TaskContentComponent implements OnInit {
   @Input()
   task: Task<User>;
 
-  userId = this.tokenService.user._id;
+  userId = this.userQuery.getValue()._id;
 
   constructor(
-    private tokenService: TokenService,
+    private userQuery: UserQuery,
     private markdownService: MarkdownService,
   ) {
   }

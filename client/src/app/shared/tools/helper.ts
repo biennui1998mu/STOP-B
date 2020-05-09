@@ -285,7 +285,7 @@ export function deepEquals(x, y, exceptionName?: string) {
   }
 }
 
-export function deepMutableObject(objectImmutable: any) {
+export function deepImmutableObject(objectImmutable: any) {
   let retObj: any;
   if (Array.isArray(objectImmutable)) {
     retObj = [];
@@ -305,12 +305,12 @@ export function deepMutableObject(objectImmutable: any) {
       if (Array.isArray(objectImmutable[prob])) {
         const arrayImmutable = [];
         Array.from(objectImmutable[prob]).forEach((member: any) => {
-          const objectInner = deepMutableObject(member);
+          const objectInner = deepImmutableObject(member);
           arrayImmutable.push(objectInner);
         });
         retObj[prob] = arrayImmutable;
       } else {
-        retObj[prob] = deepMutableObject(objectImmutable[prob]);
+        retObj[prob] = deepImmutableObject(objectImmutable[prob]);
       }
     } else {
       retObj[prob] = objectImmutable[prob];

@@ -120,19 +120,20 @@ io.use(async function (socket, next) {
             ],
             status: 1
         }).exec().then(result => {
-            socket.broadcast.emit("Offline", result);
+            socket.broadcast.emit("User-offline", result);
         })
     });
 
     // lắng nghe sự kiện join room
     socket.on("user-join-room-chat", function (room) {
         Room.findOne({_id: room._id})
+            .populate('listUser')
             .exec()
             .then(data => {
                 socket.join(data._id);
 
                 // user sẽ tự join vào room mới tạo
-                socket.emit("Joined", data);
+                socket.emit("Joined-room", data);
 
                 // lắng nghe user send message
                 socket.on("send-Message-toServer", function (messageData) {

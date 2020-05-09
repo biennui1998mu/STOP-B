@@ -12,6 +12,9 @@ import { AuthenticateGuard } from "./shared/guard/authenticate.guard";
 import { LayoutsModule } from './shared/layouts/layouts.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -28,6 +31,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     SharedServicesModule,
     CoreImportsModule,
     AppRoutingModule,
+    environment.production ? [] : AkitaNgDevtools,
+    AkitaNgRouterStoreModule,
   ],
   providers: [
     AuthenticateGuard,

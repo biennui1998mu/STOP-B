@@ -51,7 +51,7 @@ const taskSchema = new Schema({
 taskSchema.plugin(AutoIncrement, {
     id: 'indicator_seq',            // required if use reference_fields
     inc_field: 'indicator',         // plugin auto create this field in schema
-    reference_fields: ['projectId'] // only increment based on projectId
+    reference_fields: ['project'] // only increment based on projectId
 });
 
 module.exports = mongoose.model(

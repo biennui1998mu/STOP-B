@@ -2,7 +2,7 @@ import { AfterContentInit, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AccountComponent } from "../../../features/account/account.component";
 import { Router } from '@angular/router';
-import { ProjectService } from '../../services/project.service';
+import { ProjectsQuery, ProjectsService } from '../../services/projects';
 
 @Component({
   selector: 'app-sidenav',
@@ -14,15 +14,16 @@ export class SideNavigationComponent implements AfterContentInit {
   noteSectionOpen = false;
   projectSectionOpen = false;
 
-  projects = this.projectService.projects;
-  projectsLoading = this.projectService.projectsLoading;
+  projects = this.projectsQuery.selectAll();
+  projectsLoading = this.projectsQuery.selectLoading();
 
   constructor(
     private dialog: MatDialog,
     private router: Router,
-    private projectService: ProjectService,
+    private projectsQuery: ProjectsQuery,
+    private projectsService: ProjectsService,
   ) {
-    this.projectService.refreshProjects();
+    this.projectsService.get();
   }
 
   ngAfterContentInit(): void {

@@ -4,9 +4,9 @@ import { AbstractControl, FormControl } from '@angular/forms';
 import { User } from '../../../../shared/interface/User';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { TokenService } from '../../../../shared/services/token.service';
-import { UserService } from '../../../../shared/services/user.service';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
+import { UserQuery, UserService } from '../../../../shared/services/user';
 
 @Component({
   selector: 'app-member-input',
@@ -32,8 +32,8 @@ export class MemberInputComponent implements OnInit {
   memberFormSearch = new FormControl();
 
   constructor(
-    private tokenService: TokenService,
     private userService: UserService,
+    private userQuery: UserQuery,
   ) {
   }
 
@@ -46,7 +46,7 @@ export class MemberInputComponent implements OnInit {
   }
 
   get currentUser() {
-    return this.tokenService.user;
+    return this.userQuery.getValue();
   }
 
   ngOnInit(): void {
@@ -97,7 +97,7 @@ export class MemberInputComponent implements OnInit {
         debounceTime(200),
         filter((input: string | null) => input && input.length > 1),
         distinctUntilChanged(),
-        switchMap(value => this.userService.searchUser(value)),
+        switchMap(value => this.userService.find(value)),
         map(user => {
           const returnAvailable: User[] = [];
           user.forEach(found => {

@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommentIssue } from '../../../../interface/CommentIssue';
 import { Task } from '../../../../interface/Task';
 import { User } from '../../../../interface/User';
-import { TokenService } from '../../../../services/token.service';
 import { Project } from '../../../../interface/Project';
+import { UserQuery } from '../../../../services/user';
 
 @Component({
   selector: 'app-task-comment',
@@ -18,10 +18,10 @@ export class TaskCommentComponent implements OnInit {
   @Input()
   task: Task<User, Project>;
 
-  userId = this.tokenService.user?._id;
+  userId = this.userQuery.getValue()._id;
 
   constructor(
-    private tokenService: TokenService,
+    private userQuery: UserQuery,
   ) {
   }
 

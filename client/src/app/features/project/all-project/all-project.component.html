@@ -1,1 +1,24 @@
-<p>all-project works!</p>
+<div class="container">
+  <button [routerLink]="['/project', 'create']"
+          color="primary"
+          mat-flat-button>
+    <mat-icon>
+      add
+    </mat-icon>
+    Create project
+  </button>
+</div>
+
+<div class="list-project">
+  <mat-card *ngFor="let project of projects|async"
+            [ngStyle]="{backgroundColor: project.colorCover,color: project.colorText}"
+            [routerLink]="['/project', 'view', project._id]"
+            class="cursor-pointer user-select-none">
+    <mat-card-content>
+      <h2>{{project.title}}</h2>
+      <small>{{project.description}}</small>
+      <br>
+      <small>Start date: {{project.startDate | date: 'dd/MM/yyyy - hh:mm:ss'}}</small>
+    </mat-card-content>
+  </mat-card>
+</div>

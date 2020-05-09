@@ -106,7 +106,6 @@ router.post('/create', checkAuth, checkProject, (req, res) => {
                 // then the array output will have different length
                 return responseError('assignee');
             }
-
             const getMemberProject = [
                 ...currentProject.moderator,
                 ...currentProject.member,
@@ -114,10 +113,10 @@ router.post('/create', checkAuth, checkProject, (req, res) => {
             ];
             const isNotInvolved = [];
             userAssignee.forEach(user => {
-                const findNotInGetMember = getMemberProject.find(member =>
-                    member._id.toString() !== user._id // member is still mongoose doc
+                const findMember = getMemberProject.find(member =>
+                    member._id.toString() === user._id // member is still mongoose doc
                 );
-                if (findNotInGetMember) {
+                if (!findMember) {
                     isNotInvolved.push(user);
                 }
             });

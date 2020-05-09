@@ -7,23 +7,12 @@ const Note = require('../database/models/note');
 
 // Take all notes from list
 router.post('/', checkAuth, (req, res) => {
-    Note.find({UserId : req.userData._id.toString()})
+    Note.find({UserId: req.userData._id.toString()})
         .exec()
         .then(docs => {
             const response = {
                 count: docs.length,
-                notes: docs.map(doc => {
-                    return {
-                        _id: doc._id,
-                        Title: doc.Title,
-                        UserId: doc.UserId,
-                        Description: doc.Description,
-                        Priority: doc.Priority,
-                        StartDate: doc.StartDate,
-                        Status: doc.Status,
-                        ProjectId: doc.ProjectId,
-                    }
-                })
+                notes: docs
             };
             res.status(200).json(response)
         })
@@ -65,20 +54,20 @@ router.post('/view', (req, res) => {
 router.post('/search', (req, res) => {
     const input = req.body.search;
 
-    if(input.length < 2){
+    if (input.length < 2) {
         return res.json({
             message: 'Must be at least 2 character'
         })
-    }else{
+    } else {
         Note.find({
             $or: [
                 {Title: new RegExp(input, 'i')},
                 {Description: new RegExp(input, 'i')}
             ]
         }, function (err, notes) {
-            if(notes){
+            if (notes) {
                 return res.json(notes);
-            }else{
+            } else {
                 return err;
             }
         }).limit(10);

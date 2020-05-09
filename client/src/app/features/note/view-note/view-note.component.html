@@ -23,14 +23,31 @@
     <input matInput placeholder="project 1">
   </mat-form-field>
   <div class="btn">
-    <button (click)="updateNote()" [disabled]="readNoteForm.invalid || !readNoteForm.dirty" mat-raised-button>Save
+    <button (click)="updateNote()"
+            [disabled]="readNoteForm.invalid || !readNoteForm.dirty"
+            mat-raised-button>
+      Save
     </button>
-    <button (click)="showAlertDelete()" mat-raised-button>Delete</button>
+    <button (click)="showAlertDelete()"
+            mat-raised-button>
+      Delete
+    </button>
   </div>
 
-  <mat-card *ngIf="alertDelete" class="alertDelete">
-    <p>Do you confirm Delete this note ?</p>
-    <button (click)="deleteNote(noteId.value)" class="alert-btn-delete" mat-raised-button>Delete</button>
-    <button (click)="hideAlertDelete()" class="alert-btn-cancel" mat-raised-button>Cancel</button>
+  <mat-card *ngIf="alertDelete"
+            class="alertDelete">
+    <p>
+      Do you confirm Delete this note ?
+    </p>
+    <button (click)="deleteNote(noteId.value)"
+            class="alert-btn-delete"
+            mat-raised-button>
+      Delete
+    </button>
+    <button (click)="hideAlertDelete()"
+            class="alert-btn-cancel"
+            mat-raised-button>
+      Cancel
+    </button>
   </mat-card>
 </form>

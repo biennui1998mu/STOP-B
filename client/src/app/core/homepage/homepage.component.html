@@ -43,7 +43,7 @@
   </div>
 
   <div class="list-available">
-    <a *ngFor="let note of notes"
+    <a *ngFor="let note of notes|async"
        [class.finished]="note.Status"
        [class.high]="note.Priority === 1"
        [class.medium]="note.Priority === 2"
