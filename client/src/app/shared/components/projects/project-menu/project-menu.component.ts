@@ -1,6 +1,7 @@
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Project } from '../../../interface/Project';
+import { User } from '../../../interface/User';
 
 @Component({
   selector: 'app-project-menu',
@@ -10,7 +11,7 @@ import { Project } from '../../../interface/Project';
 export class ProjectMenuComponent implements OnInit {
 
   @Input()
-  project: Project;
+  project: Project<User>;
 
   expandState = false;
 

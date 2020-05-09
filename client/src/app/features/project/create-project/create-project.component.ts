@@ -5,6 +5,7 @@ import { Router } from "@angular/router";
 import { MatVerticalStepper } from '@angular/material/stepper';
 import { UserQuery } from '../../../shared/services/user';
 import { ProjectsService } from '../../../shared/services/projects';
+import { Project } from '../../../shared/interface/Project';
 
 @Component({
   selector: 'app-makePlan',
@@ -16,6 +17,7 @@ export class CreateProjectComponent implements OnInit {
   projectFormCreate: MatVerticalStepper;
 
   projectForm: FormGroup;
+  cachedSuccess: Project = null;
 
   constructor(
     private uiStateService: UiStateService,
@@ -70,9 +72,8 @@ export class CreateProjectComponent implements OnInit {
   }
 
   createProject() {
-    return this.projectsService.create(this.projectForm.value).subscribe(success => {
+    return this.projectsService.create(this.projectForm.value).subscribe((success) => {
       if (success) {
-        this.projectsService.get();
         this.router.navigate(
           ['/project', 'view', success._id],
         );

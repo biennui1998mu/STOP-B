@@ -3,6 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AccountComponent } from "../../../features/account/account.component";
 import { Router } from '@angular/router';
 import { ProjectsQuery, ProjectsService } from '../../services/projects';
+import { Project } from '../../interface/Project';
+import { User } from '../../interface/User';
 
 @Component({
   selector: 'app-sidenav',
@@ -23,7 +25,6 @@ export class SideNavigationComponent implements AfterContentInit {
     private projectsQuery: ProjectsQuery,
     private projectsService: ProjectsService,
   ) {
-    this.projectsService.get();
   }
 
   ngAfterContentInit(): void {
@@ -49,6 +50,10 @@ export class SideNavigationComponent implements AfterContentInit {
         break;
     }
     this.router.navigate(routing);
+  }
+
+  setActive(project: Project<User>) {
+    this.projectsService.setActive(project._id);
   }
 
   private extractCurrentURL(url: string) {

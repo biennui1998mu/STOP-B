@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from '../../../shared/interface/Project';
 import { User } from '../../../shared/interface/User';
-import { Task } from '../../../shared/interface/Task';
+import { Task, TASK_STATUS } from '../../../shared/interface/Task';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { TasksQuery, TasksService } from '../../../shared/services/task';
@@ -28,7 +28,9 @@ export class TasksComponent implements OnInit {
     private taskQueue: TasksQuery,
   ) {
     this.taskQueue.selectAll().subscribe(
-      tasks => this.tasks = tasks,
+      tasks => {
+        this.tasks = tasks;
+      },
     );
   }
 
@@ -37,17 +39,21 @@ export class TasksComponent implements OnInit {
       .pipe(
         switchMap(project => {
           this.project = project;
-
           if (project) {
-            return this.taskService.get(project);
+            return this.taskService.get(project._id);
           }
-          return of(null);
+          return of([] as Task<User>[]);
         }),
-      ).subscribe(refreshed => {
-      if (refreshed) {
-        this.ongoingTasks = refreshed.ongoingCount;
-        this.finishedTasks = refreshed.finishedCount;
+      ).subscribe(tasks => {
+      if (tasks) {
+        const tasksOngoing = tasks.filter(t => t.status === TASK_STATUS.open);
+        this.ongoingTasks = tasksOngoing.length;
+        this.finishedTasks = tasks.length - this.ongoingTasks;
       }
     });
+  }
+
+  updateStatistic() {
+
   }
 }

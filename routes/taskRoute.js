@@ -179,11 +179,7 @@ router.post('/', checkAuth, checkProject, (req, res) => {
         const countOngoingTask = docs.length - countFinished;
         const response = {
             message: 'Fetched all tasks',
-            data: {
-                ongoingCount: countOngoingTask,
-                finishedCount: countFinished,
-                tasks: docs,
-            },
+            data: docs,
         };
         res.status(200).json(response)
     }).catch(err => {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UiStateService } from '../../../shared/services/state/ui-state.service';
 import { Router } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -10,7 +10,7 @@ import { NotesService } from '../../../shared/services/note';
   templateUrl: './create-note.component.html',
   styleUrls: ['./create-note.component.scss'],
 })
-export class CreateNoteComponent implements OnInit {
+export class CreateNoteComponent {
 
   createNoteFrom: FormGroup;
   projects = this.projectsQuery.selectAll();
@@ -52,10 +52,6 @@ export class CreateNoteComponent implements OnInit {
 
   get ProjectId() {
     return this.createNoteFrom.get('ProjectId');
-  }
-
-  ngOnInit(): void {
-    this.projectService.get();
   }
 
   createNote() {

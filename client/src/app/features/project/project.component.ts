@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Project } from "../../shared/interface/Project";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { UiStateService } from '../../shared/services/state/ui-state.service';
 import { filter, switchMap } from 'rxjs/operators';
 import { User } from '../../shared/interface/User';
@@ -20,7 +20,6 @@ export class ProjectComponent implements OnInit {
     private projectsService: ProjectsService,
     private projectsQuery: ProjectsQuery,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
   ) {
     this.activatedRoute.paramMap
       .pipe(
