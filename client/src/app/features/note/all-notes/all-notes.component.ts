@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UiStateService } from '../../../shared/services/state/ui-state.service';
 import { NotesQuery, NotesService } from '../../../shared/services/note';
+import { Observable } from 'rxjs';
+import { Note } from '../../../shared/interface/Note';
+import { Project } from '../../../shared/interface/Project';
 
 @Component({
   selector: 'app-all-notes',
@@ -9,7 +12,7 @@ import { NotesQuery, NotesService } from '../../../shared/services/note';
 })
 export class AllNotesComponent implements OnInit {
 
-  notes = this.notesQuery.selectAll();
+  notes: Observable<Note<Project>[]> = this.notesQuery.selectAll();
 
   constructor(
     private uiStateService: UiStateService,

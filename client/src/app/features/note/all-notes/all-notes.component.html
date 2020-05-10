@@ -1,7 +1,7 @@
 <div class="note-list">
 
   <div *ngFor="let note of notes|async"
-       class="note-input-paper note-item">
+       class="note-input-paper relative note-item">
     <div class="note-title">
       {{note.title}}
     </div>
@@ -12,32 +12,25 @@
       {{note.description}}
     </div>
     <div class="flex align-items-center mt1 note-project">
-      <div class="grid place-item-center icon-represent mat-elevation-z1 mr1">
+      <div [ngStyle]="{backgroundColor: note.project.colorCover, color: note.project.colorText}"
+           class="grid place-item-center icon-represent mat-elevation-z1 mr1">
         PR
       </div>
       <div class="whitespace-nowrap of-hidden text-overflow-ellipsis name">
         {{note.project.title}}
       </div>
     </div>
-  </div>
 
-  <div class="note-input-paper note-item">
-    <div class="note-title">
-      123
-    </div>
-    <small class="note-startDate">
-      1231231
-    </small>
-    <div class="whitespace-pre-wrap note-content">
-      12322222
-    </div>
-    <div class="flex align-items-center mt1 note-project">
-      <div class="grid place-item-center icon-represent mat-elevation-z1 mr1">
-        PR
-      </div>
-      <div class="whitespace-nowrap of-hidden text-overflow-ellipsis name">
-        Project RushB
-      </div>
+    <div class="absolute flex justify-flex-end button-action">
+      <button color="accent"
+              mat-mini-fab>
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button color="warn"
+              mat-mini-fab
+              style="margin-left: 1rem">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
   </div>
 
