@@ -388,29 +388,26 @@ router.post('/search', checkAuth, async (req, res) => {
 });
 
 // Update user
-router.post('/update/:userId', upload.single('avatar'), (req, res) => {
-    const id = req.params._id;
-    const updateOps = {...req.body};
-
-    if (!req.file){
-        return res.json({
-            message: 'Please upload a file'
-        });
+router.post('/update', checkAuth, upload.single('avatar'), (req, res) => {
+    const id = req.userData._id;
+    let update = {...req.body};
+    if (req.file) {
+        update.avatar = req.file.originalname;
     }
-    const avatar = req.file.originalname;
 
-    User.update({_id: id}, {$set: {updateOps, avatar: avatar}})
+    User.update({_id: id}, {$set: update})
         .exec()
         .then(result => {
-            console.log(result);
             return res.status(200).json({
                 message: 'User updated',
+                data: true,
             });
         })
         .catch(err => {
             console.log(err);
             return res.status(500).json({
-                Error: err
+                error: err,
+                data: false,
             });
         });
 });
@@ -428,7 +425,7 @@ router.post('/delete/:userId', (req, res) => {
         .catch(err => {
             console.log(err);
             res.status(500).json({
-                Error: err,
+                error: err,
             })
         });
 });

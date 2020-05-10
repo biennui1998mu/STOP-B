@@ -79,7 +79,7 @@ router.post('/delete/:messageId', (req, res) => {
         .catch(err => {
             console.log(err);
             res.status(500).json({
-                Error: err,
+                error: err,
             })
         });
 });

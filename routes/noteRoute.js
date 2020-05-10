@@ -127,7 +127,7 @@ router.post('/update/:noteId', (req, res) => {
         .catch(err => {
             console.log(err);
             return res.status(500).json({
-                Error: err
+                error: err
             });
         });
 });
@@ -145,7 +145,7 @@ router.post('/delete/:noteId', (req, res) => {
         .catch(err => {
             console.log(err);
             res.status(500).json({
-                Error: err,
+                error: err,
             })
         });
 });

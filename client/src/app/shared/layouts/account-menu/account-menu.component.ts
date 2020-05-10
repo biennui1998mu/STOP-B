@@ -21,7 +21,7 @@ export class AccountMenuComponent implements OnInit {
   }
 
   logout() {
-    return this.userService.changeStatusUser(this.tokenService.decodedToken._id, 2).subscribe(result => {
+    return this.userService.changeStatusUser(2).subscribe(result => {
       if (result) {
         // event.preventDefault();
         this.userService.logout();

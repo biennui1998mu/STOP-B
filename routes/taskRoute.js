@@ -249,7 +249,7 @@ router.post('/update/:taskId', (req, res) => {
         .catch(err => {
             console.log(err);
             return res.status(500).json({
-                Error: err
+                error: err
             });
         });
 });
@@ -267,7 +267,7 @@ router.post('/delete/:taskId', (req, res) => {
         .catch(err => {
             console.log(err);
             res.status(500).json({
-                Error: err,
+                error: err,
             })
         });
 });

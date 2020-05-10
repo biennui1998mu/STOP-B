@@ -103,9 +103,9 @@ export class UserService {
     );
   }
 
-  changeStatusUser(userId: string, status: number) {
+  changeStatusUser(status: number) {
     return this.http.post<User>(
-      `${this.url}/update/${userId}`,
+      `${this.url}/update`,
       { status: status },
       { headers: this.tokenService.authorizeHeader },
     ).pipe(
