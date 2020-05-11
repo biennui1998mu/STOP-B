@@ -6,6 +6,7 @@ import { AllNotesComponent } from './all-notes/all-notes.component';
 import { CreateNoteComponent } from './create-note/create-note.component';
 import { ViewNoteComponent } from './view-note/view-note.component';
 import { CoreImportsModule } from '../../shared/modules/core-imports.module';
+import { MaterialCompsModule } from '../../shared/modules/material-comps.module';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { CoreImportsModule } from '../../shared/modules/core-imports.module';
     CommonModule,
     CoreImportsModule,
     NoteRoutingModule,
+    MaterialCompsModule,
   ],
 })
 export class NoteModule {

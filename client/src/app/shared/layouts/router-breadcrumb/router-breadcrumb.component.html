@@ -9,7 +9,7 @@
     </div>
 
     <div class="flex flex-d-row-reverse right-side-bc">
-      <button [routerLink]="['/note', 'create']"
+      <button (click)="openNote()"
               class="bg-transparent note-routing"
               mat-icon-button
               matTooltip="Quick note">

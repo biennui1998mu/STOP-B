@@ -1,63 +1,105 @@
-form {
-  display: grid;
-  grid-template-areas: 'general detail' 'confirm detail';
-  grid-template-columns: minmax(max-content, 350px) auto;
-  grid-template-rows: max-content auto;
-  grid-gap: 1rem;
-  padding: 1rem;
-}
-
-.general-information {
-  grid-area: general;
-  width: 100%;
-  max-width: 350px;
-  height: max-content;
+.form-notes {
   position: relative;
-
-  .general-section-content {
-    display: flex;
-    flex-direction: column;
-
-    > *:not(:last-child) {
-      margin-bottom: 1rem;
-    }
-  }
-}
-
-.detail-information {
-  grid-area: detail;
-  height: 100%;
-  width: 100%;
-  position: relative;
-
-  .detail-section-content {
-    display: flex;
-    flex-direction: column;
-
-    .note-input-paper {
-      margin-bottom: 1rem;
-    }
-  }
-}
-
-.confirmation {
-  grid-area: confirm;
-  height: max-content;
-  width: 100%;
   display: flex;
-  justify-content: flex-end;
-  position: relative;
-}
-
-
-mat-form-field.span-all {
+  flex-direction: column;
   width: 100%;
-}
+  max-width: 500px;
+  background: var(--note-color);
+  font-size: 14px;
+  padding: 0 1rem 1rem;
 
-mat-card-content {
-  padding-top: 0.5rem;
-}
+  .priority-input {
+    padding: 0.25rem;
+    margin-bottom: 0.125rem;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    font-size: 14px;
+    line-height: 14px;
+    grid-template-columns: max-content auto;
+    align-items: center;
+    grid-gap: 0.5rem;
+    background: rgba(45, 45, 45, 0.66);
+    color: white;
 
-.note-input-paper {
-  height: 369px;
+    select {
+      outline: none;
+      border: none;
+      border-radius: 6px;
+      padding: inherit;
+      background: rgba(95, 95, 95, 0.26);
+      color: inherit;
+    }
+
+    &.important {
+      background: red;
+
+      select {
+        background: tomato;
+      }
+    }
+  }
+
+  .title-input {
+    font-size: 1.5rem;
+    font-weight: bold;
+
+    input {
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: inherit;
+      padding: 0;
+      font-weight: inherit;
+      width: 100%;
+    }
+  }
+
+  .description-input {
+    min-height: 200px;
+    font-size: 16px;
+
+    textarea {
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 0.25rem 0;
+      width: 100%;
+      min-height: inherit;
+      max-height: 400px;
+      resize: vertical;
+      font-size: inherit;
+    }
+  }
+
+  .project-input {
+    grid-template-columns: max-content auto;
+    align-items: center;
+    grid-gap: 0.5rem;
+    padding: 0.25rem 0.25rem 0 0.25rem;
+    font-size: 14px;
+    line-height: 14px;
+
+    select {
+      outline: none;
+      border: none;
+      border-radius: 6px;
+      padding: 0.25rem;
+      background: transparent;
+    }
+  }
+
+  .button-action {
+    position: absolute;
+    justify-content: flex-end;
+    top: 100%;
+    right: 1rem;
+    transform: translateY(-50%);
+    display: flex;
+  }
+
+  &:hover {
+    .button-action {
+      display: flex;
+    }
+  }
 }

@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const checkAuth = require("../middleware/check-auth");
 
 const Note = require('../database/models/note');
+const Project = require('../database/models/project');
 
 // Take all notes from list
 router.post('/', checkAuth, (req, res) => {
-    Note.find({user: req.userData._id.toString()})
+    Note.find({user: req.userData._id})
         .populate('project user')
         .exec()
         .then(docs => {
@@ -76,78 +76,128 @@ router.post('/search', (req, res) => {
 });
 
 // Create new note
-router.post('/create', checkAuth, (req, res) => {
-    const note = new Note({
-        _id: new mongoose.Types.ObjectId(),
-        user: req.userData._id.toString(),
+router.post('/create', checkAuth, async (req, res) => {
+    const info = {
+        user: req.userData._id,
         title: req.body.title,
         description: req.body.description,
         priority: req.body.priority,
-        project: req.body.project
-    });
-    note.save()
-        .then(result => {
-            console.log(result);
-            return res.status(200).json({
-                message: "Created note successfully",
-                createdNote: {
-                    _id: result._id,
-                    title: result.title,
-                    user: result.user,
-                    description: result.description,
-                    priority: result.priority,
-                    createdAt: result.createdAt,
-                    project: result.project
-                }
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
+        status: req.body.status,
+    };
+
+    if (req.body.project) {
+        info.project = req.body.project;
+    }
+
+    try {
+        const note = new Note(info);
+        await note.save();
+        const returnNote = await note.populate('project').execPopulate();
+        return res.status(200).json({
+            message: "Created note successfully",
+            data: returnNote
         });
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            error: e
+        });
+    }
 });
 
 // Update note by ID
-router.post('/update/:noteId', (req, res) => {
+router.post('/update/:noteId', checkAuth, async (req, res) => {
     const id = req.params.noteId;
-    const updateOps = {...req.body};
+    const {title, description, project, priority, status} = req.body;
+    if (req.body._id) {
+        delete req.body._id; // prevent update _id
+    }
+    if (req.body.createdAt) {
+        delete req.body.createdAt; // prevent update createdAt
+    }
+    if (req.body.user) {
+        delete req.body.user; // prevent update user
+    }
 
-    console.log(updateOps);
+    try {
+        const note = await Note.findOne({
+            _id: id,
+            user: req.userData._id
+        }).exec();
+        if (!note) {
+            return res.status(404).json({
+                message: 'Note not found',
+            })
+        }
+        if (title && title.length > 0) {
+            note.title = title;
+        }
+        if (description) {
+            note.description = description;
+        }
+        if (project) {
+            const projectFind = await Project.findOne({
+                _id: project._id ? project._id : project,
+                $or: [
+                    {manager: req.userData._id.toString()},
+                    {moderator: {$in: [req.userData._id.toString()]}},
+                    {member: {$in: [req.userData._id.toString()]}},
+                ]
+            }).exec();
+            if (!projectFind) {
+                return res.status(301).json({
+                    message: 'Project is not valid',
+                })
+            }
+            note.project = projectFind._id;
+        }
+        if (priority !== undefined) {
+            note.priority = priority;
+        }
+        if (status !== undefined) {
+            note.status = status;
+        }
 
-    Note.update({_id: id}, {$set: updateOps})
-        .exec()
-        .then(result => {
-            console.log(result);
-            return res.status(200).json({
-                message: 'Note updated',
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            return res.status(500).json({
-                error: err
-            });
+        await note.save();
+        const returnNote = await note.populate('project').execPopulate();
+        return res.json({
+            message: 'update successfully',
+            data: returnNote
         });
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            error: e
+        });
+    }
 });
 
 // Delete note by ID
-router.post('/delete/:noteId', (req, res) => {
+router.post('/delete/:noteId', checkAuth, async (req, res) => {
     const id = req.params.noteId;
-    Note.remove({_id: id})
-        .exec()
-        .then(result => {
-            res.status(200).json({
-                message: 'Note was deleted',
+    try {
+        let findNote = await Note.findOne({
+            _id: id,
+            user: req.userData._id,
+        }).exec();
+
+        if (!findNote) {
+            return res.status(404).json({
+                message: 'Note not found.'
             });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err,
-            })
+        }
+
+        findNote = await findNote.deleteOne();
+        return res.json({
+            message: 'deleted',
+            data: findNote,
         });
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({
+            error: e,
+        })
+    }
 });
 
 module.exports = router;

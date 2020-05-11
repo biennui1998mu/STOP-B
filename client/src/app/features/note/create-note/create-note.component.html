@@ -1,73 +1,65 @@
-<form [formGroup]="createNoteFrom" action="">
-  <mat-card class="general-information">
-    <mat-card-title>
-      Note Information
-    </mat-card-title>
-    <mat-card-content class="general-section-content">
-      <mat-form-field appearance="fill" class="span-all">
-        <mat-label>Title</mat-label>
-        <input formControlName="title" matInput
-               name="Title"
-               required>
-      </mat-form-field>
+<form [formGroup]="createNoteFrom"
+      class="form-notes hand-writing">
+  <label [class.important]="NOTE_Primary.important == priority.value"
+         class="grid priority-input">
+    Priority:
+    <select formControlName="priority">
+      <option [value]="0">Normal</option>
+      <option [value]="1">Important</option>
+    </select>
+  </label>
 
-      <mat-form-field appearance="fill" class="span-all">
-        <mat-label>Priority</mat-label>
-        <mat-select formControlName="priority" required>
-          <mat-option value="1">Important</mat-option>
-          <mat-option value="2">Normal</mat-option>
-        </mat-select>
-      </mat-form-field>
+  <label class="title-input">
+    <input formControlName="title"
+           placeholder="Title..."
+           type="text">
+  </label>
 
-      <mat-form-field appearance="fill" class="span-all">
-        <mat-label>Project</mat-label>
-        <mat-select formControlName="project">
-          <mat-option>None</mat-option>
-          <mat-option *ngFor="let project of projects | async" value="{{project._id}}">{{project.title}}</mat-option>
-        </mat-select>
-      </mat-form-field>
+  <small class="text-muted">
+    {{date | date: 'dd/MM/yyyy - hh:mm:ss'}}
+  </small>
 
-      <mat-form-field appearance="fill" class="span-all">
-        <mat-label>Label Color</mat-label>
-        <mat-select>
-          <mat-option value="">None</mat-option>
-          <mat-option value="green">Green</mat-option>
-          <mat-option value="red">Red</mat-option>
-          <mat-option value="orange">Orange</mat-option>
-          <mat-option value="blue">Blue</mat-option>
-          <mat-option value="pink">Pink</mat-option>
-          <mat-option value="black">Black</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </mat-card-content>
-  </mat-card>
+  <label class="description-input">
+    <textarea formControlName="description"
+              maxlength="200"
+              minlength="0"
+              name="description"
+              placeholder="Detail of the note..."
+              required></textarea>
+  </label>
 
-  <mat-card class="detail-information">
-    <mat-card-title>
-      Note Description
-    </mat-card-title>
-    <mat-card-content class="detail-section-content">
-      <!--  note-input-paper + red/green/blue/orange/...  -->
-      <textarea class="note-input-paper hand-writing mat-elevation-z5 red"
-                formControlName="description"
-                maxlength="200"
-                minlength="0"
-                name="Description"
-                placeholder="Detail of the note..."
-                required></textarea>
-      <small class="count-character">
-        0/200
-      </small>
-    </mat-card-content>
-  </mat-card>
+  <label class="grid project-input">
+    Project:
+    <select formControlName="project">
+      <option [value]="null">None</option>
+      <option *ngFor="let project of projects | async"
+              [value]="project._id">
+        {{project.title}}
+      </option>
+    </select>
+  </label>
 
-  <mat-card class="confirmation">
-    <button (click)="createNote()"
-            [disabled]="createNoteFrom.invalid"
-            class="button"
-            color="primary"
-            mat-raised-button>
-      Create Note
+  <div class="button-action">
+    <button (click)="cancel()"
+            color="accent"
+            mat-mini-fab>
+      <mat-icon>close</mat-icon>
     </button>
-  </mat-card>
+    <button (click)="update()"
+            *ngIf="noteData.action === ActionDialog.update"
+            [disabled]="createNoteFrom.invalid"
+            color="primary"
+            mat-mini-fab
+            style="margin-left: 1rem">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button (click)="createNote()"
+            *ngIf="noteData.action === ActionDialog.create"
+            [disabled]="createNoteFrom.invalid"
+            color="primary"
+            mat-mini-fab
+            style="margin-left: 1rem">
+      <mat-icon>check</mat-icon>
+    </button>
+  </div>
 </form>

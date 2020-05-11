@@ -14,7 +14,7 @@
     <div class="flex align-items-center mt1 note-project">
       <div [ngStyle]="{backgroundColor: note.project.colorCover, color: note.project.colorText}"
            class="grid place-item-center icon-represent mat-elevation-z1 mr1">
-        PR
+        {{shortName(note.project)}}
       </div>
       <div class="whitespace-nowrap of-hidden text-overflow-ellipsis name">
         {{note.project.title}}
@@ -22,11 +22,13 @@
     </div>
 
     <div class="absolute flex justify-flex-end button-action">
-      <button color="accent"
+      <button (click)="editNote(note)"
+              color="accent"
               mat-mini-fab>
         <mat-icon>edit</mat-icon>
       </button>
-      <button color="warn"
+      <button (click)="deleteNote(note)"
+              color="warn"
               mat-mini-fab
               style="margin-left: 1rem">
         <mat-icon>close</mat-icon>

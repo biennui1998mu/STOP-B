@@ -57,3 +57,10 @@ blockquote {
   margin-inline-start: 40px;
   margin-inline-end: 40px;
 }
+
+.create-note-dialog {
+  .mat-dialog-container {
+    padding: 0;
+    overflow: visible;
+  }
+}

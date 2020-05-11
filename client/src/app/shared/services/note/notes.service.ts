@@ -6,6 +6,9 @@ import { apiRoute } from '../../api';
 import { Note } from '../../interface/Note';
 import { of } from 'rxjs';
 import { TokenService } from '../token.service';
+import { APIResponse } from '../../interface/API-Response';
+import { UserQuery } from '../user';
+import { Project } from '../../interface/Project';
 
 @Injectable({ providedIn: 'root' })
 export class NotesService {
@@ -15,6 +18,7 @@ export class NotesService {
     private store: NotesStore,
     private token: TokenService,
     private http: HttpClient,
+    private userQuery: UserQuery,
   ) {
   }
 
@@ -62,20 +66,15 @@ export class NotesService {
   }
 
   create(credentials: Note) {
-    return this.http.post<{
-      token: string;
-      message: string,
-      createdNote?: Note,
-      error: any
-    }>(
+    return this.http.post<APIResponse<Note<string>>>(
       `${this.url}/create`,
       credentials,
       { headers: this.token.authorizeHeader },
     ).pipe(
-      map(result => result.createdNote),
+      map(result => result.data),
       catchError(error => {
         console.log(error);
-        return of(null as Note);
+        return of(null as Note<string>);
       }),
       tap(note => {
         if (note) {
@@ -85,20 +84,16 @@ export class NotesService {
     );
   }
 
-  update(noteId: string, credentials: Partial<Note>) {
-    return this.http.post<{
-      message: string,
-      updatedNote?: Note,
-      error: any
-    }>(
-      `${this.url}/update/${noteId}`,
+  update(id: string, credentials: Partial<Note>) {
+    return this.http.post<APIResponse<Note<Project>>>(
+      `${this.url}/update/${id}`,
       credentials,
       { headers: this.token.authorizeHeader },
     ).pipe(
-      map(result => result.updatedNote),
+      map(result => result.data),
       catchError(error => {
         console.log(error);
-        return of(null as Note);
+        return of(null as Note<Project>);
       }),
       tap(note => {
         if (note) {
