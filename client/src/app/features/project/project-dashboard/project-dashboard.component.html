@@ -1,1 +1,40 @@
-'dashboard'
+<div class="main-section">
+  <h1>
+    Description
+  </h1>
+  <hr class="divider">
+  <p>{{project?.description}}</p>
+  <h1>Manager</h1>
+  <hr class="divider">
+  <mat-chip-list aria-label="Project manager">
+    <mat-chip>
+      <img [alt]="project?.manager.name"
+           [src]="project?.manager.avatar"
+           class="obj-pos-center obj-fit-cover br50 mr05"
+           style="width: 16px; height: 16px">
+      {{project?.manager.name}}
+    </mat-chip>
+  </mat-chip-list>
+  <h1>Moderator</h1>
+  <hr class="divider">
+  <mat-chip-list aria-label="Project manager">
+    <mat-chip *ngFor="let mod of project?.moderator">
+      <img [alt]="mod.name"
+           [src]="mod.avatar"
+           class="obj-pos-center obj-fit-cover br50 mr05"
+           style="width: 16px; height: 16px">
+      {{mod.name}}
+    </mat-chip>
+  </mat-chip-list>
+  <h1>Members</h1>
+  <hr class="divider">
+  <mat-chip-list aria-label="Project manager">
+    <mat-chip *ngFor="let mem of project?.member">
+      <img [alt]="mem.name"
+           [src]="mem.avatar"
+           class="obj-pos-center obj-fit-cover br50 mr05"
+           style="width: 16px; height: 16px">
+      {{mem.name}}
+    </mat-chip>
+  </mat-chip-list>
+</div>

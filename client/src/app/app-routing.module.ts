@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomepageComponent } from './core/homepage/homepage.component';
 import { LayoutsComponent } from './shared/layouts/layouts.component';
 import { LoginComponent } from './core/login/login.component';
 import { AuthenticateGuard } from './shared/guard/authenticate.guard';
@@ -15,8 +14,7 @@ const routes: Routes = [
       projects: AllProjectResolver,
     },
     children: [
-      { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
-      { path: 'dashboard', component: HomepageComponent },
+      { path: '', pathMatch: 'full', redirectTo: '/project' },
       {
         path: 'project', // lazy load
         loadChildren: () => import('./features/project/project.module').then(m => m.ProjectModule),
