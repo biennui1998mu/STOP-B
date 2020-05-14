@@ -42,7 +42,7 @@ export class LoginComponent {
     this.userService.login(this.formSignIn)
       .subscribe(status => {
         if (status) {
-          this.router.navigateByUrl('/dashboard');
+          this.router.navigateByUrl('/project');
         }
       });
   }
