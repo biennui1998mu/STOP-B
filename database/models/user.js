@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 let urlHost;
 
-if (process.env.IS_DEPLOYMENT) {
+if (process.env.IS_DEPLOYMENT === 'true') {
     // Deploy thi k can port (lay host name)
     urlHost = `${process.env.PROTOCOL}://${process.env.HOST_NAME}`;
 } else {
