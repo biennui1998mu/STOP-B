@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UiStateService } from '../../../shared/services/state/ui-state.service';
 import { Router } from "@angular/router";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -10,7 +10,7 @@ import { NotesService } from '../../../shared/services/note';
   templateUrl: './create-note.component.html',
   styleUrls: ['./create-note.component.scss'],
 })
-export class CreateNoteComponent implements OnInit {
+export class CreateNoteComponent {
 
   createNoteFrom: FormGroup;
   projects = this.projectsQuery.selectAll();
@@ -30,32 +30,28 @@ export class CreateNoteComponent implements OnInit {
       },
     });
     this.createNoteFrom = this.formBuilder.group({
-      Title: ['', [Validators.required, Validators.minLength(2)]],
-      Description: [''],
-      Priority: [''],
-      ProjectId: [''],
+      title: ['', [Validators.required, Validators.minLength(2)]],
+      description: [''],
+      priority: [''],
+      project: [''],
     });
 
   }
 
-  get Title() {
-    return this.createNoteFrom.get('Title');
+  get title() {
+    return this.createNoteFrom.get('title');
   }
 
-  get Description() {
-    return this.createNoteFrom.get('Description');
+  get description() {
+    return this.createNoteFrom.get('description');
   }
 
-  get Priority() {
-    return this.createNoteFrom.get('Priority');
+  get priority() {
+    return this.createNoteFrom.get('priority');
   }
 
-  get ProjectId() {
-    return this.createNoteFrom.get('ProjectId');
-  }
-
-  ngOnInit(): void {
-    this.projectService.get();
+  get project() {
+    return this.createNoteFrom.get('project');
   }
 
   createNote() {

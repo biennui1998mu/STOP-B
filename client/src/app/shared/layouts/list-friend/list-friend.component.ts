@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MatDialogState } from '@angular/material/dialog';
 import { ChatLayoutComponent } from '../../components/chat-layout/chat-layout.component';
 import { User } from '../../interface/User';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
@@ -38,7 +38,9 @@ export class ListFriendComponent implements OnInit, OnDestroy {
       )
       .subscribe(friends => this.listFriend = friends);
 
-    this.roomChatQuery.selectLoading().subscribe(status => this.roomChatLoading = status);
+    this.roomChatQuery.selectLoading().subscribe(
+      status => this.roomChatLoading = status,
+    );
   }
 
   ngOnInit() {
@@ -62,6 +64,18 @@ export class ListFriendComponent implements OnInit, OnDestroy {
       !this.roomChatLoading &&          // must not in loading state
       this.dialogFriendId !== friendId  // must be the current chatting person
     ) {
+      this.roomChatLoading = true;
+      if (this.chatDialog && this.chatDialog.getState() === MatDialogState.OPEN) {
+        this.chatDialog.close();
+        this.chatDialog.afterClosed().subscribe(
+          () => {
+            this.dialogFriendId = friendId;
+            this.roomChatService.get([friendId], this.userQuery.getValue()._id);
+          },
+        );
+        return;
+      }
+
       this.dialogFriendId = friendId;
       this.roomChatService.get([friendId], this.userQuery.getValue()._id);
     }
@@ -79,12 +93,10 @@ export class ListFriendComponent implements OnInit, OnDestroy {
       hasBackdrop: false,
       panelClass: `setting-modal-box`,
     });
-    this.chatDialog.afterClosed().subscribe(
-      () => {
-        this.dialogFriendId = null;
-        this.roomChatService.clearRoom();
-      },
-    );
+    this.chatDialog.beforeClosed().subscribe(() => {
+      this.dialogFriendId = null;
+      this.roomChatService.clearRoom();
+    });
   }
 
   ngOnDestroy(): void {

@@ -6,6 +6,7 @@
   <div class="ofy-scroll relative flex flex-d-col pb1 h100pct user-list">
     <div (click)="requestRoomChat(friend._id)"
          *ngFor="let friend of listFriend"
+         [class.loading]="this.roomChatLoading"
          class="grid relative cursor-pointer user-select-none user-pill">
       <div class="grid place-item-center of-hidden br50 avatar">
         <img [src]="friend.avatar"

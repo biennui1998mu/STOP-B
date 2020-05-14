@@ -86,18 +86,7 @@ router.post('/create', checkAuth, (req, res) => {
             console.log(result);
             res.status(200).json({
                 message: 'Project has been created',
-                createdProject: {
-                    _id: result._id,
-                    title: result.title,
-                    description: result.description,
-                    priority: result.priority,
-                    startDate: result.startDate,
-                    endDate: result.endDate,
-                    status: result.status,
-                    manager: result.manager,
-                    moderator: result.moderator,
-                    member: result.member
-                }
+                data: result
             });
         })
         .catch(err => {

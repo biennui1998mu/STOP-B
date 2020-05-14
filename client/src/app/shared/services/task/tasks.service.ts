@@ -24,32 +24,24 @@ export class TasksService {
 
   /**
    * get all tasks and push it to state
-   * @param project
+   * @param project_id
    */
-  get(project: Project<User>) {
+  get(project_id: string): Observable<Task<User>[]> {
     this.store.setLoading(true);
-    return this.http.post<APIResponse<{
-      ongoingCount: number,
-      finishedCount: number,
-      tasks: Task<User>[]
-    }>>(
+    return this.http.post<APIResponse<Task<User>[]>>(
       `${this.url}`,
-      { project },
+      { project_id },
       { headers: this.tokenService.authorizeHeader },
     ).pipe(
       map(result => {
         this.store.setLoading(false);
-        this.store.set(result.data.tasks);
+        this.store.set(result.data);
         return result.data;
       }),
       catchError(error => {
         console.log(error);
         this.store.reset();
-        return of({
-          ongoingCount: 0,
-          finishedCount: 0,
-          tasks: [],
-        });
+        return of([] as Task<User>[]);
       }),
     );
   }
@@ -99,6 +91,7 @@ export class TasksService {
       }),
       tap(res => {
         if (res && setActive) {
+          console.log('in');
           this.store.setActive(res._id);
         }
       }),
@@ -157,6 +150,25 @@ export class TasksService {
       catchError(error => {
         console.log(error);
         return of(false);
+      }),
+    );
+  }
+
+  changeStatus(task_id: string, project_id: string, status: number) {
+    return this.http.post<APIResponse<Task<User, Project>>>(
+      `${this.url}/change-state`,
+      { task_id, project_id, status },
+      { headers: this.tokenService.authorizeHeader },
+    ).pipe(
+      map(result => result.data),
+      catchError(error => {
+        console.log(error);
+        return of(null as Task<User, any>);
+      }),
+      tap(task => {
+        if (task) {
+          this.store.update(task._id, () => task);
+        }
       }),
     );
   }

@@ -22,7 +22,7 @@ export class ProjectsService {
 
   get() {
     this.store.setLoading(true);
-    this.http.post<APIResponse<Project<User>[]>>(
+    return this.http.post<APIResponse<Project<User>[]>>(
       `${this.url}`,
       {},
       { headers: this.token.authorizeHeader },
@@ -35,9 +35,10 @@ export class ProjectsService {
         console.error(error);
         return of([] as Project<User>[]);
       }),
-    ).subscribe(projects => {
-      this.store.set(projects);
-    });
+      tap(projects => {
+        this.store.set(projects);
+      }),
+    );
   }
 
   /**
@@ -93,13 +94,22 @@ export class ProjectsService {
     );
   }
 
+  setActive(project_id: string) {
+    this.store.setActive(project_id);
+  }
+
   create(credentials: Partial<Project>): Observable<Project> {
-    return this.http.post<APIResponse<Project>>(
+    return this.http.post<APIResponse<Project<User>>>(
       `${this.url}/create`,
       credentials,
       { headers: this.token.authorizeHeader },
     ).pipe(
       map(result => result.data),
+      tap(project => {
+        if (project) {
+          this.store.add(project);
+        }
+      }),
       catchError(error => {
         console.error(error);
         return of(null);

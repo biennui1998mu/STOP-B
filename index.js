@@ -96,7 +96,7 @@ io.use(async function (socket, next) {
                 if (err) return next(new Error('Authentication error'));
                 socket.decoded = decoded;
                 // show token connect
-                console.log('Đăng nhập mới: ' + username);
+                console.log('Đăng nhập mới: ' + decoded.username);
                 next();
             });
     } else {

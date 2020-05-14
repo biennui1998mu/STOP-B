@@ -132,6 +132,7 @@ export class UserPillComponent {
           if (result.status === 1) {
             // if friend then set isStranger option to false.
             this.isStranger = false;
+            this.friendRequestService.removeFromStore(result);
           }
         }
       },
