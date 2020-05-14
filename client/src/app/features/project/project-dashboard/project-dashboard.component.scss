@@ -2,5 +2,8 @@
   padding: 0 1rem;
   display: grid;
   grid-template-columns: auto 350px;
-  grid-gap: 1rem;
+  grid-gap: 1rem 3rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
 }

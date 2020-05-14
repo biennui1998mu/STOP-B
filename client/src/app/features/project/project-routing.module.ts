@@ -8,6 +8,7 @@ import { ProjectDashboardComponent } from './project-dashboard/project-dashboard
 import { TaskDetailComponent } from './tasks/task-detail/task-detail.component';
 import { TaskCreateComponent } from './tasks/task-create/task-create.component';
 import { AllTaskResolver } from '../../shared/resolver/all-task.resolver';
+import { ProjectOptionsComponent } from './project-options/project-options.component';
 
 
 const routes: Routes = [
@@ -31,6 +32,7 @@ const routes: Routes = [
             ],
           },
           { path: 'tasks-create', component: TaskCreateComponent },
+          { path: 'options', component: ProjectOptionsComponent },
         ],
       },
     ],

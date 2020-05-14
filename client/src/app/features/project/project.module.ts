@@ -14,6 +14,7 @@ import { ProjectDashboardComponent } from './project-dashboard/project-dashboard
 import { SharedComponentModule } from '../../shared/components/shared-component.module';
 import { TaskDetailComponent } from './tasks/task-detail/task-detail.component';
 import { TaskCreateComponent } from './tasks/task-create/task-create.component';
+import { ProjectOptionsComponent } from './project-options/project-options.component';
 
 const comps = [
   ProjectComponent,
@@ -31,6 +32,7 @@ const comps = [
     ...comps,
     TaskDetailComponent,
     TaskCreateComponent,
+    ProjectOptionsComponent,
   ],
   imports: [
     CommonModule,

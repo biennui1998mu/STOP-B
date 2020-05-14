@@ -2,12 +2,11 @@
   <h1>
     Description
   </h1>
-  <hr class="divider">
   <p>{{project?.description}}</p>
-  <h1>Manager</h1>
   <hr class="divider">
+  <h1 class="mt3">Manager</h1>
   <mat-chip-list aria-label="Project manager">
-    <mat-chip>
+    <mat-chip [matTooltip]="project?.manager.username">
       <img [alt]="project?.manager.name"
            [src]="project?.manager.avatar"
            class="obj-pos-center obj-fit-cover br50 mr05"
@@ -15,10 +14,11 @@
       {{project?.manager.name}}
     </mat-chip>
   </mat-chip-list>
-  <h1>Moderator</h1>
   <hr class="divider">
+  <h1 class="mt3">Moderator</h1>
   <mat-chip-list aria-label="Project manager">
-    <mat-chip *ngFor="let mod of project?.moderator">
+    <mat-chip *ngFor="let mod of project?.moderator"
+              [matTooltip]="mod.username">
       <img [alt]="mod.name"
            [src]="mod.avatar"
            class="obj-pos-center obj-fit-cover br50 mr05"
@@ -26,10 +26,19 @@
       {{mod.name}}
     </mat-chip>
   </mat-chip-list>
-  <h1>Members</h1>
   <hr class="divider">
+  <h1 class="mt3">Members</h1>
   <mat-chip-list aria-label="Project manager">
-    <mat-chip *ngFor="let mem of project?.member">
+    <mat-chip *ngFor="let mem of project?.member"
+              [matTooltip]="mem.username">
+      <img [alt]="mem.name"
+           [src]="mem.avatar"
+           class="obj-pos-center obj-fit-cover br50 mr05"
+           style="width: 16px; height: 16px">
+      {{mem.name}}
+    </mat-chip>
+    <mat-chip *ngFor="let mem of project?.member"
+              [matTooltip]="mem.username">
       <img [alt]="mem.name"
            [src]="mem.avatar"
            class="obj-pos-center obj-fit-cover br50 mr05"
@@ -37,4 +46,37 @@
       {{mem.name}}
     </mat-chip>
   </mat-chip-list>
+</div>
+
+<div class="meta-section">
+  <h1>
+    Status
+  </h1>
+  <p [class.text-danger]="project?.status"
+     [class.text-success]="!project?.status"
+     class="fw-bold">
+    {{project?.status ? 'Finished' : 'Ongoing'}}
+  </p>
+  <hr class="divider">
+  <h1 class="mt3">
+    Starting date
+  </h1>
+  <p [matTooltip]="project?.createdAt | date: 'hh:mm:ss'"
+     style="margin-bottom: 1.25rem">
+    {{project?.createdAt | date: 'dd/MM/yyyy'}}
+  </p>
+  <hr class="divider">
+  <h1 class="mt3">
+    End date
+  </h1>
+  <ng-container *ngIf="project?.endDate">
+    <p [matTooltip]="project?.endDate | date: 'hh:mm:ss'">
+      {{project?.endDate | date: 'dd/MM/yyyy'}}
+    </p>
+  </ng-container>
+  <ng-container *ngIf="!project?.endDate">
+    <p class="text-muted">
+      Not indicated yet.
+    </p>
+  </ng-container>
 </div>
