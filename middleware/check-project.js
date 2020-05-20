@@ -51,8 +51,9 @@ module.exports = async (req, res, next) => {
         });
     }
 
-    let projectId = project_id ? project_id :
-        project ? project._id : _id;
+    let projectId =
+        project_id ? project_id : project ?
+        project._id : _id;
 
     const dataProject = await Project.findOne({
         _id: projectId,

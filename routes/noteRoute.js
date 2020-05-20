@@ -6,53 +6,55 @@ const Note = require('../database/models/note');
 const Project = require('../database/models/project');
 
 // Take all notes from list
-router.post('/', checkAuth, (req, res) => {
-    Note.find({user: req.userData._id})
+router.post('/', checkAuth, async (req, res) => {
+    const userId = req.userData._id
+
+    const listNote = await Note.find({user: userId})
         .populate('project user')
         .exec()
-        .then(docs => {
-            const response = {
-                count: docs.length,
-                notes: docs
-            };
-            res.status(200).json(response)
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            })
-        });
-});
 
-// Take note from db by ID
-router.post('/view', (req, res) => {
-    const id = req.body.noteId;
-    if (!id) {
-        // ... xu ly validate
+    if (!listNote) {
+        return res.json({
+            message: 'Find list note fail'
+        })
     }
-    Note.findById(id)
-        .exec()
-        .then(doc => {
-            if (doc) {
-                return res.status(200).json({
-                    note: doc,
-                });
-            }
-            return res.status(404).json({
-                message: 'No valid id was found',
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            return res.status(500).json({
-                error: err
-            })
-        })
+
+    return res.json({
+        message: 'listNote founded',
+        data: listNote
+    })
+
 });
 
-// Search by string
-router.post('/search', (req, res) => {
+/**
+ * View note from db by ID
+ */
+router.post('/view', checkAuth, async (req, res) => {
+    const noteId = req.body.noteId;
+
+    if (!noteId) {
+        return res.json({
+            message: 'No valid id was found',
+        });
+    }
+
+    const findNote = await Note.find({_id: noteId}).exec();
+
+    if (!findNote) {
+        return res.json({
+            message: 'Cannot find any note',
+        });
+    }
+    return res.json({
+        message: 'Note founded',
+        note: findNote,
+    });
+});
+
+/**
+ * Search by string
+ */
+router.post('/search', checkAuth, (req, res) => {
     const input = req.body.search;
 
     if (input.length < 2) {
@@ -75,14 +77,19 @@ router.post('/search', (req, res) => {
     }
 });
 
-// Create new note
+/**
+ * Create new note
+ */
 router.post('/create', checkAuth, async (req, res) => {
+    const userId = req.userData._id;
+    const {title, description, priority, status} = req.body;
+
     const info = {
-        user: req.userData._id,
-        title: req.body.title,
-        description: req.body.description,
-        priority: req.body.priority,
-        status: req.body.status,
+        userId,
+        title,
+        description,
+        priority,
+        status
     };
 
     if (req.body.project) {
@@ -105,18 +112,22 @@ router.post('/create', checkAuth, async (req, res) => {
     }
 });
 
-// Update note by ID
+/**
+ * Update note by ID
+ */
 router.post('/update/:noteId', checkAuth, async (req, res) => {
     const id = req.params.noteId;
+
     const {title, description, project, priority, status} = req.body;
+
     if (req.body._id) {
-        delete req.body._id; // prevent update _id
+        delete req.body._id;
     }
     if (req.body.createdAt) {
-        delete req.body.createdAt; // prevent update createdAt
+        delete req.body.createdAt;
     }
     if (req.body.user) {
-        delete req.body.user; // prevent update user
+        delete req.body.user;
     }
 
     try {
@@ -124,6 +135,7 @@ router.post('/update/:noteId', checkAuth, async (req, res) => {
             _id: id,
             user: req.userData._id
         }).exec();
+
         if (!note) {
             return res.status(404).json({
                 message: 'Note not found',
@@ -172,7 +184,9 @@ router.post('/update/:noteId', checkAuth, async (req, res) => {
     }
 });
 
-// Delete note by ID
+/**
+ * Delete note by ID
+ */
 router.post('/delete/:noteId', checkAuth, async (req, res) => {
     const id = req.params.noteId;
     try {

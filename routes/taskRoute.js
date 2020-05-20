@@ -232,30 +232,56 @@ router.post('/view', checkAuth, checkProject, (req, res) => {
 });
 
 // Update task by ID
-router.post('/update/:taskId', (req, res) => {
+router.post('/update/:taskId', checkAuth, async (req, res) => {
     const id = req.params.taskId;
-    const updateOps = {...req.body};
 
-    console.log(updateOps);
+    const {title, description, priority, endDate, status, assignee} = req.body;
 
-    Task.update({_id: id}, {$set: updateOps})
-        .exec()
-        .then(result => {
-            console.log(result);
-            return res.status(200).json({
-                message: 'Task updated',
-            });
+    const taskFound = await Task.findOne({
+        _id: id
+    }).exec();
+
+    if(!taskFound) {
+        return res.json({
+            message: 'No task founded'
         })
-        .catch(err => {
-            console.log(err);
-            return res.status(500).json({
-                error: err
-            });
-        });
+    }
+
+    if(title){
+        taskFound.title = title;
+    }
+
+    if(description){
+        taskFound.description = description;
+    }
+
+    if(priority){
+        taskFound.priority = priority;
+    }
+
+    if(endDate && moment(endDate).isValid() && moment(endDate).isAfter(taskFound.createdAt)){
+        taskFound.endDate = endDate;
+    }
+
+    if(status){
+        taskFound.status = status;
+    }
+
+    if(assignee){
+        taskFound.assignee = assignee;
+    }
+
+    taskFound.updatedAt = Date.now();
+
+    await taskFound.save();
+    return res.json({
+        message: 'Task updated',
+        data: taskFound
+    });
 });
 
 // Delete task by ID
-router.post('/delete/:taskId', (req, res) => {
+router.post('/delete/:taskId', checkAuth, (req, res) => {
     const id = req.params.taskId;
     Task.remove({_id: id})
         .exec()
@@ -273,7 +299,7 @@ router.post('/delete/:taskId', (req, res) => {
 });
 
 // query 2 tasks, high priority
-router.post('/important', (req, res) => {
+router.post('/important', checkAuth, async (req, res) => {
     Task.find({
         priority: {
             $lte: 2

@@ -1,18 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const checkAuth = require("../middleware/check-auth");
 
-const User = require('../database/models/user');
 const friendRequest = require('../database/models/friendRequest');
 
-// Get all friend from list
+/**
+ * Get all friend from list
+ */
 router.post('/list', checkAuth, async (req, res) => {
     const userId = req.userData._id.toString();
 
-    if (!userId) {
-        // ... xu ly validate
-    }
     let listFriendRequest = [];
     try {
         const listFriendDoc = await friendRequest.find({
@@ -62,31 +59,34 @@ router.post('/list', checkAuth, async (req, res) => {
     return res.json(arrayParser);
 });
 
-// send friend request
-router.post('/add', checkAuth, (req, res) => {
+/**
+ * send friend request
+ */
+router.post('/add', checkAuth, async (req, res) => {
+    const requester = req.userData._id.toString();
+    const recipient = req.body.recipient
+
     const sendRequest = new friendRequest({
-        _id: new mongoose.Types.ObjectId(),
-        requester: req.userData._id.toString(),
-        recipient: req.body.recipient,
-        status: 0
+        requester,
+        recipient
     });
-    sendRequest.save()
-        .then(result => {
-            console.log(result);
-            return res.status(200).json({
-                message: "send request successfully",
-                sendRequest: {
-                    _id: result._id,
-                    requester: result.requester,
-                    recipient: result.recipient,
-                    status: result.status
-                }
-            });
+
+    const sendSuccess = await sendRequest.save()
+
+    if (!sendSuccess) {
+        return res.json({
+            message: 'send fail'
         })
-        .catch()
+    }
+    return res.json({
+        message: "send request successfully",
+        sendRequest: sendSuccess
+    });
 });
 
-// Get friend request
+/**
+ * Get friend request
+ */
 router.post('/request', checkAuth, async (req, res) => {
     try {
         const requests = await friendRequest.find({
@@ -94,7 +94,6 @@ router.post('/request', checkAuth, async (req, res) => {
             status: 0
         }).populate([`requester`, `recipient`])
             .exec();
-
         return res.json(requests);
     } catch (e) {
         console.log(e);
@@ -102,42 +101,31 @@ router.post('/request', checkAuth, async (req, res) => {
     }
 });
 
-// add friend request - change status of request to 1 or 2
-router.post('/request/update/:requestId', (req, res) => {
+/**
+ * add friend request - change status of request to 1 or 2
+  */
+router.post('/request/update/:requestId', checkAuth, async (req, res) => {
     const id = req.params.requestId;
     const updateOps = {...req.body};
 
-    friendRequest.findOneAndUpdate(
+    const updateRequest = await friendRequest.findOneAndUpdate(
         {_id: id},
         updateOps,
         {
             new: true
         }
-    ).exec().then(result => {
-        return res.status(200).json({
-            message: 'Request updated',
-            data: result
-        });
-    }).catch(err => {
-        console.log(err);
-        return res.status(500).json({
-            message: 'Update failed. Catch an error!',
-            data: null
-        });
-    });
-});
+    ).exec()
 
-// Check friend online
-router.post('/online', (req, res) => {
-    User.find({
-        userStatus: 1
-    }, function (err, requests) {
-        if (requests) {
-            return res.json(requests);
-        } else {
-            return err;
-        }
-    })
+     if(!updateRequest){
+         return res.json({
+             message: 'Request cannot updated'
+         });
+     }
+
+    return res.json({
+        message: 'Request updated',
+        data: updateRequest
+    });
 });
 
 module.exports = router;

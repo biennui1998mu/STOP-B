@@ -260,70 +260,9 @@ router.post('/view', checkAuth, (req, res) => {
         })
 });
 
-// take all user from list user
-router.post('/', (req, res, next) => {
-    User.find({})
-        .exec()
-        .then(users => {
-            if (users.length >= 1) {
-                const response = {
-                    count: users.length,
-                    users: users.map(user => {
-                        return {
-                            _id: user._id,
-                            username: user.username,
-                            password: user.password,
-                            name: user.name,
-                            dob: user.dob,
-                            avatar: user.avatar,
-                            status: user.status
-                        }
-                    })
-                };
-                res.status(200).json(response)
-            } else {
-                res.status(200).json({
-                    message: 'No user found',
-                })
-            }
-
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                message: 'No user found',
-                error: err,
-            })
-        })
-});
-
-// search friend
-router.post('/friend', checkAuth, (req, res) => {
-    const friendId = req.body.friendId;
-
-    if (!friendId) {
-        // ... xu ly validate
-    }
-    User.findById(friendId)
-        .exec()
-        .then(user => {
-            if (user) {
-                return res.status(200).json(user)
-            } else {
-                return res.status(404).json({
-                    message: 'No friend found by id'
-                })
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            return res.status(500).json({
-                error: err
-            })
-        })
-});
-
-// Search user by username or name
+/**
+ * Search user by username or name
+ */
 router.post('/search', checkAuth, async (req, res) => {
     const input = req.body.input;
 
@@ -387,47 +326,35 @@ router.post('/search', checkAuth, async (req, res) => {
     }
 });
 
-// Update user
-router.post('/update', checkAuth, upload.single('avatar'), (req, res) => {
+/**
+ * Update user
+ */
+router.post('/update', checkAuth, upload.single('avatar'), async (req, res) => {
     const id = req.userData._id;
-    let update = {...req.body};
+
+    const {name, dob} = req.body;
+
+    const userFound = await User.findOne({
+        _id: id
+    }).exec()
+
     if (req.file) {
-        update.avatar = req.file.originalname;
+        userFound.avatar = req.file.originalname;
     }
 
-    User.update({_id: id}, {$set: update})
-        .exec()
-        .then(result => {
-            return res.status(200).json({
-                message: 'User updated',
-                data: true,
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            return res.status(500).json({
-                error: err,
-                data: false,
-            });
-        });
-});
+    if(name){
+        userFound.name = name;
+    }
 
-// Delete user
-router.post('/delete/:userId', (req, res) => {
-    const id = req.params.userId;
-    User.remove({_id: id})
-        .exec()
-        .then(result => {
-            res.status(200).json({
-                message: 'User was deleted',
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err,
-            })
-        });
+    if(dob){
+        userFound.dob = dob;
+    }
+
+    await userFound.save();
+    return res.json({
+        message: 'User updated',
+        data: userFound
+    })
 });
 
 module.exports = router;

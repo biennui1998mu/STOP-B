@@ -3,10 +3,20 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const friendRequestSchema = new Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    requester: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    recipient: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    status: Number
+    requester: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    recipient: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    status: {
+        type: Number,
+        default: 0
+    }
 });
 
 module.exports = mongoose.model('friendRequest', friendRequestSchema);

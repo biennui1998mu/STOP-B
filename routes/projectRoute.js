@@ -6,7 +6,9 @@ const checkProject = require("../middleware/check-project");
 
 const Project = require('../database/models/project');
 
-// Take all projects from list
+/**
+ * Take all projects from list
+ */
 router.post('/', checkAuth, (req, res) => {
     Project.find({
         $or: [
@@ -31,9 +33,10 @@ router.post('/', checkAuth, (req, res) => {
     })
 });
 
-// Take project from db by ID
+/**
+ * View project from db by ID
+ */
 router.post('/view', checkAuth, checkProject, async (req, res) => {
-    const userId = req.userData._id.toString();
     let project = req.projectData;
 
     return res.status(200).json({
@@ -42,8 +45,10 @@ router.post('/view', checkAuth, checkProject, async (req, res) => {
     })
 });
 
-// Search by string
-router.post('/search', (req, res) => {
+/**
+ * Search by string
+ */
+router.post('/search', checkAuth, (req, res) => {
     const input = req.body.search;
 
     if (input.length < 2) {
@@ -67,40 +72,43 @@ router.post('/search', (req, res) => {
 });
 
 // Create new project
-router.post('/create', checkAuth, (req, res) => {
+router.post('/create', checkAuth, async (req, res) => {
     const userId = req.userData._id.toString();
 
+    const {title, description, priority, endDate, moderator, member} = req.body
+
+
     const project = new Project({
-        title: req.body.title,
-        description: req.body.description,
-        priority: req.body.priority,
-        startDate: Date.now(),
-        endDate: req.body.endDate,
-        status: false,
+        title,
+        description,
+        priority,
+        endDate,
         manager: userId,
-        moderator: req.body.moderator,
-        member: req.body.member
+        moderator,
+        member
     });
-    project.save()
-        .then(result => {
-            console.log(result);
-            res.status(200).json({
-                message: 'Project has been created',
-                data: result
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
+
+    const savedProject= await project.save();
+
+    if(!savedProject){
+        return res.json({
+            message: 'Project has been created'
         });
+    }
+    return res.json({
+        message: 'Project has been created',
+        data: savedProject
+    });
 });
 
-// Update note by ID
+/**
+ * Update note by ID
+ */
 router.post('/update', checkAuth, async (req, res) => {
     const user = req.userData;
+
     const projectId = req.body._id;
+
     const {
         title, description,
         priority, colorCover,
@@ -179,25 +187,27 @@ router.post('/update', checkAuth, async (req, res) => {
     });
 });
 
-// Delete note by ID
-router.post('/delete/:projectId', checkAuth, (req, res) => {
+/**
+ * Delete note by ID
+ */
+router.post('/delete/:projectId', checkAuth, async (req, res) => {
     const id = req.params.projectId;
-    Project.remove({_id: id})
-        .exec()
-        .then(result => {
-            res.status(200).json({
-                message: 'Project was deleted',
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err,
-            })
+
+    const deletedProject = await Project.remove({_id: id}).exec();
+
+    if(!deletedProject){
+        return res.json({
+            message: 'Project cannot deleted',
         });
+    }
+    return res.json({
+        message: 'Project was deleted',
+    });
 });
 
-// query 3 projects, high priority
+/**
+ * query 3 projects, high priority
+ */
 router.post('/important', checkAuth, (req, res) => {
     Project.find({
         manager: req.userData._id.toString(),

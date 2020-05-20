@@ -7,81 +7,68 @@ const Message = require('../database/models/message');
 const Room = require('../database/models/room');
 const User = require('../database/models/user');
 
-// get message from room
-router.post('', (req, res) => {
+/**
+ * get message from room
+ */
+router.post('', checkAuth, async (req, res) => {
     const roomId = req.body.roomId;
-    Message.find({
-        roomId: roomId
-    }).sort({createdAt: 1})
-        .exec()
-        .then(docs => {
-            const response = {
-                count: docs.length,
-                messages: docs.map(doc => {
-                    return {
-                        _id: doc._id,
-                        roomId: doc.roomId,
-                        message: doc.message,
-                        from: doc.from,
-                        createdAt: doc.createdAt
-                    }
-                })
-            };
-            // console.log(response);
-            res.status(200).json(response)
+    const getMessages = await Message.find({roomId: roomId}).sort({createdAt: 1}).exec()
+
+    if (!getMessages) {
+        return res.json({
+            message: 'cannot find Message'
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            })
-        });
+    }
+    return res.json({
+        message: 'cannot find Message',
+        data: getMessages
+    })
 });
 
-// create message
-router.post('/save', checkAuth, (req, res) => {
-    const message = new Message({
-        _id: mongoose.Types.ObjectId(),
-        roomId: req.body.roomId,
-        message: req.body.message,
-        from: req.userData._id.toString(),
+/**
+ * create message
+ */
+router.post('/save', checkAuth, async (req, res) => {
+    const from = req.userData._id.toString();
+
+    const {roomId, message} = req.body
+
+    const newMessage = new Message({
+        roomId,
+        message,
+        from
     });
-    message.save()
-        .then(result => {
-            // console.log(result);
-            return res.status(200).json({
-                _id: result._id,
-                roomId: result.roomId,
-                message: result.message,
-                from: result.from,
-                createdAt: result.createdAt
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
+
+    const saveMessage = await newMessage.save();
+
+    if (!saveMessage) {
+        return res.json({
+            message: 'cannot save message'
         });
+    }
+
+    return res.json({
+        message: 'saved successfully',
+        data: saveMessage
+    });
 });
 
-// Delete message
-router.post('/delete/:messageId', (req, res) => {
+/**
+ * Delete message
+ */
+router.post('/delete/:messageId', checkAuth, async (req, res) => {
     const messageId = req.params.messageId;
 
-    Message.remove({_id: messageId})
-        .exec()
-        .then(result => {
-            res.status(200).json({
-                message: 'message was deleted',
-            });
+    const deleteMessage = await Message.remove({_id: messageId}).exec();
+
+    if(!deleteMessage){
+        return res.json({
+            message: 'Message delete fail'
         })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err,
-            })
-        });
+    }
+    return res.json({
+        message: 'message was deleted',
+    });
 });
 
 // --------------------------------------------------------------------------------------
@@ -138,7 +125,6 @@ router.post('/room/get', checkAuth, async (req, res) => {
     if (!room) {
         // query tim k thay ket qua
         room = new Room({
-            _id: mongoose.Types.ObjectId(),
             listUser: [...listIds, req.userData._id.toString()]
         });
         // tao record moi
@@ -151,16 +137,27 @@ router.post('/room/get', checkAuth, async (req, res) => {
     });
 });
 
-// find room
-router.post('/findRoom', (req, res) => {
-    Room.findOne({
-        listUser: [req.body.userId, req.body.friendId]
-    }, function (err, room) {
-        if (room) {
-            return res.json(room);
-        } else {
-            return err;
-        }
-    })
+/**
+ * find room
+ */
+router.post('/findRoom', checkAuth, async (req, res) => {
+    const {userId, friendId} = req.body;
+
+    const findRoom = await Room.findOne({
+        listUser: [
+            userId,
+            friendId
+        ]
+    });
+
+    if(!findRoom){
+        return res.json({
+            message: 'cannot find any room'
+        })
+    }
+    return res.json({
+        message: 'room founded',
+        data: findRoom
+    });
 });
 module.exports = router;

@@ -5,12 +5,6 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const jwtDecode = require('jwt-decode');
-const jwt = require('jsonwebtoken');
-const User = require('./database/models/user');
-const Message = require('./database/models/message');
-const Room = require('./database/models/room');
-const friendRequestSchema = require('./database/models/friendRequest');
 
 mongoose.Promise = global.Promise;
 mongoose.set('useFindAndModify', false);
@@ -75,13 +69,17 @@ app.use((error, req, res) => {
     })
 });
 
-// -------------------------------------------------------------------------------------
+const jwt = require('jsonwebtoken');
+const User = require('./database/models/user');
+const Room = require('./database/models/room');
+const friendRequestSchema = require('./database/models/friendRequest');
+// const express = require('express');
+
 // io.sockets.emit gửi tới toàn bộ server
 // socket.emit gửi tới chính nó
 // socket.broadcast.emit gửi tới toàn bộ server trừ chính nó
 // io.to(socketId).emit() gửi tới người có socketid
 // socket.adapter.rooms Show danh sách room đang có
-
 
 // Socket.io cho chat
 const http = require('http').Server(app);
@@ -143,9 +141,15 @@ io.use(async function (socket, next) {
     });
 });
 
-http.listen(PORT, () => {
-    console.log(`Server lives! Port: ${PORT}`);
+const port = 5000;
+
+http.listen(port, () => {
+    console.log(`Server lives! Port: ${port}`);
 });
+
+// app.listen(PORT, () => {
+//     console.log(`Server lives! Port: ${PORT}`);
+// });
 
 
 

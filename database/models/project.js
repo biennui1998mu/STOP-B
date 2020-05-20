@@ -13,9 +13,9 @@ const projectSchema = new Schema({
     moderator: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     member: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
 
-    status: {type: Boolean, required: true},
-    startDate: {type: Date},
-    endDate: {type: Date},
+    status: {type: Boolean, default: false},
+    startDate: {type: Date, default: Date.now},
+    endDate: {type: Date, required: true},
     createdAt: {type: Date, default: Date.now}
 });
 
