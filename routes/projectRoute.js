@@ -88,9 +88,9 @@ router.post('/create', checkAuth, async (req, res) => {
         member
     });
 
-    const savedProject= await project.save();
+    const savedProject = await project.save();
 
-    if(!savedProject){
+    if (!savedProject) {
         return res.json({
             message: 'Project has been created'
         });
@@ -104,7 +104,7 @@ router.post('/create', checkAuth, async (req, res) => {
 /**
  * Update note by ID
  */
-router.post('/update', checkAuth, async (req, res) => {
+router.post('/update', checkAuth, checkProject, async (req, res) => {
     const user = req.userData;
 
     const projectId = req.body._id;
@@ -140,10 +140,12 @@ router.post('/update', checkAuth, async (req, res) => {
     if (priority) {
         dataProject.priority = priority;
     }
-    if (colorCover) {
+    // String and match regex => hex color code (#fff or #000000)
+    if (colorCover && typeof colorCover === 'string' && colorCover.match(/^#(?:[0-9a-fA-F]{3}){1,2}$/)) {
         dataProject.colorCover = colorCover;
     }
-    if (colorText) {
+    // String and match regex => hex color code (#fff or #000000)
+    if (colorText && typeof colorText === 'string' && colorText.match(/^#(?:[0-9a-fA-F]{3}){1,2}$/)) {
         dataProject.colorText = colorText;
     }
     if (manager && manager._id && dataProject.manager === user._id) {
@@ -180,7 +182,14 @@ router.post('/update', checkAuth, async (req, res) => {
         dataProject.endDate = endDate;
     }
 
-    await dataProject.save();
+    try {
+        await dataProject.save().then(t => t.populate('manager member moderator').execPopulate());
+    } catch (e) {
+        return res.status(500).json({
+            message: 'Update failed. Cannot save the information.',
+            error: e,
+        })
+    }
     return res.status(200).json({
         message: 'Project updated',
         data: dataProject
@@ -195,7 +204,7 @@ router.post('/delete/:projectId', checkAuth, async (req, res) => {
 
     const deletedProject = await Project.remove({_id: id}).exec();
 
-    if(!deletedProject){
+    if (!deletedProject) {
         return res.json({
             message: 'Project cannot deleted',
         });

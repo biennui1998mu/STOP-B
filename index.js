@@ -141,10 +141,8 @@ io.use(async function (socket, next) {
     });
 });
 
-const port = 5000;
-
-http.listen(port, () => {
-    console.log(`Server lives! Port: ${port}`);
+http.listen(PORT, () => {
+    console.log(`Server lives! Port: ${PORT}`);
 });
 
 // app.listen(PORT, () => {

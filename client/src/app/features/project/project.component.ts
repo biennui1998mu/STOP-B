@@ -38,6 +38,10 @@ export class ProjectComponent implements OnInit {
           },
         });
       });
+
+    this.projectsQuery.selectActive().subscribe(project => {
+      this.project = project;
+    });
   }
 
   get memberCount() {

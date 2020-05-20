@@ -4,15 +4,13 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { TokenService } from "./token.service";
 import { Message } from '../interface/Message';
 import { Room } from "../interface/Room";
-import { apiRoute, host } from '../api';
+import { socketHost } from '../api';
 import { User } from '../interface/User';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SocketService {
-
-  private readonly url = apiRoute('messages');
   private readonly _socket: SocketIOClient.Socket;
 
   private _friendOnline: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
@@ -28,7 +26,7 @@ export class SocketService {
   public roomChat = this._roomChat.asObservable();
 
   constructor(private tokenService: TokenService) {
-    this._socket = io(host, {
+    this._socket = io(socketHost, {
       query: {
         token: this.tokenService.token,
       },

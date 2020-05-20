@@ -117,22 +117,23 @@ export class ProjectsService {
     );
   }
 
-  update(projectId: string, credentials: Partial<Project>) {
-    return this.http.post<{
-      message: string,
-      updatedProject?: Project<User>,
-      error: any
-    }>(
+  update(credentials: Partial<Project>) {
+    return this.http.post<APIResponse<Project<User>>>(
       `${this.url}/update`,
       credentials,
       { headers: this.token.authorizeHeader },
     ).pipe(
       map(result => {
-        return !!result.updatedProject;
+        return result.data;
       }),
       catchError(error => {
         console.error(error);
-        return of(false);
+        return of(null);
+      }),
+      tap(data => {
+        if (data) {
+          this.store.update(data._id, () => data);
+        }
       }),
     );
   }

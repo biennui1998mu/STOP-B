@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UiStateService } from '../../shared/services/state/ui-state.service';
-import { Project } from "../../shared/interface/Project";
+import { Project, ProjectPriority } from "../../shared/interface/Project";
 import { ProjectsService } from '../../shared/services/projects';
 import { NotesQuery, NotesService } from '../../shared/services/note';
 
@@ -17,6 +17,8 @@ export class HomepageComponent implements OnInit {
 
   notes = this.noteQuery.selectAll();
   projects: Project[] = [];
+
+  ProjectPriority = ProjectPriority;
 
   constructor(
     private uiStateService: UiStateService,

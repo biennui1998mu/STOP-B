@@ -1,0 +1,126 @@
+<form [formGroup]="projectFormInfo"
+      class="form-info">
+  <mat-form-field appearance="outline"
+                  class="w100pct">
+    <mat-label>
+      Project title
+    </mat-label>
+    <input [formControl]="title"
+           matInput
+           placeholder="project x..."
+           required>
+    <mat-hint>
+      Project title must have at least 2 character.
+    </mat-hint>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline"
+                  class="w100pct">
+    <mat-label>
+      Project description
+    </mat-label>
+    <textarea [formControl]="description"
+              matInput
+              maxlength="200"
+              placeholder="project is about..."
+              style="max-height: 100px"></textarea>
+    <mat-hint>
+      Project description can be empty, however, a describable project is better.
+    </mat-hint>
+  </mat-form-field>
+
+  <div class="flex align-items-center w100pct">
+    <div [ngStyle]="{backgroundColor: colorCover.value}"
+         class="flex representing-color mat-elevation-z1 mb1 mr1"></div>
+    <mat-form-field appearance="outline"
+                    class="w100pct">
+      <mat-label>
+        Project Cover Color
+      </mat-label>
+      <input [formControl]="colorCover"
+             matInput
+             placeholder="#ccc"
+             required
+             style="max-height: 100px">
+      <mat-hint>
+        Hex color only
+      </mat-hint>
+    </mat-form-field>
+  </div>
+
+  <div class="flex align-items-center w100pct">
+    <div [ngStyle]="{backgroundColor: colorText.value}"
+         class="flex representing-color mat-elevation-z1 mb1 mr1"></div>
+    <mat-form-field appearance="outline"
+                    class="w100pct">
+      <mat-label>
+        Project Heading Color
+      </mat-label>
+      <input [formControl]="colorText"
+             matInput
+             placeholder="#ccc"
+             required
+             style="max-height: 100px">
+      <mat-hint>
+        Hex color only
+      </mat-hint>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline"
+                  class="w100pct">
+    <mat-label>
+      Project priority
+    </mat-label>
+    <mat-select [formControl]="priority"
+                required>
+      <mat-option [value]="ProjectPriority.medium">Medium</mat-option>
+      <mat-option [value]="ProjectPriority.high">High</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline"
+                  class="w100pct">
+    <mat-label>Starting Date</mat-label>
+    <input [formControl]="startDate"
+           [matDatepicker]="startingDate"
+           matInput>
+    <mat-datepicker-toggle [for]="startingDate"
+                           matSuffix></mat-datepicker-toggle>
+    <mat-datepicker #startingDate
+                    [disabled]="true"></mat-datepicker>
+    <mat-hint>
+      Is set when created and cannot be changed.
+    </mat-hint>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline"
+                  class="w100pct">
+    <mat-label>Ending Date</mat-label>
+    <input [formControl]="endDate"
+           [matDatepicker]="endingDate"
+           matInput>
+    <mat-datepicker-toggle [for]="endingDate"
+                           matSuffix></mat-datepicker-toggle>
+    <mat-datepicker #endingDate></mat-datepicker>
+    <mat-hint>
+      Ending date can be null, but if having value, it must be after the starting date
+    </mat-hint>
+  </mat-form-field>
+
+  <div *ngIf="projectFormInfo.dirty"
+       class="flex justify-flex-end">
+    <button (click)="resetForm()"
+            class="mr1"
+            color="warn"
+            mat-button>
+      Cancel
+    </button>
+    <button (click)="updateProject()"
+            [disabled]="projectFormInfo.invalid"
+            color="primary"
+            mat-raised-button>
+      Save
+    </button>
+  </div>
+</form>

@@ -80,8 +80,8 @@
   <div class="list-available">
     <a *ngFor="let project of projects"
        [class.finished]="project.status"
-       [class.high]="project.priority === 1"
-       [class.medium]="project.priority === 2"
+       [class.high]="project.priority === ProjectPriority.high"
+       [class.medium]="project.priority === ProjectPriority.medium"
        [routerLink]="['/project', 'view', project._id]"
        class="item mat-elevation-z1 note-card">
       <div class="header">

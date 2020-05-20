@@ -13,34 +13,32 @@ import { TaskMetaComponent } from './tasks/task-meta/task-meta.component';
 import { RelatedTasksComponent } from './resources/related-tasks/related-tasks.component';
 import { ImagePreviewComponent } from './resources/image-preview/image-preview.component';
 import { TaskContentComponent } from './tasks/task-content/task-content.component';
+import { MembersManagesComponent } from './projects/members-manages/members-manages.component';
+import { InfoManagesComponent } from './projects/info-manages/info-manages.component';
 
 const components = [
   NewTaskComponent,
   ChatLayoutComponent,
   UserPillComponent,
   ConfirmDialogsComponent,
+  RelatedTasksComponent,
+  ImagePreviewComponent,
+  MembersManagesComponent,
+  InfoManagesComponent,
+  ProjectMenuComponent,
+  TaskPillComponent,
+  TaskCommentComponent,
+  TaskCommentInputComponent,
+  TaskMetaComponent,
+  TaskContentComponent,
 ];
 
 @NgModule({
   declarations: [
     ...components,
-    ProjectMenuComponent,
-    TaskPillComponent,
-    TaskCommentComponent,
-    TaskCommentInputComponent,
-    TaskMetaComponent,
-    RelatedTasksComponent,
-    ImagePreviewComponent,
-    TaskContentComponent,
   ],
   exports: [
     ...components,
-    ProjectMenuComponent,
-    TaskPillComponent,
-    TaskCommentComponent,
-    TaskCommentInputComponent,
-    TaskMetaComponent,
-    TaskContentComponent,
   ],
   imports: [
     CommonModule,

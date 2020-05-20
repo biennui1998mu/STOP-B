@@ -1,1 +1,38 @@
-<p>project-options works!</p>
+<div class="block-option p1 mb1 bg-white flex flex-d-col">
+  <h2>
+    Project Info
+  </h2>
+  <p class="mt0">
+    You can change project name, description, representing color, etc.
+  </p>
+  <app-info-manages [project]="project"></app-info-manages>
+</div>
+
+<div class="block-option p1 mb1 bg-white flex flex-d-col">
+  <h2>
+    Project Members
+  </h2>
+  <p class="mt0">
+    You can remove or add new member to the project
+  </p>
+  <button class="align-self-flex-end"
+          mat-flat-button>
+    <mat-icon>edit</mat-icon>
+    Edit
+  </button>
+</div>
+
+<div class="block-option p1 mb1 bg-white flex flex-d-col">
+  <h2>
+    Danger zone!
+  </h2>
+  <p class="text-danger mt0">
+    Leave this project will prevent you from creating or answering any current or future tasks. Also, only member with
+    authorized level will be able to add you to this project again.
+  </p>
+  <button class="align-self-flex-end"
+          color="warn"
+          mat-flat-button>
+    Leave this project
+  </button>
+</div>
