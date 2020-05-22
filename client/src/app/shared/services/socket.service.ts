@@ -96,6 +96,7 @@ export class SocketService {
 export enum SOCKET_REQUEST_EVENT {
   sendMessage = 'send-Message-toServer',
   joinRoomChat = 'user-join-room-chat',
+  leaveRoomChat = 'user-leave-room-chat',
 }
 
 export enum SOCKET_RESPONSE_EVENT {

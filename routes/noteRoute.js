@@ -85,7 +85,7 @@ router.post('/create', checkAuth, async (req, res) => {
     const {title, description, priority, status} = req.body;
 
     const info = {
-        userId,
+        user: userId,
         title,
         description,
         priority,

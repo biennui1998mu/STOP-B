@@ -9,6 +9,7 @@ import { TokenService } from '../token.service';
 import { APIResponse } from '../../interface/API-Response';
 import { UserQuery } from '../user';
 import { Project } from '../../interface/Project';
+import {User} from "../../interface/User";
 
 @Injectable({ providedIn: 'root' })
 export class NotesService {
@@ -24,16 +25,12 @@ export class NotesService {
 
   get() {
     this.store.setLoading(true);
-    this.http.post<{
-      error: any,
-      count: number,
-      notes: Note[],
-    }>(
+    this.http.post<APIResponse<Note<Project, User>[]>>(
       `${this.url}`,
       {},
       { headers: this.token.authorizeHeader })
       .pipe(
-        map(result => result.notes),
+        map(result => result.data),
         catchError(error => {
           console.error(error);
           return of([] as Note[]);
@@ -45,16 +42,12 @@ export class NotesService {
   }
 
   getOne(noteId: string) {
-    return this.http.post<{
-      error: any,
-      message: string,
-      note: Note
-    }>(
+    return this.http.post<APIResponse<Note>>(
       `${this.url}/view`,
       { noteId: noteId },
       { headers: this.token.authorizeHeader },
     ).pipe(
-      map(result => result.note),
+      map(result => result.data),
       catchError(error => {
         console.log(error);
         return of(null as Note);
@@ -104,9 +97,7 @@ export class NotesService {
   }
 
   delete(noteId: string) {
-    return this.http.post<{
-      message: string
-    }>(
+    return this.http.post<APIResponse>(
       `${this.url}/delete/${noteId}`,
       { noteId: noteId },
       { headers: this.token.authorizeHeader },

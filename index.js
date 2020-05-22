@@ -139,6 +139,16 @@ io.use(async function (socket, next) {
                 });
             });
     });
+
+    socket.on("user-leave-room-chat", function (room_id) {
+        Room.findOne({_id: room_id})
+            .populate('listUser')
+            .exec()
+            .then(data => {
+                console.log();
+                socket.leave(data._id);
+            });
+    });
 });
 
 http.listen(PORT, () => {

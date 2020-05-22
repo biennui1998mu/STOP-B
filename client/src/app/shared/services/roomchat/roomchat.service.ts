@@ -70,6 +70,13 @@ export class RoomChatService {
     });
   }
 
+  leaveRoomChat(idRoom: string) {
+    this.socketService.socketEmit(
+      SOCKET_REQUEST_EVENT.leaveRoomChat,
+      idRoom,
+    );
+  }
+
   clearRoom() {
     this.store.reset();
   }

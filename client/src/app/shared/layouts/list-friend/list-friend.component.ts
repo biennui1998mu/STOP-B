@@ -94,6 +94,7 @@ export class ListFriendComponent implements OnInit, OnDestroy {
       panelClass: `setting-modal-box`,
     });
     this.chatDialog.beforeClosed().subscribe(() => {
+      this.roomChatService.leaveRoomChat(this.roomChatQuery.getValue()._id);
       this.dialogFriendId = null;
       this.roomChatService.clearRoom();
     });

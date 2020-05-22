@@ -7,6 +7,7 @@ import { Message } from '../../interface/Message';
 import { of } from 'rxjs';
 import { apiRoute } from '../../api';
 import { SOCKET_REQUEST_EVENT, SocketService } from '../socket.service';
+import {APIResponse} from "../../interface/API-Response";
 
 @Injectable({ providedIn: 'root' })
 export class MessageChatService {
@@ -27,34 +28,25 @@ export class MessageChatService {
 
   get(roomId: string) {
     this.store.setLoading(true);
-    this.http.post<{
-      count: number,
-      messages: Message[],
-    }>(
+    this.http.post<APIResponse<Message[]>>(
       `${this.url}`,
       { roomId: roomId },
       { headers: this.token.authorizeHeader },
     ).pipe(
       map(result => {
         if (result) {
-          return result;
+          return result.data;
         } else {
-          return {
-            count: 0,
-            messages: [] as Message[],
-          };
+          return [] as Message[];
         }
       }),
       catchError(error => {
         console.log(error);
-        return of({
-          count: 0,
-          messages: [] as Message[],
-        });
+        return of([] as Message[]);
       }),
     ).subscribe(info => {
       this.store.setLoading(false);
-      this.store.set(info.messages);
+      this.store.set(info);
     });
   }
 
@@ -68,7 +60,7 @@ export class MessageChatService {
     }
 
     this.store.setLoading(true);
-    this.http.post<Message>(
+    this.http.post<APIResponse<Message>>(
       `${this.url}/save`,
       {
         message: message,
@@ -80,10 +72,10 @@ export class MessageChatService {
         if (result) {
           this.socketService.socketEmit(
             SOCKET_REQUEST_EVENT.sendMessage,
-            result,
+            result.data,
           );
         }
-        return result;
+        return result.data;
       }),
       catchError(error => {
         console.log(error);

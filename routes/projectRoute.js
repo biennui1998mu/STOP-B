@@ -88,7 +88,7 @@ router.post('/create', checkAuth, async (req, res) => {
         member
     });
 
-    const savedProject = await project.save();
+    const savedProject = await project.save().then(t => t.populate('manager member moderator').execPopulate());
 
     if (!savedProject) {
         return res.json({

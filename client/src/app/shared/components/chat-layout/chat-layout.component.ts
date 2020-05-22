@@ -1,14 +1,14 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { Message } from '../../interface/Message';
-import { User } from "../../interface/User";
-import { Subject } from 'rxjs';
-import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { FormControl, Validators } from '@angular/forms';
-import { Room } from '../../interface/Room';
-import { MessageChatQuery, MessageChatService } from '../../services/roomchat-message';
-import { RoomchatQuery } from '../../services/roomchat';
-import { UserQuery } from '../../services/user';
+import {AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
+import {MatDialogRef} from '@angular/material/dialog';
+import {Message} from '../../interface/Message';
+import {User} from "../../interface/User";
+import {Subject} from 'rxjs';
+import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
+import {FormControl, Validators} from '@angular/forms';
+import {Room} from '../../interface/Room';
+import {MessageChatQuery, MessageChatService} from '../../services/roomchat-message';
+import {RoomchatQuery, RoomChatService} from '../../services/roomchat';
+import {UserQuery} from '../../services/user';
 
 @Component({
   selector: 'app-chat-layout',

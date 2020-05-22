@@ -11,7 +11,8 @@
     <div class="whitespace-pre-wrap note-content">
       {{note.description}}
     </div>
-    <div class="flex align-items-center mt1 note-project">
+    <div *ngIf="note.project"
+         class="flex align-items-center mt1 note-project">
       <div [ngStyle]="{backgroundColor: note.project.colorCover, color: note.project.colorText}"
            class="grid place-item-center icon-represent mat-elevation-z1 mr1">
         {{shortName(note.project)}}
